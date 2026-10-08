@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="uz" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>clamo.uz - Tibbiyot Akkreditatsiyasi Onlayn Chek-listi (275 Mezon)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Davlat standartlariga muvofiq rasmiy idoraviy shriftlar */
+    * { 
+      font-family: Arial, Calibri, 'Times New Roman', -apple-system, BlinkMacSystemFont, sans-serif; 
+    }
+    .font-mono { 
+      font-family: 'Courier New', Courier, monospace; 
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    html { scroll-behavior: smooth; }
+    .domain-scroll-block { scroll-margin-top: 15px; }
+    
+    /* Sidebar menyu uchun qat'iy fiksirlangan stillar (Zero Layout Shift) */
+    .sidebar-nav-item {
+      border-left: 4px solid transparent;
+      background-color: transparent;
+      color: #334155;
+      box-sizing: border-box;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .sidebar-nav-item:hover {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .sidebar-nav-item.active-nav-item {
+      border-left-color: #0d9488 !important;
+      background-color: #f0fdfa !important;
+      color: #0f766e !important;
+    }
+
+    /* ========================================================================= */
+    /* ON-SCROLL ANIMATED DOMAIN HEADER (CODROPS STYLE)                          */
+    /* ========================================================================= */
+    .domain-header-card {
+      position: sticky;
+      top: 0px;
+      z-index: 25;
+      box-sizing: border-box;
+      transition: padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-radius 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 1. Normal State (Expanded resting mode - spacious & clear) */
+    .domain-header-card.is-normal {
+      padding: 1.125rem 1.25rem;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+    }
+    .domain-header-card.is-normal .domain-header-content {
+      display: grid;
+      grid-template-areas:
+        "meta count"
+        "title title";
+      grid-template-columns: auto auto;
+      align-items: center;
+      row-gap: 0.35rem;
+    }
+    .domain-header-card.is-normal .domain-header-meta {
+      grid-area: meta;
+      justify-self: start;
+    }
+    .domain-header-card.is-normal .domain-standards-count {
+      grid-area: count;
+      justify-self: end;
+      font-size: 0.75rem;
+      color: #64748b;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+    .domain-header-card.is-normal .domain-header-title {
+      grid-area: title;
+      font-size: 1.125rem;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      transition: font-size 0.25s ease, color 0.25s ease;
+    }
+    .domain-header-card.is-normal .domain-badge {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 0.2rem 0.625rem;
+      border-radius: 0.375rem;
+      background-color: #f0fdfa;
+      color: #0f766e;
+      border: 1px solid #99f6e4;
+      letter-spacing: 0.025em;
+      transition: all 0.25s ease;
+    }
+
+    /* 2. Stuck State (Compact on-scroll under navbar - shrunk height) */
+    .domain-header-card.is-stuck {
+      padding: 0.45rem 1rem;
+      background-color: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #cbd5e1;
+      border-radius: 0.625rem;
+      box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.09), 0 2px 4px -1px rgba(15, 23, 42, 0.05);
+    }
+    .domain-header-card.is-stuck .domain-header-content {
+      display: grid;
+      grid-template-areas:
+        "meta title count";
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      column-gap: 0.75rem;
+    }
+    .domain-header-card.is-stuck .domain-header-meta {
+      grid-area: meta;
+    }
+    .domain-header-card.is-stuck .domain-badge {
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      background-color: #0d9488;
+      color: #ffffff;
+      border: 1px solid #0d9488;
+      letter-spacing: 0.025em;
+      transition: all 0.25s ease;
+    }
+    .domain-header-card.is-stuck .domain-header-title {
+      grid-area: title;
+      font-size: 0.875rem;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+      transition: font-size 0.25s ease, color 0.25s ease;
+    }
+    .domain-header-card.is-stuck .domain-standards-count {
+      grid-area: count;
+      font-size: 0.6875rem;
+      color: #64748b;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 h-full flex flex-col antialiased selection:bg-teal-600 selection:text-white">
+
+  <!-- TOP APP BAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-teal-500/20">
+          ✚
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg tracking-tight text-slate-900">clamo<span class="text-teal-600">.uz</span></span>
+            <span class="bg-teal-50 text-teal-800 text-[11px] font-bold px-2 py-0.5 rounded border border-teal-200 uppercase">Klinika Portali</span>
+          </div>
+          <p class="text-[11px] text-slate-500 hidden sm:block">75 ta standart va 275 ta mezon asosidagi milliy audit chek-listi</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/backoffice" class="text-xs font-bold text-slate-700 hover:text-teal-700 flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <span>Backoffice Panelga O'tish &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 1: ONBOARDING & SERVICES IDENTIFICATION -->
+  <!-- ========================================================================= -->
+  <main id="view-onboarding" class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col justify-center">
+    
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-full text-teal-800 text-xs font-bold mb-3">
+        <span>Davlat Standartlari Asosida Rasmiy Akkreditatsiya So'rovnomasi</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Klinika Pasporti va Xizmatlar Ro'yxati</h1>
+      <p class="mt-2 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+        Tashkilotingiz INN va xizmatlari profilini tasdiqlang. Tizim sizning yo'nalishingizga mos mezonlarni belgilaydi.
+      </p>
+    </div>
+
+    <div class="bg-white border border-slate-300 rounded-2xl shadow-xl p-6 sm:p-10 relative">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-t-2xl"></div>
+
+      <form onsubmit="event.preventDefault(); startChecklist();" class="space-y-6">
+        
+        <!-- STEP 1: INN & ORG NAME -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Tashkilot INN'i *</label>
+            <div class="relative">
+              <input 
+                type="text" 
+                id="inp-inn" 
+                maxlength="9"
+                value="304882190" 
+                oninput="onInnInput(this.value)"
+                class="w-full pl-3 pr-24 py-2.5 bg-white border border-slate-300 rounded-xl font-mono text-sm focus:ring-2 focus:ring-teal-500 focus:outline-hidden"
+                required
+              />
+              <span id="inn-badge" class="absolute right-2.5 top-2.5 text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded border border-emerald-200">
+                ✓ Topildi
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">9 xonali yuridik shaxs INN kodi</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Tashkilot nomi *</label>
+            <input 
+              type="text" 
+              id="inp-org-name" 
+              readonly
+              value="«SHIFO MED SERVIS KOP TARMOQLI KLINIKASI» MCHJ" 
+              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs text-slate-800 cursor-not-allowed"
+            />
+          </div>
+        </div>
+
+        <!-- STEP 2: KADASTR, DARAJA, HUDUD -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Kadastr raqami *</label>
+            <input 
+              type="text" 
+              id="inp-cadastre"
+              value="10:01:04:02:01:0045"
+              placeholder="XX:XX:XX:XX:XX:XXXX"
+              class="w-full px-3 py-2.5 border border-slate-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-teal-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Viloyat / Hudud *</label>
+            <input 
+              type="text" 
+              id="inp-region"
+              readonly
+              value="Toshkent shahri"
+              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold text-xs text-slate-800 cursor-not-allowed select-all focus:outline-hidden"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Muassasa darajasi *</label>
+            <select id="inp-level" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-xs bg-white">
+              <option value="VILOYAT">Viloyat darajasi</option>
+              <option value="RESPUBLIKA">Respublika darajasi</option>
+              <option value="TUMAN">Tuman darajasi</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- STEP 3: FIO & TELEFON -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">F.I.O (to'ldiruvchi mas'ul shaxs) *</label>
+            <input 
+              type="text" 
+              id="inp-fio"
+              value="Alimov Jamshid Baxtiyorovich" 
+              class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Telefon raqam (tashkilotniki) *</label>
+            <input 
+              type="tel" 
+              id="inp-phone"
+              value="+998 71 200-11-22" 
+              class="w-full px-3 py-2.5 border border-slate-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-teal-500"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- STEP 4: SERVICES APPLICABILITY CHECKBOXES (DYNAMIC ТЭ ENGINE) -->
+        <div class="pt-4 border-t border-slate-100">
+          <label class="block text-xs font-bold text-slate-800 mb-2">
+            Amalda ko'rsatilayotgan tibbiy xizmatlar:
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-slate-700">
+            <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+              <input type="checkbox" id="srv-blue-code" checked class="w-4 h-4 text-teal-600 rounded">
+              <span>Шошилинч / «Кўк код»</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+              <input type="checkbox" id="srv-surgery" checked class="w-4 h-4 text-teal-600 rounded">
+              <span>Жарроҳлик бўлими</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+              <input type="checkbox" id="srv-lab" checked class="w-4 h-4 text-teal-600 rounded">
+              <span>Лаборатория</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+              <input type="checkbox" id="srv-endoscopy" checked class="w-4 h-4 text-teal-600 rounded">
+              <span>Эндоскопия (Гастро/Колоно)</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+              <input type="checkbox" id="srv-mri" class="w-4 h-4 text-teal-600 rounded">
+              <span>МРТ хизмати</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+              <input type="checkbox" id="srv-steril" checked class="w-4 h-4 text-teal-600 rounded">
+              <span>Стерилизация бўлинмаси</span>
+            </label>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          id="btn-start"
+          class="w-full py-3.5 bg-gradient-to-r from-teal-700 to-cyan-700 hover:from-teal-800 hover:to-cyan-800 text-white font-bold text-sm rounded-xl shadow-lg transition cursor-pointer flex items-center justify-center gap-2"
+        >
+          <span>Chek-list Savolnomasini Boshlash (75 Standart) &rarr;</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 2: CONTINUOUS CHECKLIST FEED (ALL 7 DOMAINS SEQUENTIAL) -->
+  <!-- ========================================================================= -->
+  <main id="view-checklist" class="hidden flex-1 flex flex-col h-[calc(100vh-65px)] overflow-hidden">
+    
+    <!-- SUBHEADER / PROGRESS & CONTROLS -->
+    <div class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-2xs">
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 leading-tight" id="header-org-name">«SHIFO MED SERVIS» MCHJ</h2>
+        <!-- Official ID format: INN+date+month -->
+        <span class="text-xs font-bold text-slate-700" id="header-session-id">Akkreditatsiya arizasi №: yuklanmoqda...</span>
+      </div>
+
+      <!-- Center Progress -->
+      <div class="flex-1 max-w-md mx-auto w-full">
+        <div class="flex items-center justify-between text-xs mb-1">
+          <span class="text-slate-700 font-bold">
+            Tayyorgarlik bali: <span class="text-teal-700 font-mono text-sm" id="score-percent">0.0%</span>
+          </span>
+          <span class="text-slate-500 text-xs font-medium" id="score-counts">0 / 275 mezon</span>
+        </div>
+        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar-fill" class="h-full bg-teal-600 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-2">
+        <span id="autosave-tag" class="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-300 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Avtomatik saqlanmoqda
+        </span>
+        <button onclick="submitFullAssessment()" class="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs transition cursor-pointer">
+          Arizani Topshirish &rarr;
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN TWO COLUMN WORKSPACE -->
+    <div class="flex-1 flex overflow-hidden">
+      
+      <!-- LEFT SIDEBAR: PURE NAVIGATION MENU (SCROLL-SPY TOC) -->
+      <aside class="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0">
+        <div class="p-3.5 border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-800 flex items-center justify-between">
+          <span>7 та Асосий Бўлим Менюси</span>
+          <span class="text-[10px] text-slate-500 font-normal">Тегишли бўлимга ўтиш</span>
+        </div>
+        <div class="flex-1 overflow-y-auto divide-y divide-slate-100" id="domains-sidebar">
+          <!-- Populated by JS -->
+        </div>
+      </aside>
+
+      <!-- RIGHT MAIN CONTENT: CONTINUOUS FEED OF ALL 7 DOMAINS -->
+      <section id="checklist-scroll-area" class="flex-1 bg-slate-50/80 overflow-y-auto px-4 sm:px-8 pt-3 pb-28 flex flex-col items-center">
+        <div class="max-w-3xl w-full space-y-10 pb-28" id="criteria-cards-container">
+          <div class="text-center py-16 text-slate-500 font-bold">
+            Mezonlar yuklanmoqda...
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    let activeSessionId = null;
+    let fullChecklistData = null;
+
+    // INN Debounced lookup
+    let innTimeout;
+    function onInnInput(val) {
+      clearTimeout(innTimeout);
+      if (val.length === 9) {
+        innTimeout = setTimeout(async () => {
+          try {
+            const res = await fetch(`/api/v1/organizations/lookup-inn/${val}`);
+            const data = await res.json();
+            if (data.found) {
+              document.getElementById('inp-org-name').value = data.name;
+              document.getElementById('inp-region').value = data.region || "Toshkent shahri";
+              document.getElementById('inn-badge').textContent = "✓ Topildi";
+            }
+          } catch (e) { console.error(e); }
+        }, 300);
+      }
+    }
+
+    // Initialize session and transition to checklist view
+    async function startChecklist() {
+      const btn = document.getElementById('btn-start');
+      btn.textContent = "Tayyorlanmoqda...";
+      btn.disabled = true;
+
+      const payload = {
+        inn: document.getElementById('inp-inn').value,
+        name: document.getElementById('inp-org-name').value,
+        cadastre_number: document.getElementById('inp-cadastre').value,
+        region: document.getElementById('inp-region').value,
+        level: document.getElementById('inp-level').value,
+        submitter_fio: document.getElementById('inp-fio').value,
+        submitter_phone: document.getElementById('inp-phone').value,
+        services: {
+          has_emergency_blue_code: document.getElementById('srv-blue-code').checked,
+          has_surgery: document.getElementById('srv-surgery').checked,
+          has_laboratory: document.getElementById('srv-lab').checked,
+          has_endoscopy: document.getElementById('srv-endoscopy').checked,
+          has_mri: document.getElementById('srv-mri').checked,
+          has_sterilization_dept: document.getElementById('srv-steril').checked
+        }
+      };
+
+      try {
+        const res = await fetch("/api/v1/audit-sessions/initialize", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        activeSessionId = data.session_id;
+
+        document.getElementById('header-org-name').textContent = data.org_name;
+        // Human-readable official ID: e.g. 304882190-0710
+        document.getElementById('header-session-id').textContent = `Akkreditatsiya arizasi №: ${activeSessionId}`;
+
+        // Switch to View 2
+        document.getElementById('view-onboarding').classList.add('hidden');
+        document.getElementById('view-checklist').classList.remove('hidden');
+
+        await loadChecklist();
+      } catch (e) {
+        alert("Xatolik: Serverga ulanib bo'lmadi");
+        btn.disabled = false;
+        btn.textContent = "Chek-list Savolnomasini Boshlash";
+      }
+    }
+
+    // Load full checklist from backend
+    async function loadChecklist() {
+      try {
+        const res = await fetch(`/api/v1/audit-sessions/${activeSessionId}/checklist`);
+        fullChecklistData = await res.json();
+        updateScoreHeader(fullChecklistData.score);
+        renderDomainsSidebar();
+        renderAllDomains();
+        setupScrollSpy();
+        updateStickyHeaders();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Sidebar: Table of contents navigation (Zero Layout Shift)
+    function renderDomainsSidebar() {
+      const sidebar = document.getElementById('domains-sidebar');
+      sidebar.innerHTML = fullChecklistData.domains.map((d, idx) => {
+        const isFirst = idx === 0;
+        return `
+          <div onclick="scrollToDomain(${d.id})" id="sidebar-nav-${d.id}" class="sidebar-nav-item p-3.5 cursor-pointer transition flex items-center justify-between ${isFirst ? 'active-nav-item' : ''}">
+            <div class="min-w-0 pr-2">
+              <span class="text-xs line-clamp-2 leading-snug font-medium">${d.name}</span>
+              <span class="text-[11px] text-slate-500 font-normal mt-0.5 block">${d.standards.length} та стандарт</span>
+            </div>
+            <span class="sidebar-badge w-6 h-6 rounded-full ${isFirst ? 'bg-teal-600 text-white font-bold' : 'bg-slate-100 text-slate-600 font-semibold'} text-xs flex items-center justify-center shrink-0">
+              ${d.id}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    let isProgrammaticScroll = false;
+    let programmaticScrollTimer = null;
+
+    function scrollToDomain(domainId) {
+      const scrollArea = document.getElementById('checklist-scroll-area');
+      const targetEl = document.getElementById('domain-section-' + domainId);
+      if (targetEl && scrollArea) {
+        // 1. Darhol tanlangan bo'limni faollashtirish
+        highlightSidebar(domainId);
+
+        // 2. Skroll monitoringini qulflash (oraliq bo'limlar miltillamasligi uchun)
+        isProgrammaticScroll = true;
+        clearTimeout(programmaticScrollTimer);
+
+        // 3. Faqat ichki skroll maydonini to'g'ri nuqtaga silliq surish
+        const targetTop = targetEl.offsetTop - scrollArea.offsetTop - 5;
+        scrollArea.scrollTo({
+          top: targetTop,
+          behavior: 'smooth'
+        });
+
+        // 4. Skroll yakunlangach qulfni ochish va sticky holatini yangilash
+        programmaticScrollTimer = setTimeout(() => {
+          isProgrammaticScroll = false;
+          updateStickyHeaders();
+        }, 750);
+      }
+    }
+
+    function highlightSidebar(domainId) {
+      document.querySelectorAll('.sidebar-nav-item').forEach(el => {
+        el.classList.remove('active-nav-item');
+        const badge = el.querySelector('.sidebar-badge');
+        if (badge) {
+          badge.className = "sidebar-badge w-6 h-6 rounded-full bg-slate-100 text-slate-600 font-semibold text-xs flex items-center justify-center shrink-0";
+        }
+      });
+      const activeEl = document.getElementById('sidebar-nav-' + domainId);
+      if (activeEl) {
+        activeEl.classList.add('active-nav-item');
+        const badge = activeEl.querySelector('.sidebar-badge');
+        if (badge) {
+          badge.className = "sidebar-badge w-6 h-6 rounded-full bg-teal-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs";
+        }
+      }
+    }
+
+    // Scroll spy: Sticky headerlar va sidebar faolligini boshqarish
+    function setupScrollSpy() {
+      const scrollArea = document.getElementById('checklist-scroll-area');
+      scrollArea.addEventListener('scroll', () => {
+        window.requestAnimationFrame(() => {
+          updateStickyHeaders();
+          if (!isProgrammaticScroll) {
+            updateScrollSpyNav();
+          }
+        });
+      }, { passive: true });
+    }
+
+    // On-scroll animatsiyali sticky header (Codrops uslubi)
+    function updateStickyHeaders() {
+      const scrollArea = document.getElementById('checklist-scroll-area');
+      if (!scrollArea) return;
+      const scrollAreaTop = scrollArea.getBoundingClientRect().top;
+      const isAtTop = scrollArea.scrollTop < 25;
+
+      const sections = document.querySelectorAll('.domain-scroll-block');
+      sections.forEach((sec, idx) => {
+        const domainId = sec.getAttribute('data-domain-id');
+        const header = document.getElementById('domain-header-' + domainId);
+        if (!header) return;
+
+        // 1-bo'lim uchun: agar sahifa boshida tursa normal (keng), biroz pastga skroll bo'lsa - compact sticky
+        if (idx === 0) {
+          if (!isAtTop) {
+            const secRect = sec.getBoundingClientRect();
+            const relBottom = secRect.bottom - scrollAreaTop;
+            if (relBottom > 60) {
+              header.classList.add('is-stuck');
+              header.classList.remove('is-normal');
+            } else {
+              header.classList.remove('is-stuck');
+              header.classList.add('is-normal');
+            }
+          } else {
+            header.classList.remove('is-stuck');
+            header.classList.add('is-normal');
+          }
+          return;
+        }
+
+        // 2..7 bo'limlar: navbar tagiga yetganda (relTop <= 15) va bo'lim hali tugamaganda (relBottom > 60)
+        const secRect = sec.getBoundingClientRect();
+        const relTop = secRect.top - scrollAreaTop;
+        const relBottom = secRect.bottom - scrollAreaTop;
+
+        if (relTop <= 15 && relBottom > 60) {
+          header.classList.add('is-stuck');
+          header.classList.remove('is-normal');
+        } else {
+          header.classList.remove('is-stuck');
+          header.classList.add('is-normal');
+        }
+      });
+    }
+
+    function updateScrollSpyNav() {
+      const scrollArea = document.getElementById('checklist-scroll-area');
+      if (!scrollArea) return;
+      let currentId = 1;
+      const sections = document.querySelectorAll('.domain-scroll-block');
+      sections.forEach(sec => {
+        const top = sec.offsetTop - scrollArea.offsetTop;
+        if (scrollArea.scrollTop >= top - 70) {
+          currentId = parseInt(sec.getAttribute('data-domain-id'));
+        }
+      });
+      highlightSidebar(currentId);
+    }
+
+    // Render ALL 7 domains sequentially in one continuous feed!
+    function renderAllDomains() {
+      const container = document.getElementById('criteria-cards-container');
+      let html = '';
+
+      fullChecklistData.domains.forEach(domain => {
+        html += `
+          <!-- DOMAIN SECTION: ${domain.id} -->
+          <div id="domain-section-${domain.id}" data-domain-id="${domain.id}" class="domain-scroll-block space-y-4 ${domain.id > 1 ? 'pt-8 mt-8 border-t-2 border-slate-200' : 'pt-1'}">
+            
+            <!-- CODROPS ON-SCROLL ANIMATED DOMAIN HEADER (SHRINKS WHEN STICKY UNDER NAVBAR) -->
+            <div id="domain-header-${domain.id}" class="domain-header-card is-normal mb-3">
+              <div class="domain-header-content">
+                <div class="domain-header-meta">
+                  <span class="domain-badge">${domain.id}-БЎЛИМ</span>
+                </div>
+                <h2 class="domain-header-title">${domain.name}</h2>
+                <div class="domain-standards-count">
+                  ${domain.standards.length} та стандарт
+                </div>
+              </div>
+            </div>
+        `;
+
+        domain.standards.forEach(st => {
+          html += `
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-2xs space-y-3">
+              <div class="border-b border-slate-200 pb-2">
+                <div class="flex items-center justify-between text-xs text-slate-500">
+                  <span class="font-bold text-teal-800">Стандарт ${st.id}</span>
+                  <span class="text-[11px]">${st.applicability}</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 mt-0.5">${st.title}</h3>
+              </div>
+              <div class="space-y-3">
+          `;
+
+          st.criteria.forEach(c => {
+            const ans = c.answer;
+            html += `
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-2" id="criterion-box-${c.id}">
+                <div class="flex items-start justify-between gap-2">
+                  <span class="text-slate-800 leading-relaxed font-normal">
+                    <strong class="text-slate-900">#${c.number}.</strong> ${c.description}
+                    ${c.is_critical ? '<span class="ml-1 text-[11px] text-rose-700 font-bold bg-rose-50 px-1.5 py-0.5 rounded border border-rose-300">⚠️ Критик талаб</span>' : ''}
+                  </span>
+                </div>
+                
+                <!-- BUTTONS: PURE TEXT WITHOUT NUMERICAL SCORES AS REQUESTED -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1" id="btn-group-${c.id}">
+                  <button type="button" onclick="saveAnswer(${c.id}, 'YES')" id="btn-${c.id}-YES" class="py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center ${ans === 'YES' ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs' : 'bg-white text-slate-800 border-slate-300 hover:border-emerald-600'}">
+                    ✓ Бор
+                  </button>
+                  <button type="button" onclick="saveAnswer(${c.id}, 'PARTIAL')" id="btn-${c.id}-PARTIAL" class="py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center ${ans === 'PARTIAL' ? 'bg-amber-600 text-white border-amber-600 shadow-xs' : 'bg-white text-slate-800 border-slate-300 hover:border-amber-500'}">
+                    ⏳ Қисман
+                  </button>
+                  <button type="button" onclick="saveAnswer(${c.id}, 'NO')" id="btn-${c.id}-NO" class="py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center ${ans === 'NO' ? 'bg-rose-700 text-white border-rose-700 shadow-xs' : 'bg-white text-slate-800 border-slate-300 hover:border-rose-600'}">
+                    ✕ Йўқ
+                  </button>
+                  <button type="button" onclick="saveAnswer(${c.id}, 'NA')" id="btn-${c.id}-NA" class="py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center ${ans === 'NA' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-500 border-slate-300 hover:bg-slate-100'}">
+                    — Тааллуқли эмас
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+
+          html += `</div></div>`;
+        });
+
+        html += `</div>`; // Close domain-scroll-block
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Save answer without re-rendering whole feed (smooth, no scroll jump!)
+    async function saveAnswer(criterionId, answerValue) {
+      // 1. Immediately update buttons in DOM
+      const btnGroup = document.getElementById(`btn-group-${criterionId}`);
+      if (btnGroup) {
+        const btns = btnGroup.querySelectorAll('button');
+        btns.forEach(b => {
+          b.className = "py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center bg-white text-slate-800 border-slate-300";
+        });
+        
+        const activeBtn = document.getElementById(`btn-${criterionId}-${answerValue}`);
+        if (activeBtn) {
+          if (answerValue === 'YES') activeBtn.className = "py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center bg-emerald-700 text-white border-emerald-700 shadow-xs";
+          else if (answerValue === 'PARTIAL') activeBtn.className = "py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center bg-amber-600 text-white border-amber-600 shadow-xs";
+          else if (answerValue === 'NO') activeBtn.className = "py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center bg-rose-700 text-white border-rose-700 shadow-xs";
+          else if (answerValue === 'NA') activeBtn.className = "py-2.5 px-3 rounded-lg border font-bold transition cursor-pointer text-center bg-slate-700 text-white border-slate-700";
+        }
+      }
+
+      // 2. Send PATCH API request to backend
+      try {
+        const res = await fetch(`/api/v1/audit-sessions/${activeSessionId}/save-answer`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ criterion_id: criterionId, answer_value: answerValue })
+        });
+        const data = await res.json();
+        updateScoreHeader(data.score);
+      } catch (e) {
+        console.error("Autosave xatoligi:", e);
+      }
+    }
+
+    function updateScoreHeader(score) {
+      if (!score) return;
+      document.getElementById('score-percent').textContent = score.total_score + '%';
+      document.getElementById('score-counts').textContent = `${score.yes_count} бор, ${score.partial_count} қисман / ${score.applicable_criteria} mezon`;
+      document.getElementById('progress-bar-fill').style.width = score.total_score + '%';
+    }
+
+    async function submitFullAssessment() {
+      if (confirm("Haqiqatdan ham akkreditatsiya chek-listini yakunlab, komissiyaga topshirmoqchimisiz?")) {
+        const res = await fetch(`/api/v1/audit-sessions/${activeSessionId}/submit`, { method: "POST" });
+        const data = await res.json();
+        alert(`Muvaffaqiyatli topshirildi!\nAkkreditatsiya arizasi №: ${activeSessionId}\nYakuniy ball: ${data.final_score.total_score}%\nHolati: ${data.final_score.readiness_category}`);
+        window.location.href = "/backoffice";
+      }
+    }
+  </script>
+</body>
+</html>

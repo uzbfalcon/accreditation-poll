@@ -1,0 +1,20 @@
+# Dependencies & build
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# SQLite ma'lumotlar bazasi (shaxsiy/ish ma'lumotlari — public repo'ga yuklanmaydi)
+*.db
+*.db-shm
+*.db-wal
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Env & OS
+.env*
+.DS_Store

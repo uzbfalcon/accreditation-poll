@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uz" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>clamo.uz - Backoffice Monitoring Paneli (Akkreditatsiya Boshqaruvi)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    * { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    
+    @media print {
+      body * { visibility: hidden; }
+      #printable-pdf, #printable-pdf * { visibility: visible; }
+      #printable-pdf { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 h-full flex flex-col antialiased selection:bg-teal-500 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-teal-500/20">
+          ✚
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg tracking-tight text-slate-900">clamo<span class="text-teal-600">.uz</span></span>
+            <span class="bg-teal-50 text-teal-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-teal-200 uppercase tracking-wider">Backoffice Monitoring</span>
+          </div>
+          <p class="text-[11px] text-slate-500 hidden sm:block">Milliy akkreditatsiya standartlari (75 standart, 275 mezon) monitoringi</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/" class="text-xs font-semibold text-slate-600 hover:text-teal-600 flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <span>Klinika So'rovnomasiga O'tish</span>
+        </a>
+        <a href="/api/v1/backoffice/export-excel" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          <span>Excel (CSV) Eksport</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    
+    <!-- 4 TOP HIGH VALUE KPI CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Topshirgan Klinikalar</span>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 tracking-tight" id="kpi-total">...</span>
+          <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Faol monitoring</span>
+        </div>
+        <p class="mt-2 text-xs text-slate-500">Respublika bo'yicha jami arizalar</p>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">O'rtacha Milliy Ball</span>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-blue-600 font-mono tracking-tight" id="kpi-avg">...%</span>
+          <span class="text-xs text-slate-400">O'tish: 75.0%</span>
+        </div>
+        <p class="mt-2 text-xs text-slate-500">275 ta mezon bo'yicha tayyorgarlik</p>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">To'liq Tayyor (&ge;80%)</span>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-emerald-600 tracking-tight" id="kpi-ready">...</span>
+          <span class="text-xs text-emerald-700 font-semibold" id="kpi-ready-pct"></span>
+        </div>
+        <p class="mt-2 text-xs text-slate-500">Davlat akkreditatsiyasiga tavsiya etilgan</p>
+      </div>
+
+      <div class="bg-white border border-rose-200 bg-rose-50/20 rounded-2xl p-5 shadow-2xs">
+        <span class="text-xs font-bold text-rose-600 uppercase tracking-wider block">Xavfli Hudud (&lt;55%)</span>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-rose-600 tracking-tight" id="kpi-risk">...</span>
+          <span class="text-xs text-rose-700 font-semibold">Tuzatish choralari zarur</span>
+        </div>
+        <p class="mt-2 text-xs text-rose-800/80">Konsalting va yordamga muhtoj</p>
+      </div>
+    </div>
+
+    <!-- MIDDLE: REGIONS AND 7 DOMAINS -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- REGIONS BARS (7 COLS) -->
+      <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-2xs flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Viloyatlar Bo'yicha Natijalar va Ballar</h2>
+            <p class="text-xs text-slate-500">Topshirgan klinikalar soni va o'rtacha tayyorgarlik darajasi</p>
+          </div>
+          <select id="sel-region-sort" onchange="loadRegions()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 font-medium">
+            <option value="score_desc">Ball yuqoridan pastga</option>
+            <option value="count_desc">Klinikalar soni bo'yicha</option>
+            <option value="name_asc">Viloyat nomi bo'yicha</option>
+          </select>
+        </div>
+
+        <div class="space-y-3.5 flex-1 overflow-y-auto max-h-[350px] pr-2" id="regions-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- 7 DOMAINS BREAKDOWN (5 COLS) -->
+      <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-2xs">
+        <div class="mb-4">
+          <h2 class="text-base font-bold text-slate-900">7 ta Asosiy Bo'lim Bo'yicha Milliy Natijalar</h2>
+          <p class="text-xs text-slate-500">275 ta mezonning sohalar kesimidagi bajarilishi</p>
+        </div>
+
+        <div class="space-y-3" id="domains-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CLINICS REGISTRY TABLE WITH CASCADE FILTERS -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Akkreditatsiyaga Topshirgan Klinikalar Reyestri</h2>
+          <p class="text-xs text-slate-500">Viloyat, tuman, muassasa darajasi va natijalar bo'yicha filtrlash</p>
+        </div>
+      </div>
+
+      <!-- CASCADE FILTERS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-1">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Viloyat / Hudud</label>
+          <select id="flt-region" onchange="onRegionChange(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium">
+            <option value="all">Barcha viloyatlar</option>
+            <option value="Toshkent shahri">Toshkent shahri</option>
+            <option value="Toshkent viloyati">Toshkent viloyati</option>
+            <option value="Samarqand viloyati">Samarqand viloyati</option>
+            <option value="Farg'ona viloyati">Farg'ona viloyati</option>
+            <option value="Andijon viloyati">Andijon viloyati</option>
+            <option value="Buxoro viloyati">Buxoro viloyati</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Tuman / Shahar</label>
+          <select id="flt-district" onchange="loadClinics()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium">
+            <option value="all">Barcha tumanlar</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Daraja</label>
+          <select id="flt-level" onchange="loadClinics()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium">
+            <option value="all">Barchasi</option>
+            <option value="RESPUBLIKA">Respublika</option>
+            <option value="VILOYAT">Viloyat</option>
+            <option value="TUMAN">Tuman</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Holati</label>
+          <select id="flt-status" onchange="loadClinics()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium">
+            <option value="all">Barchasi</option>
+            <option value="ready">Tayyor (&ge;80%)</option>
+            <option value="partial">Qisman (55 - 79%)</option>
+            <option value="risk">Xavfli (&lt;55%)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Qidiruv (Klinika / INN)</label>
+          <input 
+            type="text" 
+            id="flt-search" 
+            placeholder="Nomi, INN, FIO..." 
+            oninput="loadClinics()"
+            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs"
+          />
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="overflow-x-auto border border-slate-200 rounded-xl mt-4">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+              <th class="py-3 px-4">Tashkilot nomi va INN</th>
+              <th class="py-3 px-3">Hudud & Tuman</th>
+              <th class="py-3 px-3">Daraja & Quvvat</th>
+              <th class="py-3 px-3 text-center">Mezonlar</th>
+              <th class="py-3 px-3 text-center">Tayyorgarlik Bali</th>
+              <th class="py-3 px-3 text-center">Holat</th>
+              <th class="py-3 px-4 text-right">Amallar</th>
+            </tr>
+          </thead>
+          <tbody id="clinics-table-body" class="divide-y divide-slate-100">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: CLINIC AUDIT PASSPORT & PDF GENERATOR -->
+  <div id="passport-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between border-b border-slate-200 pb-3">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">Akkreditatsiya Pasporti</span>
+          <h3 class="text-base font-bold text-slate-900 mt-1" id="pass-clinic-name">...</h3>
+          <p class="text-xs text-slate-400" id="pass-clinic-meta">...</p>
+        </div>
+        <button onclick="closePassportModal()" class="p-1 text-slate-400 hover:text-slate-600">✕</button>
+      </div>
+
+      <!-- 7 Domains Breakdown inside modal -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold text-slate-700">7 ta Bo'lim Bo'yicha Aniqlangan Natijalar (GAP Tahlili):</h4>
+        <div class="space-y-2" id="pass-domains-container"></div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+        <button onclick="closePassportModal()" class="px-4 py-2 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700">
+          Yopish
+        </button>
+        <button onclick="window.print()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs">
+          <span>Rasmiy PDF Xulosa (Chop etish)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const districtMapping = {
+      "Toshkent shahri": ["Barchasi", "Yunusobod", "Olmazor", "Mirobod", "Chilonzor", "Mirzo Ulug'bek", "Shayxontohur", "Yakkasaroy"],
+      "Toshkent viloyati": ["Barchasi", "Chirchiq sh.", "Angren sh.", "Qibray", "Zangiota", "Olmaliq sh."],
+      "Samarqand viloyati": ["Barchasi", "Samarqand sh.", "Kattaqo'rg'on sh.", "Pastdarg'om", "Urgut", "Jomboy"],
+      "Farg'ona viloyati": ["Barchasi", "Farg'ona sh.", "Qo'qon sh.", "Marg'ilon sh.", "Quva"],
+      "Andijon viloyati": ["Barchasi", "Andijon sh.", "Asaka", "Shahrixon", "Xo'jaobod"],
+      "Buxoro viloyati": ["Barchasi", "Buxoro sh.", "G'ijduvon", "Kogon sh."]
+    };
+
+    async function initDashboard() {
+      await loadSummary();
+      await loadRegions();
+      await loadDomains();
+      await loadClinics();
+    }
+
+    async function loadSummary() {
+      const res = await fetch("/api/v1/backoffice/dashboard/summary");
+      const d = await res.json();
+      document.getElementById('kpi-total').textContent = d.total_clinics;
+      document.getElementById('kpi-avg').textContent = d.avg_score + '%';
+      document.getElementById('kpi-ready').textContent = d.ready_clinics;
+      document.getElementById('kpi-risk').textContent = d.risk_clinics;
+      if (d.total_clinics > 0) {
+        document.getElementById('kpi-ready-pct').textContent = `(${Math.round(d.ready_clinics / d.total_clinics * 100)}%)`;
+      }
+    }
+
+    async function loadRegions() {
+      const sort = document.getElementById('sel-region-sort').value;
+      const res = await fetch(`/api/v1/backoffice/dashboard/regions-breakdown?sort_by=${sort}`);
+      const regions = await res.json();
+      const container = document.getElementById('regions-container');
+      
+      container.innerHTML = regions.map(reg => {
+        let barColor = reg.avgScore >= 75 ? "bg-emerald-500" : (reg.avgScore >= 55 ? "bg-amber-500" : "bg-rose-500");
+        return `
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800">${reg.name} (${reg.count} ta klinika)</span>
+              <span class="font-bold font-mono text-slate-900">${reg.avgScore}%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div class="${barColor} h-full rounded-full" style="width: ${reg.avgScore}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadDomains() {
+      const res = await fetch("/api/v1/backoffice/dashboard/domains-breakdown");
+      const domains = await res.json();
+      const container = document.getElementById('domains-container');
+
+      container.innerHTML = domains.map(d => {
+        let barColor = d.is_weakest ? "bg-rose-500" : (d.score >= 75 ? "bg-emerald-500" : "bg-teal-500");
+        return `
+          <div class="p-2.5 bg-slate-50 border ${d.is_weakest ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'} rounded-xl text-xs">
+            <div class="flex justify-between font-semibold text-slate-800 mb-1">
+              <span class="truncate">${d.id}. ${d.name} ${d.is_weakest ? '⚠️' : ''}</span>
+              <span class="font-mono ${d.is_weakest ? 'text-rose-600 font-bold' : ''}">${d.score}%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+              <div class="${barColor} h-full rounded-full" style="width: ${d.score}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function onRegionChange(reg) {
+      const distSelect = document.getElementById('flt-district');
+      distSelect.innerHTML = '<option value="all">Barcha tumanlar</option>';
+      if (reg !== 'all' && districtMapping[reg]) {
+        districtMapping[reg].forEach(d => {
+          if (d !== "Barchasi") {
+            const opt = document.createElement("option");
+            opt.value = d;
+            opt.textContent = d;
+            distSelect.appendChild(opt);
+          }
+        });
+      }
+      loadClinics();
+    }
+
+    async function loadClinics() {
+      const region = document.getElementById('flt-region').value;
+      const district = document.getElementById('flt-district').value;
+      const level = document.getElementById('flt-level').value;
+      const status = document.getElementById('flt-status').value;
+      const search = document.getElementById('flt-search').value;
+
+      const params = new URLSearchParams({ region, district, level, status, search });
+      const res = await fetch(`/api/v1/backoffice/clinics?${params}`);
+      const clinics = await res.json();
+
+      const tbody = document.getElementById('clinics-table-body');
+      if (clinics.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Klinika topilmadi</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = clinics.map(c => {
+        let badge = c.status === "ready" 
+          ? `<span class="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px]">✓ Tayyor</span>`
+          : (c.status === "partial" ? `<span class="bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded text-[10px]">⏳ Qisman</span>`
+          : `<span class="bg-rose-50 text-rose-700 font-semibold px-2 py-0.5 rounded text-[10px]">⚠️ Xavfli</span>`);
+
+        return `
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="py-3 px-4">
+              <strong class="text-slate-900 block font-semibold">${c.name}</strong>
+              <span class="text-[11px] font-mono text-slate-400">INN: ${c.inn}</span>
+            </td>
+            <td class="py-3 px-3">
+              <span>${c.region}</span>
+              <span class="block text-[11px] text-slate-400">${c.district}</span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded text-[10px] font-bold">${c.level}</span>
+              <span class="block text-[11px] text-slate-400">${c.capacity}</span>
+            </td>
+            <td class="py-3 px-3 text-center font-mono">
+              ${c.criteriaDone} <span class="text-slate-400">/ ${c.totalCriteria}</span>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <strong class="font-mono text-xs ${c.score >= 80 ? 'text-emerald-600' : (c.score >= 60 ? 'text-amber-600' : 'text-rose-600')}">
+                ${c.score}%
+              </strong>
+            </td>
+            <td class="py-3 px-3 text-center">${badge}</td>
+            <td class="py-3 px-4 text-right">
+              <button onclick="openPassport('${c.session_id}')" class="px-2.5 py-1 rounded bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold text-xs transition cursor-pointer">
+                Pasport & PDF
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function openPassport(sessionId) {
+      const res = await fetch(`/api/v1/backoffice/clinics/${sessionId}/audit-passport`);
+      const data = await res.json();
+      const clinic = data.clinic;
+      const score = data.score;
+
+      document.getElementById('pass-clinic-name').textContent = clinic.name;
+      document.getElementById('pass-clinic-meta').textContent = `${clinic.region}, ${clinic.district} • INN: ${clinic.inn} • Tayyorgarlik: ${score.total_score}%`;
+
+      const domainsContainer = document.getElementById('pass-domains-container');
+      domainsContainer.innerHTML = score.domains.map(d => `
+        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+          <div class="flex justify-between font-semibold mb-1">
+            <span>${d.id}. ${d.name}</span>
+            <span class="font-mono font-bold">${d.score}%</span>
+          </div>
+          <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+            <div class="${d.score >= 75 ? 'bg-emerald-500' : (d.score >= 50 ? 'bg-amber-500' : 'bg-rose-500')} h-full" style="width: ${d.score}%"></div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('passport-modal').classList.remove('hidden');
+    }
+
+    function closePassportModal() {
+      document.getElementById('passport-modal').classList.add('hidden');
+    }
+
+    initDashboard();
+  </script>
+</body>
+</html>
