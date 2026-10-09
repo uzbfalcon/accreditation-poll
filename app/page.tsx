@@ -902,8 +902,48 @@ export default function ChecklistPortalPage() {
                 </div>
               </div>
 
-              {/* STEP 2: HUDUD, TUMAN, KADASTR, DARAJA — hudud va tumanlar lib/regions.ts ro'yxatidan */}
+              {/* STEP 2: DARAJA, KADASTR, HUDUD, TUMAN — hudud va tumanlar lib/regions.ts ro'yxatidan */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div>
+                  <label htmlFor="level" className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Muassasa darajasi *
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="level"
+                      value={level}
+                      onChange={(e) => setLevel(e.target.value)}
+                      required
+                      className={`w-full appearance-none pl-3 pr-10 py-2.5 border border-slate-300 rounded-xl text-xs bg-white cursor-pointer focus:ring-2 focus:ring-teal-500 focus:outline-none ${
+                        level ? 'text-slate-800' : 'text-slate-400'
+                      }`}
+                    >
+                      <option value="" disabled>
+                        Tanlang
+                      </option>
+                      <option value="RESPUBLIKA">Respublika darajasi</option>
+                      <option value="VILOYAT">Viloyat darajasi</option>
+                      <option value="TUMAN">Tuman darajasi</option>
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="cadastre" className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Kadastr raqami *
+                  </label>
+                  <input
+                    id="cadastre"
+                    type="text"
+                    value={cadastre}
+                    onChange={(e) => setCadastre(e.target.value)}
+                    placeholder="XX:XX:XX:XX:XX:XXXX"
+                    className="w-full px-3 py-2.5 border border-slate-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-teal-500"
+                    required
+                  />
+                </div>
+
                 <div>
                   <label htmlFor="region" className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Viloyat / Hudud *
@@ -957,46 +997,6 @@ export default function ChecklistPortalPage() {
                           {d}
                         </option>
                       ))}
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="cadastre" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Kadastr raqami *
-                  </label>
-                  <input
-                    id="cadastre"
-                    type="text"
-                    value={cadastre}
-                    onChange={(e) => setCadastre(e.target.value)}
-                    placeholder="XX:XX:XX:XX:XX:XXXX"
-                    className="w-full px-3 py-2.5 border border-slate-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-teal-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="level" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Muassasa darajasi *
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="level"
-                      value={level}
-                      onChange={(e) => setLevel(e.target.value)}
-                      required
-                      className={`w-full appearance-none pl-3 pr-10 py-2.5 border border-slate-300 rounded-xl text-xs bg-white cursor-pointer focus:ring-2 focus:ring-teal-500 focus:outline-none ${
-                        level ? 'text-slate-800' : 'text-slate-400'
-                      }`}
-                    >
-                      <option value="" disabled>
-                        Tanlang
-                      </option>
-                      <option value="RESPUBLIKA">Respublika darajasi</option>
-                      <option value="VILOYAT">Viloyat darajasi</option>
-                      <option value="TUMAN">Tuman darajasi</option>
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   </div>
