@@ -1,4 +1,7 @@
 #!/bin/bash
+# ZAXIRA USUL. Odatda deploy avtomatik: main branch'ga push → GitHub Actions (.github/workflows/deploy.yml).
+# Bu skript faqat GitHub Actions ishlamay qolganda qo'lda yuklash uchun.
+#
 # Plesk shared hosting'ga deploy (Node.js extension / Passenger).
 # Ishga tushirish: ./deploy/deploy.sh          — kodni yangilaydi, serverdagi DB'ga tegmaydi
 #                  ./deploy/deploy.sh --with-db — lokal DB'ni ham yuklaydi (serverdagi ma'lumot o'chadi!)

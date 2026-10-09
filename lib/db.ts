@@ -3,6 +3,8 @@ import path from 'path';
 // Standart va mezonlarning o'zbekcha matnlari (scripts/import_standards_xlsx.py yaratadi)
 import standardsContent from '@/data/standards_uz.json';
 import { OFERTA_SEED } from '@/data/oferta_seed';
+import { isStrictSectionFlow } from '@/lib/checklist-config';
+import { ANSWER_SHARE, GOLD_WEIGHT, PASSING_PERCENT, REGULAR_WEIGHT, categorize, categoryLabel, type ReadinessCategory } from '@/lib/readiness';
 
 const DB_PATH = process.env.CLAMO_DB_PATH || path.join(process.cwd(), 'clamo_accreditation.db');
 
@@ -19,7 +21,10 @@ export function getDb(): Database.Database {
       dbInstance.exec('ALTER TABLE audit_sessions ADD COLUMN final_stage_at TEXT');
     }
 
-    if ((dbInstance.pragma('user_version', { simple: true }) as number) < standardsContent.version) {
+    // Ma'lumotlar migratsiyalari PRAGMA user_version bo'yicha ketma-ket: 1–3 — standartlar matni (data/standards_uz.json
+    // «version»), 4 — ballarni qayta hisoblash. Keyingi standartlar yangilanishi JSON'da version 5 dan boshlanishi kerak.
+    const contentVersion = dbInstance.pragma('user_version', { simple: true }) as number;
+    if (contentVersion < standardsContent.version) {
       applyStandardsContent(dbInstance);
     }
 
@@ -35,6 +40,24 @@ export function getDb(): Database.Database {
     dbInstance
       .prepare("INSERT OR IGNORE INTO site_pages (slug, title, content, updated_at) VALUES (?, ?, ?, datetime('now'))")
       .run(OFERTA_SEED.slug, OFERTA_SEED.title, OFERTA_SEED.content);
+
+    // v3: «Tegishli emas» atamasi «Tadbiq etilmaydi» ga almashtirildi (admin'da tahrirlangan oferta matnida ham)
+    if (contentVersion < 3) {
+      dbInstance
+        .prepare("UPDATE site_pages SET content = replace(content, '«Tegishli emas»', '«Tadbiq etilmaydi»') WHERE content LIKE '%«Tegishli emas»%'")
+        .run();
+    }
+
+    // v4: Gold vazni (1.3) va 16-son qaror toifalari (75/85/95) — saqlangan ball/toifa barcha sessiyalar uchun
+    // bir marta qayta hisoblanadi (updated_at o'zgarmaydi)
+    if (contentVersion < 4) {
+      const db = dbInstance;
+      const sessionIds = db.prepare('SELECT id FROM audit_sessions').all() as Array<{ id: string }>;
+      db.transaction(() => {
+        for (const { id } of sessionIds) calculateSessionScore(id, { touch: false });
+        db.pragma('user_version = 4');
+      })();
+    }
   }
   return dbInstance;
 }
@@ -178,130 +201,106 @@ export interface SessionScoreResult {
   partial_count: number;
   no_count: number;
   na_count: number;
+  // Olingan va maksimal ball (Gold mezon — 1.3, oddiy — 1; «Tadbiq etilmaydi» maksimal balldan chiqariladi)
+  earned_points: number;
+  max_points: number;
+  // Foiz — olingan ball / maksimal ball
   total_score: number;
-  readiness_category: 'READY' | 'PARTIALLY_READY' | 'NOT_READY';
+  readiness_category: ReadinessCategory;
   has_critical_stop_factors: boolean;
   critical_violations: CriticalViolation[];
   domains: DomainStat[];
 }
 
-export function calculateSessionScore(sessionId: string): SessionScoreResult {
+const round1 = (n: number) => Math.round(n * 10) / 10;
+
+// touch=false — natija qayta hisoblanadi, lekin sessiyaning updated_at vaqti o'zgarmaydi (migratsiyalar uchun)
+export function calculateSessionScore(sessionId: string, options: { touch?: boolean } = {}): SessionScoreResult {
   const db = getDb();
 
-  const query = `
-    SELECT 
-        c.id as criterion_id,
+  const rows = db.prepare(`
+    SELECT
+        c.id AS criterion_id,
         c.standard_id,
         c.criterion_number,
-        c.is_critical,
+        c.is_gold,
         s.domain_id,
         s.domain_name,
-        sa.answer_value,
-        sa.score_weight
+        sa.answer_value
     FROM criteria c
     JOIN standards s ON c.standard_id = s.id
     LEFT JOIN session_answers sa ON sa.criterion_id = c.id AND sa.session_id = ?
     ORDER BY c.id ASC
-  `;
-
-  const rows = db.prepare(query).all(sessionId) as Array<{
+  `).all(sessionId) as Array<{
     criterion_id: number;
     standard_id: number;
     criterion_number: number;
-    is_critical: number;
+    is_gold: number | null;
     domain_id: number;
     domain_name: string;
     answer_value: string | null;
-    score_weight: number | null;
   }>;
 
-  const totalCriteria = rows.length;
   let yesCount = 0;
   let partialCount = 0;
   let noCount = 0;
   let naCount = 0;
-
-  const domainStats: Record<number, DomainStat> = {
-    1: { id: 1, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-    2: { id: 2, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-    3: { id: 3, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-    4: { id: 4, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-    5: { id: 5, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-    6: { id: 6, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-    7: { id: 7, name: '', total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0.0 },
-  };
-
+  let earned = 0;
+  let max = 0;
+  const domainStats: Record<number, DomainStat & { earned: number; max: number }> = {};
   const criticalViolations: CriticalViolation[] = [];
 
   for (const r of rows) {
-    const dId = r.domain_id;
-    if (domainStats[dId]) {
-      domainStats[dId].name = r.domain_name;
-      domainStats[dId].total += 1;
-    }
+    const d = (domainStats[r.domain_id] ??= {
+      id: r.domain_id, name: r.domain_name, total: 0, yes: 0, partial: 0, no: 0, na: 0, score: 0, earned: 0, max: 0,
+    });
+    d.total += 1;
 
     const ans = r.answer_value;
+    if (ans === 'NA') {
+      naCount += 1;
+      d.na += 1;
+      continue;
+    }
+
+    const weight = r.is_gold ? GOLD_WEIGHT : REGULAR_WEIGHT;
+    const points = weight * (ANSWER_SHARE[ans ?? 'NO'] ?? 0);
+    max += weight;
+    earned += points;
+    d.max += weight;
+    d.earned += points;
+
     if (ans === 'YES') {
       yesCount += 1;
-      if (domainStats[dId]) domainStats[dId].yes += 1;
+      d.yes += 1;
     } else if (ans === 'PARTIAL') {
       partialCount += 1;
-      if (domainStats[dId]) domainStats[dId].partial += 1;
-    } else if (ans === 'NA') {
-      naCount += 1;
-      if (domainStats[dId]) domainStats[dId].na += 1;
+      d.partial += 1;
     } else {
-      // NO or UNANSWERED
+      // NO yoki javob berilmagan
       noCount += 1;
-      if (domainStats[dId]) domainStats[dId].no += 1;
-
-      // Check critical stop factors
-      const stNum = r.standard_id;
-      const cNum = r.criterion_number;
-      const isCritical = CRITICAL_STOP_FACTORS.some(([s, c]) => s === stNum && c === cNum);
-      if (isCritical) {
+      d.no += 1;
+      if (CRITICAL_STOP_FACTORS.some(([st, cn]) => st === r.standard_id && cn === r.criterion_number)) {
         criticalViolations.push({
-          standard_id: stNum,
-          criterion_number: cNum,
-          message: `Standart #${stNum}, Mezon #${cNum}: Kritik xavfsizlik talabi bajarilmagan!`,
+          standard_id: r.standard_id,
+          criterion_number: r.criterion_number,
+          message: `Standart #${r.standard_id}, Mezon #${r.criterion_number}: Kritik xavfsizlik talabi bajarilmagan!`,
         });
       }
     }
   }
 
-  // Calculate domain percentages
-  for (const dId of Object.keys(domainStats).map(Number)) {
-    const dData = domainStats[dId];
-    const applicable = dData.total - dData.na;
-    if (applicable > 0) {
-      const points = dData.yes * 1.0 + dData.partial * 0.5;
-      dData.score = Math.round((points / applicable) * 1000) / 10;
-    } else {
-      dData.score = 100.0;
-    }
-  }
+  const domains: DomainStat[] = Object.values(domainStats)
+    .sort((a, b) => a.id - b.id)
+    .map(({ earned: e, max: m, ...d }) => ({ ...d, score: m > 0 ? round1((e / m) * 100) : 100.0 }));
 
-  const applicableTotal = totalCriteria - naCount;
-  let totalPercentage = 0.0;
-  if (applicableTotal > 0) {
-    const totalPoints = yesCount * 1.0 + partialCount * 0.5;
-    totalPercentage = Math.round((totalPoints / applicableTotal) * 1000) / 10;
-  }
+  const applicableTotal = rows.length - naCount;
+  const totalPercentage = max > 0 ? round1((earned / max) * 100) : 0.0;
+  const category = categorize(totalPercentage, criticalViolations.length > 0);
 
-  // Categorize
-  let category: 'READY' | 'PARTIALLY_READY' | 'NOT_READY' = 'NOT_READY';
-  if (totalPercentage >= 80.0 && criticalViolations.length === 0) {
-    category = 'READY';
-  } else if (totalPercentage >= 55.0) {
-    category = 'PARTIALLY_READY';
-  } else {
-    category = 'NOT_READY';
-  }
-
-  // Update in database
-  const updateStmt = db.prepare(`
+  db.prepare(`
     UPDATE audit_sessions
-    SET 
+    SET
         total_applicable = ?,
         criteria_yes = ?,
         criteria_partial = ?,
@@ -309,12 +308,9 @@ export function calculateSessionScore(sessionId: string): SessionScoreResult {
         criteria_na = ?,
         total_score = ?,
         readiness_category = ?,
-        has_critical_stop_factors = ?,
-        updated_at = datetime('now')
+        has_critical_stop_factors = ?${options.touch === false ? '' : ",\n        updated_at = datetime('now')"}
     WHERE id = ?
-  `);
-
-  updateStmt.run(
+  `).run(
     applicableTotal,
     yesCount,
     partialCount,
@@ -328,17 +324,19 @@ export function calculateSessionScore(sessionId: string): SessionScoreResult {
 
   return {
     session_id: sessionId,
-    total_criteria: totalCriteria,
+    total_criteria: rows.length,
     applicable_criteria: applicableTotal,
     yes_count: yesCount,
     partial_count: partialCount,
     no_count: noCount,
     na_count: naCount,
+    earned_points: round1(earned),
+    max_points: round1(max),
     total_score: totalPercentage,
     readiness_category: category,
     has_critical_stop_factors: criticalViolations.length > 0,
     critical_violations: criticalViolations,
-    domains: Object.values(domainStats),
+    domains,
   };
 }
 
@@ -605,14 +603,30 @@ export function getChecklist(sessionId: string) {
     session: sessionRow,
     score: scoreData,
     domains: resultDomains,
+    strict_flow: isStrictSectionFlow(),
   };
+}
+
+// Qat'iy oqim: oldingi bo'lim to'liq bo'lmasa keyingisiga javob berilmaydi; yakuniy bo'limga o'tilgach oldingilari yopiladi
+function assertSectionOrder(sessionId: string, finalStageAt: string | null, domainId: number) {
+  const progress = getDomainProgress(sessionId);
+  const lastDomainId = progress[progress.length - 1].domain_id;
+  if (finalStageAt && domainId !== lastDomainId) {
+    throw new FlowError(`Yakuniy ${lastDomainId}-bo'limga o'tilgan, oldingi bo'limlarni o'zgartirib bo'lmaydi`);
+  }
+  if (!finalStageAt && domainId === lastDomainId) {
+    throw new FlowError(`${lastDomainId}-bo'limga o'tish hali tasdiqlanmagan`);
+  }
+  const incomplete = progress.find((p) => p.domain_id < domainId && p.answered < p.total);
+  if (incomplete) {
+    throw new FlowError(`Avval ${incomplete.domain_id}-bo'limni to'liq to'ldiring`);
+  }
 }
 
 export function saveAnswer(sessionId: string, criterionId: number, answerValue: string, note: string = '') {
   const db = getDb();
 
-  // Bo'limlar ketma-ketligi: oldingi bo'lim to'liq bo'lmasa keyingisiga javob berib bo'lmaydi;
-  // yakuniy bo'limga o'tilgach, oldingi bo'limlar yopiladi.
+  // Topshirilgan arizaga javob yozilmaydi; bo'limlar ketma-ketligi faqat qat'iy oqimda tekshiriladi
   const session = db.prepare('SELECT final_stage_at, status FROM audit_sessions WHERE id = ?').get(sessionId) as
     { final_stage_at: string | null; status: string } | undefined;
   if (session?.status === 'SUBMITTED') {
@@ -624,17 +638,8 @@ export function saveAnswer(sessionId: string, criterionId: number, answerValue: 
   if (!session || !crit) {
     throw new FlowError('Sessiya yoki mezon topilmadi');
   }
-  const progress = getDomainProgress(sessionId);
-  const lastDomainId = progress[progress.length - 1].domain_id;
-  if (session.final_stage_at && crit.domain_id !== lastDomainId) {
-    throw new FlowError(`Yakuniy ${lastDomainId}-bo'limga o'tilgan, oldingi bo'limlarni o'zgartirib bo'lmaydi`);
-  }
-  if (!session.final_stage_at && crit.domain_id === lastDomainId) {
-    throw new FlowError(`${lastDomainId}-bo'limga o'tish hali tasdiqlanmagan`);
-  }
-  const incomplete = progress.find((p) => p.domain_id < crit.domain_id && p.answered < p.total);
-  if (incomplete) {
-    throw new FlowError(`Avval ${incomplete.domain_id}-bo'limni to'liq to'ldiring`);
+  if (isStrictSectionFlow()) {
+    assertSectionOrder(sessionId, session.final_stage_at, crit.domain_id);
   }
 
   let weight: number | null = 0.0;
@@ -705,9 +710,11 @@ export function submitSession(sessionId: string) {
     if (other) {
       throw new AlreadySubmittedError(other.submitted_at);
     }
-    const incomplete = getDomainProgress(sessionId).find((p) => p.answered < p.total);
-    if (!session.final_stage_at || incomplete) {
-      throw new FlowError("Arizani topshirish uchun barcha bo'limlarni to'liq to'ldiring");
+    if (isStrictSectionFlow()) {
+      const incomplete = getDomainProgress(sessionId).find((p) => p.answered < p.total);
+      if (!session.final_stage_at || incomplete) {
+        throw new FlowError("Arizani topshirish uchun barcha bo'limlarni to'liq to'ldiring");
+      }
     }
     const updatedScore = calculateSessionScore(sessionId);
     db.prepare(`
@@ -736,7 +743,7 @@ export function getBackofficeSummary() {
   const totalSubmitted = countRes?.cnt || 0;
   const avgScore = Math.round((countRes?.avg_score || 0.0) * 10) / 10;
 
-  const readyRes = db.prepare("SELECT COUNT(*) as cnt FROM audit_sessions WHERE status = 'SUBMITTED' AND readiness_category = 'READY'").get() as { cnt: number };
+  const readyRes = db.prepare("SELECT COUNT(*) as cnt FROM audit_sessions WHERE status = 'SUBMITTED' AND readiness_category IN ('HIGHEST', 'FIRST', 'SECOND')").get() as { cnt: number };
   const readyCount = readyRes?.cnt || 0;
 
   const riskRes = db.prepare("SELECT COUNT(*) as cnt FROM audit_sessions WHERE status = 'SUBMITTED' AND readiness_category = 'NOT_READY'").get() as { cnt: number };
@@ -747,7 +754,7 @@ export function getBackofficeSummary() {
     avg_score: avgScore,
     ready_clinics: readyCount,
     risk_clinics: riskCount,
-    passing_threshold: 75.0,
+    passing_threshold: PASSING_PERCENT,
   };
 }
 
@@ -759,7 +766,7 @@ export function getBackofficeRegions(sortBy: string = 'score_desc') {
         o.region,
         COUNT(s.id) as count,
         AVG(s.total_score) as avg_score,
-        SUM(CASE WHEN s.readiness_category = 'READY' THEN 1 ELSE 0 END) as ready_count
+        SUM(CASE WHEN s.readiness_category IN ('HIGHEST', 'FIRST', 'SECOND') THEN 1 ELSE 0 END) as ready_count
     FROM audit_sessions s
     JOIN organizations o ON s.org_id = o.id
     WHERE s.status = 'SUBMITTED'
@@ -864,14 +871,9 @@ export function getBackofficeClinics(params: ClinicFilterParams) {
     query += ' AND o.level = ?';
     args.push(level);
   }
-  if (status !== 'all') {
-    if (status === 'ready') {
-      query += " AND s.readiness_category = 'READY'";
-    } else if (status === 'partial') {
-      query += " AND s.readiness_category = 'PARTIALLY_READY'";
-    } else if (status === 'risk') {
-      query += " AND s.readiness_category = 'NOT_READY'";
-    }
+  if (status !== 'all' && ['HIGHEST', 'FIRST', 'SECOND', 'NOT_READY'].includes(status)) {
+    query += ' AND s.readiness_category = ?';
+    args.push(status);
   }
 
   query += ' ORDER BY s.total_score DESC';
@@ -905,7 +907,7 @@ export function getBackofficeClinics(params: ClinicFilterParams) {
       criteriaDone: r.criteria_yes,
       totalCriteria: r.total_applicable,
       score: r.total_score,
-      status: r.readiness_category === 'READY' ? 'ready' : (r.readiness_category === 'PARTIALLY_READY' ? 'partial' : 'risk'),
+      category: r.readiness_category as ReadinessCategory,
       // Faqat haqiqatda topshirilgan sessiyalar uchun sana; qoralamada null
       date: r.status === 'SUBMITTED' ? r.submitted_at || null : null,
       submitted: r.status === 'SUBMITTED',
@@ -958,7 +960,7 @@ export function getExportCsv() {
 
   let csvContent = 'Tashkilot Nomi,INN,Viloyat,Tuman,Daraja,Tayyorgarlik Bali (%),Holati,Topshirilgan Sana\n';
   for (const r of rows) {
-    csvContent += `"${r.name}",${r.inn},${r.region},${r.district},${r.level},${r.total_score}%,${r.readiness_category},${r.submitted_at || ''}\n`;
+    csvContent += `"${r.name}",${r.inn},${r.region},${r.district},${r.level},${r.total_score}%,${categoryLabel(r.readiness_category)},${r.submitted_at || ''}\n`;
   }
 
   return csvContent;

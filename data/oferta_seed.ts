@@ -46,7 +46,7 @@ Mazkur hujjat [Ijrochining toʻliq nomi] (STIR: [STIR], keyingi oʻrinlarda — 
 
 - tashkilot pasportini (INN, nomi, kadastr raqami, hududi, darajasi, amalda koʻrsatilayotgan tibbiy xizmatlar) shakllantirish;
 - akkreditatsiya standartlari va mezonlari boʻyicha Chek-listni toʻldirish, javoblarni real vaqt rejimida saqlash;
-- Buyurtmachi koʻrsatmaydigan tibbiy xizmatlarga taalluqli mezonlarni «Tegishli emas» deb avtomatik belgilash;
+- Buyurtmachi koʻrsatmaydigan tibbiy xizmatlarga taalluqli mezonlarni «Tadbiq etilmaydi» deb avtomatik belgilash;
 - toʻldirilgan Chek-listni Ijrochiga koʻrib chiqish uchun topshirish va tayyorgarlik darajasi boʻyicha tahliliy maʼlumot olish.
 
 3.2. Xizmatlar Reglamentning 10-bandida nazarda tutilgan, akkreditatsiyalovchi organga ariza berishdan oldin oʻtkaziladigan oʻzini oʻzi baholashga tayyorgarlik koʻrish maqsadida koʻrsatiladi.
@@ -65,7 +65,7 @@ Mazkur hujjat [Ijrochining toʻliq nomi] (STIR: [STIR], keyingi oʻrinlarda — 
 
 ## 5. XIZMATLAR KOʻRSATISH TARTIBI
 
-5.1. Buyurtmachi tashkilot pasportini toʻldiradi va amalda koʻrsatilayotgan tibbiy xizmatlarni belgilaydi. Belgilangan xizmatlarga muvofiq taalluqli boʻlmagan standartlar avtomatik ravishda «Tegishli emas» deb belgilanadi va tayyorgarlik darajasini hisoblashda inobatga olinmaydi (Reglamentning 28-bandi bilan uygʻunlashtirilgan tartibda).
+5.1. Buyurtmachi tashkilot pasportini toʻldiradi va amalda koʻrsatilayotgan tibbiy xizmatlarni belgilaydi. Belgilangan xizmatlarga muvofiq taalluqli boʻlmagan standartlar avtomatik ravishda «Tadbiq etilmaydi» deb belgilanadi va tayyorgarlik darajasini hisoblashda inobatga olinmaydi (Reglamentning 28-bandi bilan uygʻunlashtirilgan tartibda).
 
 5.2. Chek-list boʻlimlar ketma-ketligida toʻldiriladi: navbatdagi boʻlim oldingi boʻlimdagi barcha mezonlarga javob berilgandan soʻng ochiladi. Yakuniy boʻlimga oʻtilganidan soʻng oldingi boʻlimlardagi javoblarni oʻzgartirish imkoniyati yopiladi.
 

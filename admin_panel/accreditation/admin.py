@@ -20,12 +20,13 @@ ANSWER_STYLES = {
     'YES': ('Bor', '#047857', '#ecfdf5'),
     'PARTIAL': ('Qisman', '#b45309', '#fffbeb'),
     'NO': ("Yo'q", '#be123c', '#fff1f2'),
-    'NA': ('Tegishli emas', '#475569', '#f1f5f9'),
+    'NA': ('Tadbiq etilmaydi', '#475569', '#f1f5f9'),
 }
 
 READINESS_STYLES = {
-    'READY': ('#047857', '#ecfdf5'),
-    'PARTIALLY_READY': ('#b45309', '#fffbeb'),
+    'HIGHEST': ('#047857', '#ecfdf5'),
+    'FIRST': ('#0f766e', '#f0fdfa'),
+    'SECOND': ('#0369a1', '#f0f9ff'),
     'NOT_READY': ('#be123c', '#fff1f2'),
 }
 
@@ -49,7 +50,7 @@ class OrganizationServicesInline(admin.StackedInline):
     model = OrganizationServices
     can_delete = False
     max_num = 1
-    verbose_name_plural = "Amaldagi xizmatlar («Tegishli emas» qoidalari)"
+    verbose_name_plural = "Amaldagi xizmatlar («Tadbiq etilmaydi» qoidalari)"
 
 
 class AuditSessionInline(admin.TabularInline):
@@ -349,7 +350,7 @@ class StandardAdmin(admin.ModelAdmin):
     def criteria_count(self, obj):
         return obj._criteria_count
 
-    # 75 ta standart tuzilmasi ball hisobi va «Tegishli emas» qoidalariga bog'langan — faqat matnni tahrirlash mumkin
+    # 75 ta standart tuzilmasi ball hisobi va «Tadbiq etilmaydi» qoidalariga bog'langan — faqat matnni tahrirlash mumkin
     def has_add_permission(self, request):
         return False
 

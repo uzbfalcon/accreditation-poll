@@ -1,0 +1,99 @@
+# main branch'ga push qilinganda Next.js ilovasini build qilib, Plesk hostingga (Passenger) yuklaydi.
+# Kerakli repo secret'lari: DEPLOY_SSH_KEY, DEPLOY_KNOWN_HOSTS, DEPLOY_HOST, DEPLOY_USER.
+# Serverdagi baza (clamo_accreditation.db*) va maxfiy sozlamalar (backoffice.env) deploy paytida o'zgartirilmaydi.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: https://lochinbek-ai.uz
+    steps:
+      - uses: actions/checkout@v4
+
+      # Serverdagi Plesk Node.js bilan bir xil major versiya — better-sqlite3 native moduli mos bo'lishi uchun
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Assemble bundle
+        run: |
+          set -euo pipefail
+          B=bundle
+          mkdir -p "$B"
+          cp -R .next/standalone/. "$B/"
+          cp -R public "$B/public"
+          cp -R .next/static "$B/.next/static"
+          rm -f "$B"/clamo_accreditation.db*
+          cp deploy/app.js "$B/app.js"
+          echo '{ "name": "clamo-accreditation-system", "version": "1.0.0", "private": true }' > "$B/package.json"
+          # better-sqlite3 Linux x64 uchun build qilingan bo'lishi kerak
+          file "$B/node_modules/better-sqlite3/build/Release/better_sqlite3.node" | grep -q 'ELF 64-bit.*x86-64'
+          tar czf clamo.tgz -C "$B" .
+          ls -lh clamo.tgz
+
+      - name: Configure SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      # Hosting ketma-ket SSH ulanishlarni cheklaydi — yuklash va o'rnatish bitta ulanishda.
+      # Yangi fayllar avval ~/release_new ga ochiladi, keyin httpdocs'dagi kod almashtiriladi (baza va backoffice.env saqlanadi).
+      - name: Upload and install
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if ssh -i ~/.ssh/id_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=20 \
+                "$DEPLOY_USER@$DEPLOY_HOST" 'set -e
+                  rm -rf ~/release_new && mkdir ~/release_new
+                  tar xzf - -C ~/release_new
+                  cd ~/httpdocs
+                  rm -rf .next.old node_modules.old
+                  [ -d .next ] && mv .next .next.old
+                  [ -d node_modules ] && mv node_modules node_modules.old
+                  cp -a ~/release_new/. ~/httpdocs/
+                  mkdir -p tmp && touch tmp/restart.txt
+                  rm -rf .next.old node_modules.old ~/release_new
+                  echo installed' < clamo.tgz; then
+              exit 0
+            fi
+            echo "SSH urinish $attempt muvaffaqiyatsiz, 30 soniyadan keyin qayta..."
+            sleep 30
+          done
+          exit 1
+
+      - name: Health check
+        run: |
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://lochinbek-ai.uz/ || true)
+            [ "$code" = 200 ] && echo "OK ($code)" && exit 0
+            echo "Kutilmoqda ($code)..."; sleep 10
+          done
+          exit 1
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/id_deploy

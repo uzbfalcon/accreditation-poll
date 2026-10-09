@@ -23,9 +23,11 @@ STATUS_CHOICES = [
     ('SUBMITTED', 'Topshirilgan'),
 ]
 
+# 16-son qaror (Reglament, 37-band) toifalari — lib/readiness.ts bilan bir xil
 READINESS_CHOICES = [
-    ('READY', 'Akkreditatsiyaga tayyor'),
-    ('PARTIALLY_READY', 'Qisman tayyor'),
+    ('HIGHEST', 'Oliy toifa (≥95%)'),
+    ('FIRST', 'Birinchi toifa (≥85%)'),
+    ('SECOND', 'Ikkinchi toifa (≥75%)'),
     ('NOT_READY', 'Tayyor emas'),
 ]
 
@@ -33,7 +35,7 @@ ANSWER_CHOICES = [
     ('YES', 'Bor'),
     ('PARTIAL', 'Qisman'),
     ('NO', "Yo'q"),
-    ('NA', 'Tegishli emas'),
+    ('NA', 'Tadbiq etilmaydi'),
 ]
 
 
@@ -140,7 +142,7 @@ class AuditSession(models.Model):
     criteria_yes = models.IntegerField('Bor', default=0)
     criteria_partial = models.IntegerField('Qisman', default=0)
     criteria_no = models.IntegerField("Yo'q", default=0)
-    criteria_na = models.IntegerField('Tegishli emas', default=0)
+    criteria_na = models.IntegerField('Tadbiq etilmaydi', default=0)
     total_score = models.FloatField('Ball (%)', default=0.0)
     readiness_category = models.TextField('Tayyorgarlik', choices=READINESS_CHOICES, default='NOT_READY')
     has_critical_stop_factors = models.BooleanField('Kritik stop-faktor', default=False)

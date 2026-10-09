@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { formatTashkentDateTime } from '@/lib/format';
+import ReadinessBadge, { scoreColorClass } from '@/components/ReadinessBadge';
 import {
   Check,
   Clock,
@@ -73,9 +74,15 @@ interface SubmissionConfirmation {
   phone: string;
   totalCriteria: number;
   completedCriteria: number;
+  // Dastlabki baholash natijasi (server hisoblaydi: Gold mezon — 1.3, oddiy — 1 ball)
+  earnedPoints: number;
+  maxPoints: number;
+  scorePercent: number;
+  category: string;
+  hasCriticalViolations: boolean;
 }
 
-// Hujjatdagi «Amalda ko'rsatilayotgan xizmatlar» jadvali tartibida (avtomatik «Tegishli emas» qoidalari: lib/db.ts STANDARD_SERVICE_RULES)
+// Hujjatdagi «Amalda ko'rsatilayotgan xizmatlar» jadvali tartibida (avtomatik «Tadbiq etilmaydi» qoidalari: lib/db.ts STANDARD_SERVICE_RULES)
 const SERVICE_OPTIONS = [
   { key: 'has_emergency_blue_code', label: "Shoshilinch yordam / «Ko'k kod»" },
   { key: 'has_surgery', label: "Jarrohlik bo'limi" },
@@ -134,6 +141,8 @@ export default function ChecklistPortalPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Yakuniy (oxirgi) bo'limga o'tilganmi — shundan keyin oldingi bo'limlarga qaytib bo'lmaydi
   const [finalStage, setFinalStage] = useState(false);
+  // Qat'iy oqim (bo'limlar ketma-ketligi) server sozlamasidan keladi: CHECKLIST_STRICT_FLOW
+  const [strictFlow, setStrictFlow] = useState(false);
   const [showFinalStageModal, setShowFinalStageModal] = useState(false);
   const [isEnteringFinalStage, setIsEnteringFinalStage] = useState(false);
 
@@ -184,7 +193,9 @@ export default function ChecklistPortalPage() {
   const loadChecklist = async (sessionId: string) => {
     const checkRes = await fetch(`/api/v1/audit-sessions/${sessionId}/checklist`);
     const checkData = await checkRes.json();
-    const isFinal = Boolean(checkData.session?.final_stage_at);
+    const strict = Boolean(checkData.strict_flow);
+    const isFinal = strict && Boolean(checkData.session?.final_stage_at);
+    setStrictFlow(strict);
     setDomains(checkData.domains);
     setScore(checkData.score);
     setFinalStage(isFinal);
@@ -371,27 +382,27 @@ export default function ChecklistPortalPage() {
   // Final submission
   const handleSubmitAssessment = async () => {
     if (!activeSessionId) return;
-    if (confirm("Haqiqatdan ham akkreditatsiya chek-listini yakunlab, komissiyaga topshirmoqchimisiz?")) {
+    const unanswered = checklistProgress.total - checklistProgress.answered;
+    const question =
+      unanswered > 0
+        ? `${unanswered} ta mezonga javob berilmagan — ular «Yo'q» deb hisoblanadi.\n\nBaribir arizani komissiyaga topshirasizmi? Topshirilgandan keyin javoblarni o'zgartirib bo'lmaydi.`
+        : "Haqiqatdan ham akkreditatsiya chek-listini yakunlab, komissiyaga topshirmoqchimisiz?";
+    if (confirm(question)) {
       setIsSubmitting(true);
       try {
         const res = await fetch(`/api/v1/audit-sessions/${activeSessionId}/submit`, {
           method: 'POST',
         });
+        const data = await res.json();
         if (!res.ok) {
-          const data = await res.json();
           alert(data.error || "Xatolik: Arizani topshirib bo'lmadi");
           return;
         }
+        const finalScore = data.final_score;
 
-        const now = new Date();
-        const formattedDate = new Intl.DateTimeFormat('uz-UZ', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        }).format(now);
+        // Brauzerning «uz-UZ» formati «2026 M10 9» ko'rinishida chiqadi — umumiy Toshkent formati ishlatiladi
+        const submittedAtParts = formatTashkentDateTime(new Date().toISOString());
+        const formattedDate = `${submittedAtParts.date}, ${submittedAtParts.time}`;
 
         setSubmissionSuccess({
           sessionId: activeSessionId,
@@ -402,8 +413,13 @@ export default function ChecklistPortalPage() {
           region: region || "O'zbekiston Respublikasi",
           fio: fio || '—',
           phone: phone || '—',
-          totalCriteria: checklistProgress.total || 275,
-          completedCriteria: checklistProgress.answered || 275,
+          totalCriteria: checklistProgress.total,
+          completedCriteria: checklistProgress.answered,
+          earnedPoints: finalScore.earned_points,
+          maxPoints: finalScore.max_points,
+          scorePercent: finalScore.total_score,
+          category: finalScore.readiness_category,
+          hasCriticalViolations: finalScore.has_critical_stop_factors,
         });
       } catch (e) {
         alert("Xatolik: Arizani topshirib bo'lmadi");
@@ -433,9 +449,21 @@ export default function ChecklistPortalPage() {
     return map;
   }, [domains]);
 
-  // Section flow: next section unlocks only when the previous one is fully answered;
+  // Section flow (strict mode only): next section unlocks only when the previous one is fully answered;
   // the last section requires confirmation and closes all earlier sections.
+  // Non-strict mode: all sections open, submission allowed at any time.
   const domainFlow = useMemo(() => {
+    if (!strictFlow) {
+      return {
+        lastDomain: domains[domains.length - 1],
+        maxUnlockedIdx: domains.length - 1,
+        canEnterFinal: false,
+        visibleDomains: domains,
+        gateDomain: undefined as DomainItem | undefined,
+        canSubmit: domains.length > 0,
+        isUnlocked: (_id: number): boolean => true,
+      };
+    }
     const isDone = (id: number) => {
       const s = domainStatsMap[id];
       return Boolean(s && s.totalCriteria > 0 && s.answeredCount === s.totalCriteria);
@@ -451,7 +479,7 @@ export default function ChecklistPortalPage() {
     const isUnlocked = (id: number) =>
       finalStage ? id === lastDomain?.id : domains.findIndex((d) => d.id === id) <= maxUnlockedIdx;
     return { lastDomain, maxUnlockedIdx, canEnterFinal, visibleDomains, gateDomain, canSubmit, isUnlocked };
-  }, [domains, domainStatsMap, finalStage]);
+  }, [domains, domainStatsMap, finalStage, strictFlow]);
 
   const handleEnterFinalStage = async () => {
     if (!activeSessionId || !domainFlow.lastDomain) return;
@@ -591,9 +619,64 @@ export default function ChecklistPortalPage() {
                     <span>To&apos;ldirilgan mezonlar</span>
                   </div>
                   <div className="font-bold text-sm text-emerald-700">
-                    {submissionSuccess.completedCriteria} / {submissionSuccess.totalCriteria} ta mezon (100%)
+                    {submissionSuccess.completedCriteria} / {submissionSuccess.totalCriteria} ta mezon (
+                    {submissionSuccess.totalCriteria > 0
+                      ? Math.round((submissionSuccess.completedCriteria / submissionSuccess.totalCriteria) * 100)
+                      : 0}
+                    %)
                   </div>
                 </div>
+              </div>
+
+              {/* Dastlabki baholash natijasi: ball va foiz (foiz = olingan ball / maksimal ball) */}
+              <div className="rounded-xl border border-slate-200 p-5 sm:p-6">
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                  Dastlabki baholash natijasi
+                </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
+                  <div className="shrink-0">
+                    <div className={`text-4xl font-black font-mono tracking-tight ${scoreColorClass(submissionSuccess.scorePercent)}`}>
+                      {submissionSuccess.scorePercent}%
+                    </div>
+                    <div className="mt-2">
+                      <ReadinessBadge category={submissionSuccess.category} size="md" />
+                    </div>
+                  </div>
+                  <div className="flex-1 space-y-2.5">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold font-mono text-slate-900">{submissionSuccess.earnedPoints}</span>
+                      <span className="text-sm text-slate-500">
+                        / {submissionSuccess.maxPoints} ball
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${
+                          submissionSuccess.scorePercent >= 85
+                            ? 'bg-emerald-500'
+                            : submissionSuccess.scorePercent >= 75
+                            ? 'bg-teal-500'
+                            : 'bg-rose-500'
+                        }`}
+                        style={{ width: `${Math.min(100, submissionSuccess.scorePercent)}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Gold mezonlar 1,3 ball, qolganlari 1 ball; «Qisman» — yarim ball, «Tadbiq etilmaydi» mezonlar hisobga
+                      olinmaydi. Toifalar 16-son qaror (37-band) bo&apos;yicha: oliy — 95%, birinchi — 85%, ikkinchi — 75%.
+                    </p>
+                    {submissionSuccess.hasCriticalViolations && (
+                      <p className="text-[11px] font-semibold text-rose-700 flex items-start gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-px" />
+                        Kritik xavfsizlik talablaridan biri bajarilmagan — shu sababli toifa berilmaydi.
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-400">
+                  Natija o&apos;z-o&apos;zini baholash asosida hisoblangan dastlabki ko&apos;rsatkich. Rasmiy akkreditatsiya toifasini
+                  akkreditatsiyalovchi organ belgilaydi.
+                </p>
               </div>
 
               {/* Detailed Organisation Information */}
@@ -846,8 +929,8 @@ export default function ChecklistPortalPage() {
                       <option value="" disabled>
                         Tanlang
                       </option>
-                      <option value="VILOYAT">Viloyat darajasi</option>
                       <option value="RESPUBLIKA">Respublika darajasi</option>
+                      <option value="VILOYAT">Viloyat darajasi</option>
                       <option value="TUMAN">Tuman darajasi</option>
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -890,7 +973,7 @@ export default function ChecklistPortalPage() {
               {/* STEP 4: SERVICES APPLICABILITY CHECKBOXES */}
               <div className="pt-4 border-t border-slate-100">
                 <label className="block text-xs font-bold text-slate-800 mb-2">
-                  Amalda ko&apos;rsatilayotgan tibbiy xizmatlar («Tegishli emas» qoidalariga binoan):
+                  Amalda ko&apos;rsatilayotgan tibbiy xizmatlar («Tadbiq etilmaydi» qoidalariga binoan):
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-slate-700">
                   {SERVICE_OPTIONS.map(({ key, label }) => (
@@ -1348,10 +1431,10 @@ export default function ChecklistPortalPage() {
                                     ? 'bg-slate-700 text-white border-slate-700 shadow-xs ring-2 ring-slate-600/30'
                                     : 'bg-white text-slate-500 border-slate-300 hover:bg-slate-100 hover:text-slate-700'
                                 }`}
-                                title="Tegishli emas"
+                                title="Tadbiq etilmaydi"
                               >
                                 <Minus className="w-3.5 h-3.5" />
-                                <span>Tegishli emas</span>
+                                <span>Tadbiq etilmaydi</span>
                               </button>
                             </div>
                           </div>
@@ -1395,7 +1478,7 @@ export default function ChecklistPortalPage() {
                   mezon
                 </span>
               </div>
-            ) : finalStage ? (
+            ) : finalStage || !strictFlow ? (
               <button
                 type="button"
                 onClick={handleSubmitAssessment}

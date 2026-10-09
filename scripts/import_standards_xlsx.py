@@ -34,7 +34,7 @@ APPLICABILITY_LATIN = {
         'Tashkilot faoliyati va xizmat profiliga muvofiq qoʻllaniladi.',
     'Тегишли муҳандислик тизими (вентиляция, лифт ёки тиббий газ) мавжуд бўлса; алоҳида мезон бўйича «ТЭ» танланиши мумкин.':
         'Tegishli muhandislik tizimi (ventilyatsiya, lift yoki tibbiy gaz) mavjud boʻlsa; '
-        'alohida mezon boʻyicha «Tegishli emas» tanlanishi mumkin.',
+        'alohida mezon boʻyicha «Tadbiq etilmaydi» tanlanishi mumkin.',
     'Қайта ишлатиладиган тиббий асбоб-анжомлар стерилизация қилинса.':
         'Qayta ishlatiladigan tibbiy asbob-anjomlar sterilizatsiya qilinsa.',
     'Эндоскопик хизмат (гастроскопия, бронхоскопия ёки колоноскопия) мавжуд бўлса.':
@@ -149,8 +149,10 @@ def main(xlsx_path, docx_path):
         s['applicability'] = applicability[s['id']]
 
     OUT_PATH.parent.mkdir(exist_ok=True)
+    # version bazadagi PRAGMA user_version'dan katta bo'lishi kerak (lib/db.ts: 4 — ballarni qayta hisoblash);
+    # keyingi yangilanishda 5 qiling
     OUT_PATH.write_text(json.dumps(
-        {'version': 2, 'domains': domains, 'standards': standards, 'criteria': criteria},
+        {'version': 3, 'domains': domains, 'standards': standards, 'criteria': criteria},
         ensure_ascii=False, indent=1,
     ) + '\n', encoding='utf-8')
     print(f'{OUT_PATH}: {len(domains)} bo\'lim, {len(standards)} standart, {len(criteria)} mezon')

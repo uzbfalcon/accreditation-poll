@@ -1,5 +1,5 @@
 {
- "version": 2,
+ "version": 3,
  "domains": [
   {
    "id": 1,
@@ -148,7 +148,7 @@
    "domain_id": 2,
    "title": "Tashkilot muhandislik tizimlari, shu jumladan ventilyatsiya, liftlar va tibbiy gazlarni yetkazish tizimlarini davriy ravishda tekshirish va ularga xizmat koʼrsatish tartiblarini ishlab chiqadi va joriy etadi.",
    "gold": true,
-   "applicability": "Tegishli muhandislik tizimi (ventilyatsiya, lift yoki tibbiy gaz) mavjud boʻlsa; alohida mezon boʻyicha «Tegishli emas» tanlanishi mumkin."
+   "applicability": "Tegishli muhandislik tizimi (ventilyatsiya, lift yoki tibbiy gaz) mavjud boʻlsa; alohida mezon boʻyicha «Tadbiq etilmaydi» tanlanishi mumkin."
   },
   {
    "id": 18,

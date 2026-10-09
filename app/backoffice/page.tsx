@@ -3,17 +3,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import { formatTashkentDateTime } from '@/lib/format';
+import ReadinessBadge, { scoreColorClass } from '@/components/ReadinessBadge';
+import { READINESS_CATEGORIES, categoryLabel, type ReadinessCategory } from '@/lib/readiness';
 import {
   Building2,
   TrendingUp,
-  CheckCircle2,
   AlertTriangle,
   Printer,
   X,
   FileSpreadsheet,
   Search,
   Filter,
-  Clock,
 } from 'lucide-react';
 
 interface SummaryData {
@@ -53,7 +53,7 @@ interface ClinicItem {
   criteriaDone: number;
   totalCriteria: number;
   score: number;
-  status: 'ready' | 'partial' | 'risk';
+  category: ReadinessCategory;
   date: string | null;
   submitted: boolean;
 }
@@ -84,6 +84,8 @@ interface PassportData {
     no_count: number;
     na_count: number;
     total_score: number;
+    earned_points: number;
+    max_points: number;
     readiness_category: string;
     has_critical_stop_factors: boolean;
     critical_violations: Array<{
@@ -308,7 +310,7 @@ export default function BackofficeDashboardPage() {
 
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
-              To&apos;liq Tayyor (&ge;80%)
+              Akkreditatsiyaga tayyor (&ge;75%)
             </span>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-3xl font-extrabold text-emerald-600 tracking-tight">
@@ -320,12 +322,12 @@ export default function BackofficeDashboardPage() {
                   : ''}
               </span>
             </div>
-            <p className="mt-2 text-xs text-slate-500">Davlat akkreditatsiyasiga tavsiya etilgan</p>
+            <p className="mt-2 text-xs text-slate-500">Oliy, birinchi yoki ikkinchi toifa (16-son qaror)</p>
           </div>
 
           <div className="bg-white border border-rose-200 bg-rose-50/20 rounded-2xl p-5 shadow-2xs">
             <span className="text-xs font-bold text-rose-600 uppercase tracking-wider block">
-              Xavfli Hudud (&lt;55%)
+              Tayyor emas (&lt;75%)
             </span>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-3xl font-extrabold text-rose-600 tracking-tight">
@@ -364,11 +366,7 @@ export default function BackofficeDashboardPage() {
             <div className="space-y-3.5 flex-1 overflow-y-auto max-h-[350px] pr-2">
               {regions.map((reg) => {
                 const barColor =
-                  reg.avgScore >= 75
-                    ? 'bg-emerald-500'
-                    : reg.avgScore >= 55
-                    ? 'bg-amber-500'
-                    : 'bg-rose-500';
+                  reg.avgScore >= 85 ? 'bg-emerald-500' : reg.avgScore >= 75 ? 'bg-teal-500' : 'bg-rose-500';
                 return (
                   <div key={reg.name} className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
@@ -510,9 +508,11 @@ export default function BackofficeDashboardPage() {
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium"
               >
                 <option value="all">Barchasi</option>
-                <option value="ready">Tayyor (&ge;80%)</option>
-                <option value="partial">Qisman tayyor (55–79%)</option>
-                <option value="risk">Tayyor emas (&lt;55%)</option>
+                {READINESS_CATEGORIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.label} ({c.code === 'NOT_READY' ? '<75%' : `≥${c.minPercent}%`})
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -556,23 +556,7 @@ export default function BackofficeDashboardPage() {
                   </tr>
                 ) : (
                   clinics.map((c) => {
-                    const badge =
-                      c.status === 'ready' ? (
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold px-2 py-0.5 rounded-full text-[11px]">
-                          <CheckCircle2 className="w-3 h-3" />
-                          Tayyor
-                        </span>
-                      ) : c.status === 'partial' ? (
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap bg-amber-50 text-amber-700 border border-amber-200 font-semibold px-2 py-0.5 rounded-full text-[11px]">
-                          <Clock className="w-3 h-3" />
-                          Qisman tayyor
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap bg-rose-50 text-rose-700 border border-rose-200 font-semibold px-2 py-0.5 rounded-full text-[11px]">
-                          <AlertTriangle className="w-3 h-3" />
-                          Tayyor emas
-                        </span>
-                      );
+                    const badge = <ReadinessBadge category={c.category} />;
                     const submittedAt = c.date ? formatTashkentDateTime(c.date) : null;
 
                     return (
@@ -598,15 +582,7 @@ export default function BackofficeDashboardPage() {
                           {c.criteriaDone} <span className="text-slate-400">/ {c.totalCriteria}</span>
                         </td>
                         <td className="py-3 px-3 text-center">
-                          <strong
-                            className={`font-mono text-xs ${
-                              c.score >= 80
-                                ? 'text-emerald-600'
-                                : c.score >= 55
-                                ? 'text-amber-600'
-                                : 'text-rose-600'
-                            }`}
-                          >
+                          <strong className={`font-mono text-xs ${scoreColorClass(c.score)}`}>
                             {c.score}%
                           </strong>
                         </td>
@@ -762,13 +738,12 @@ export default function BackofficeDashboardPage() {
               <div>
                 <p className="text-xs font-bold uppercase">
                   Holati:{' '}
-                  {passportData.score.readiness_category === 'READY'
-                    ? 'AKKREDITATSIYAGA TAYYOR (TAVSIYA ETILADI)'
-                    : passportData.score.readiness_category === 'PARTIALLY_READY'
-                    ? "TAYYORGARLIK BOSQICHIDA (QISMAN TAYYOR)"
-                    : "TAYYOR EMAS (TUZATISH CHORALARI ZARUR)"}
+                  {passportData.score.readiness_category === 'NOT_READY'
+                    ? 'TAYYOR EMAS (TUZATISH CHORALARI ZARUR)'
+                    : `${categoryLabel(passportData.score.readiness_category).toUpperCase()} (16-SON QAROR, 37-BAND)`}
                 </p>
                 <p className="text-xs text-slate-600">
+                  Ball: {passportData.score.earned_points} / {passportData.score.max_points} |{' '}
                   Amaldagi mezonlar: {passportData.score.applicable_criteria} ta | Bajarilgan: {passportData.score.yes_count} ta | Qisman: {passportData.score.partial_count} ta
                 </p>
               </div>
