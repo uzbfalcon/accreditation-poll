@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'clamo.uz - Tibbiyot Akkreditatsiyasi Baholash Tizimi',
-  description: 'O‘zbekiston Respublikasi Sog‘liqni saqlash vazirligi milliy akkreditatsiya standartlari (75 standart, 273 mezon) asosidagi baholash tizimi',
+  description: 'O‘zbekiston Respublikasi Sog‘liqni saqlash vazirligi milliy akkreditatsiya standartlari (75 standart, 275 mezon) asosidagi baholash tizimi',
 };
 
 export default function RootLayout({

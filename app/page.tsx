@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { formatTashkentDateTime } from '@/lib/format';
 import {
   Check,
   Clock,
@@ -13,9 +14,11 @@ import {
   ArrowRight,
   ShieldCheck,
   Building2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Layers,
+  Lock,
   LayoutDashboard,
   CheckCircle2,
   Printer,
@@ -72,33 +75,54 @@ interface SubmissionConfirmation {
   completedCriteria: number;
 }
 
+// Hujjatdagi «Amalda ko'rsatilayotgan xizmatlar» jadvali tartibida (avtomatik «Tegishli emas» qoidalari: lib/db.ts STANDARD_SERVICE_RULES)
+const SERVICE_OPTIONS = [
+  { key: 'has_emergency_blue_code', label: "Shoshilinch yordam / «Ko'k kod»" },
+  { key: 'has_surgery', label: "Jarrohlik bo'limi" },
+  { key: 'has_anesthesia', label: 'Anesteziya / sedatsiya' },
+  { key: 'has_laboratory', label: 'Laboratoriya' },
+  { key: 'has_radiology_ultrasound', label: 'Nur diagnostikasi / UTT' },
+  { key: 'has_mri', label: 'MRT xizmati' },
+  { key: 'has_endoscopy', label: 'Endoskopiya (gastro/kolono)' },
+  { key: 'has_sterilization_dept', label: "Sterilizatsiya bo'linmasi" },
+  { key: 'has_academic_base', label: "O'quv bazasi / ta'lim oluvchilar" },
+] as const;
+
 export default function ChecklistPortalPage() {
   const router = useRouter();
 
   const [submissionSuccess, setSubmissionSuccess] = useState<SubmissionConfirmation | null>(null);
 
   // Onboarding Form State
-  const [inn, setInn] = useState('304907014');
-  const [orgName, setOrgName] = useState('"AKFA MEDLINE" mas\'uliyati cheklangan jamiyati');
-  const [cadastre, setCadastre] = useState('10:01:04:02:01:0045');
-  const [region, setRegion] = useState('Toshkent shahri');
-  const [level, setLevel] = useState('VILOYAT');
-  const [fio, setFio] = useState('Alimov Jamshid Baxtiyorovich');
-  const [phone, setPhone] = useState('+998 71 200-11-22');
-  const [innFound, setInnFound] = useState(true);
+  const [inn, setInn] = useState('');
+  const [orgName, setOrgName] = useState('');
+  const [cadastre, setCadastre] = useState('');
+  const [region, setRegion] = useState('');
+  const [district, setDistrict] = useState('');
+  const [level, setLevel] = useState('');
+  const [fio, setFio] = useState('');
+  const [phone, setPhone] = useState('');
+  const [innFound, setInnFound] = useState(false);
+  // Ushbu INN bo'yicha ariza allaqachon topshirilganmi (bitta INN — bitta topshirish)
+  const [alreadySubmitted, setAlreadySubmitted] = useState<{ at: string | null } | null>(null);
+  const [startError, setStartError] = useState<string | null>(null);
   const [isSearchingInn, setIsSearchingInn] = useState(false);
-  const [innSource, setInnSource] = useState<string>('orginfo.uz');
   const [isInitializing, setIsInitializing] = useState(false);
-  const [resetDraft, setResetDraft] = useState(false);
+  const [offerAccepted, setOfferAccepted] = useState(false);
+  // INN reyestrdan topilmasa — nom va hudud qo'lda kiritiladi
+  const manualOrgEntry = inn.length === 9 && !isSearchingInn && !innFound;
 
   // Services State
   const [services, setServices] = useState({
-    has_emergency_blue_code: true,
-    has_surgery: true,
-    has_laboratory: true,
-    has_endoscopy: true,
+    has_emergency_blue_code: false,
+    has_surgery: false,
+    has_anesthesia: false,
+    has_laboratory: false,
+    has_radiology_ultrasound: false,
     has_mri: false,
-    has_sterilization_dept: true,
+    has_endoscopy: false,
+    has_sterilization_dept: false,
+    has_academic_base: false,
   });
 
   // Checklist View State
@@ -108,24 +132,37 @@ export default function ChecklistPortalPage() {
   const [activeDomainId, setActiveDomainId] = useState(1);
   const [stuckDomainIds, setStuckDomainIds] = useState<Record<number, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Yakuniy (oxirgi) bo'limga o'tilganmi — shundan keyin oldingi bo'limlarga qaytib bo'lmaydi
+  const [finalStage, setFinalStage] = useState(false);
+  const [showFinalStageModal, setShowFinalStageModal] = useState(false);
+  const [isEnteringFinalStage, setIsEnteringFinalStage] = useState(false);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef(false);
   const programmaticScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounced INN lookup from orginfo.uz / ihamkor.uz
+  // Debounced INN lookup
   useEffect(() => {
+    setAlreadySubmitted(null);
+    setStartError(null);
+    // Boshqa INN uchun avvalgi nom/hudud qolib ketmasin
+    setOrgName('');
+    setRegion('');
+    setDistrict('');
     if (inn.length === 9) {
       setIsSearchingInn(true);
       const timer = setTimeout(async () => {
         try {
           const res = await fetch(`/api/v1/organizations/lookup-inn/${inn}`);
           const data = await res.json();
+          if (data.already_submitted) {
+            setAlreadySubmitted({ at: data.submitted_at ?? null });
+          }
           if (data.found) {
             setOrgName(data.name);
             if (data.region) setRegion(data.region);
+            if (data.district) setDistrict(data.district);
             setInnFound(true);
-            setInnSource(data.source || 'orginfo.uz');
           } else {
             setInnFound(false);
           }
@@ -143,9 +180,28 @@ export default function ChecklistPortalPage() {
     }
   }, [inn]);
 
+  // Load full checklist (also used to resync after a rejected autosave)
+  const loadChecklist = async (sessionId: string) => {
+    const checkRes = await fetch(`/api/v1/audit-sessions/${sessionId}/checklist`);
+    const checkData = await checkRes.json();
+    const isFinal = Boolean(checkData.session?.final_stage_at);
+    setDomains(checkData.domains);
+    setScore(checkData.score);
+    setFinalStage(isFinal);
+    if (isFinal && checkData.domains.length > 0) {
+      setActiveDomainId(checkData.domains[checkData.domains.length - 1].id);
+    }
+  };
+
   // Start Checklist
   const handleStartChecklist = async (e: React.FormEvent) => {
     e.preventDefault();
+    // readOnly maydonlar brauzerda «required» bo'yicha tekshirilmaydi — shu yerda tekshiriladi
+    if (!/^\d{9}$/.test(inn) || !orgName.trim() || !region.trim()) {
+      setStartError("INN (9 xonali), tashkilot nomi va viloyatni to'ldiring");
+      return;
+    }
+    setStartError(null);
     setIsInitializing(true);
 
     try {
@@ -154,11 +210,11 @@ export default function ChecklistPortalPage() {
         name: orgName,
         cadastre_number: cadastre,
         region,
+        district,
         level,
         submitter_fio: fio,
         submitter_phone: phone,
         services,
-        reset: resetDraft,
       };
 
       const res = await fetch('/api/v1/audit-sessions/initialize', {
@@ -167,15 +223,18 @@ export default function ChecklistPortalPage() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
+      if (!res.ok) {
+        if (data.code === 'ALREADY_SUBMITTED') {
+          setAlreadySubmitted({ at: data.submitted_at ?? null });
+        } else {
+          setStartError(data.error || "Chek-listni boshlab bo'lmadi");
+        }
+        return;
+      }
 
       setActiveSessionId(data.session_id);
       setScore(data.score);
-
-      // Load full checklist
-      const checkRes = await fetch(`/api/v1/audit-sessions/${data.session_id}/checklist`);
-      const checkData = await checkRes.json();
-      setDomains(checkData.domains);
-      setScore(checkData.score);
+      await loadChecklist(data.session_id);
     } catch (err) {
       alert("Xatolik: Serverga ulanib bo'lmadi");
     } finally {
@@ -277,6 +336,12 @@ export default function ChecklistPortalPage() {
         body: JSON.stringify({ criterion_id: criterionId, answer_value: answerValue }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        // Server rejected (e.g. section order rule) — show reason and resync with saved state
+        alert(data.error || "Javobni saqlab bo'lmadi");
+        await loadChecklist(activeSessionId);
+        return;
+      }
       if (data.score) {
         setScore(data.score);
       }
@@ -309,9 +374,14 @@ export default function ChecklistPortalPage() {
     if (confirm("Haqiqatdan ham akkreditatsiya chek-listini yakunlab, komissiyaga topshirmoqchimisiz?")) {
       setIsSubmitting(true);
       try {
-        await fetch(`/api/v1/audit-sessions/${activeSessionId}/submit`, {
+        const res = await fetch(`/api/v1/audit-sessions/${activeSessionId}/submit`, {
           method: 'POST',
         });
+        if (!res.ok) {
+          const data = await res.json();
+          alert(data.error || "Xatolik: Arizani topshirib bo'lmadi");
+          return;
+        }
 
         const now = new Date();
         const formattedDate = new Intl.DateTimeFormat('uz-UZ', {
@@ -332,8 +402,8 @@ export default function ChecklistPortalPage() {
           region: region || "O'zbekiston Respublikasi",
           fio: fio || '—',
           phone: phone || '—',
-          totalCriteria: checklistProgress.total || 273,
-          completedCriteria: checklistProgress.answered || 273,
+          totalCriteria: checklistProgress.total || 275,
+          completedCriteria: checklistProgress.answered || 275,
         });
       } catch (e) {
         alert("Xatolik: Arizani topshirib bo'lmadi");
@@ -362,6 +432,56 @@ export default function ChecklistPortalPage() {
     }
     return map;
   }, [domains]);
+
+  // Section flow: next section unlocks only when the previous one is fully answered;
+  // the last section requires confirmation and closes all earlier sections.
+  const domainFlow = useMemo(() => {
+    const isDone = (id: number) => {
+      const s = domainStatsMap[id];
+      return Boolean(s && s.totalCriteria > 0 && s.answeredCount === s.totalCriteria);
+    };
+    const lastDomain = domains[domains.length - 1];
+    const preFinal = domains.slice(0, -1);
+    const firstIncompleteIdx = preFinal.findIndex((d) => !isDone(d.id));
+    const maxUnlockedIdx = firstIncompleteIdx === -1 ? preFinal.length - 1 : firstIncompleteIdx;
+    const canEnterFinal = !finalStage && firstIncompleteIdx === -1 && domains.length > 0;
+    const visibleDomains = finalStage ? (lastDomain ? [lastDomain] : []) : domains.slice(0, maxUnlockedIdx + 1);
+    const gateDomain = finalStage ? null : domains[maxUnlockedIdx];
+    const canSubmit = finalStage && domains.every((d) => isDone(d.id));
+    const isUnlocked = (id: number) =>
+      finalStage ? id === lastDomain?.id : domains.findIndex((d) => d.id === id) <= maxUnlockedIdx;
+    return { lastDomain, maxUnlockedIdx, canEnterFinal, visibleDomains, gateDomain, canSubmit, isUnlocked };
+  }, [domains, domainStatsMap, finalStage]);
+
+  const handleEnterFinalStage = async () => {
+    if (!activeSessionId || !domainFlow.lastDomain) return;
+    setIsEnteringFinalStage(true);
+    try {
+      const res = await fetch(`/api/v1/audit-sessions/${activeSessionId}/final-stage`, { method: 'POST' });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || "Yakuniy bo'limga o'tib bo'lmadi");
+        await loadChecklist(activeSessionId);
+        return;
+      }
+      setFinalStage(true);
+      setShowFinalStageModal(false);
+      setActiveDomainId(domainFlow.lastDomain.id);
+      scrollAreaRef.current?.scrollTo({ top: 0 });
+    } catch (e) {
+      alert("Xatolik: Serverga ulanib bo'lmadi");
+    } finally {
+      setIsEnteringFinalStage(false);
+    }
+  };
+
+  const handleSidebarDomainClick = (domainId: number) => {
+    if (domainFlow.isUnlocked(domainId)) {
+      scrollToDomain(domainId);
+    } else if (domainFlow.canEnterFinal && domainId === domainFlow.lastDomain?.id) {
+      setShowFinalStageModal(true);
+    }
+  };
 
   // --------------------------------------------------------------------------
   // VIEW: SUBMISSION SUCCESS / CONFIRMATION RECEIPT PAGE
@@ -586,7 +706,7 @@ export default function ChecklistPortalPage() {
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 hidden sm:block">
-                  75 ta standart va 273 ta mezon asosidagi milliy audit chek-listi
+                  75 ta standart va 275 ta mezon asosidagi milliy audit chek-listi
                 </p>
               </div>
             </Link>
@@ -632,6 +752,9 @@ export default function ChecklistPortalPage() {
                       value={inn}
                       onChange={(e) => setInn(e.target.value.replace(/\D/g, ''))}
                       placeholder="Masalan: 304907014"
+                      inputMode="numeric"
+                      pattern="\d{9}"
+                      title="9 xonali raqam"
                       className="w-full pl-3 pr-32 py-2.5 bg-white border border-slate-300 rounded-xl font-mono text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                       required
                     />
@@ -643,7 +766,7 @@ export default function ChecklistPortalPage() {
                     ) : innFound ? (
                       <span className="absolute right-2 top-2 text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-1 rounded border border-emerald-200 flex items-center gap-1 shadow-2xs">
                         <Check className="w-3 h-3 text-emerald-600" />
-                        {innSource === 'orginfo.uz' ? 'orginfo.uz' : (innSource === 'ihamkor.uz' ? 'ihamkor.uz' : 'Topildi')}
+                        Topildi
                       </span>
                     ) : inn.length === 9 ? (
                       <span className="absolute right-2 top-2 text-[10px] bg-amber-50 text-amber-800 font-bold px-2 py-1 rounded border border-amber-200 flex items-center gap-1 shadow-2xs">
@@ -651,10 +774,7 @@ export default function ChecklistPortalPage() {
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
-                    <span>9 xonali yuridik shaxs INN kodi</span>
-                    <span className="text-[10px] text-teal-700 font-medium">⚡️ orginfo.uz va ihamkor.uz orqali</span>
-                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">9 xonali yuridik shaxs INN kodi</p>
                 </div>
 
                 <div>
@@ -663,9 +783,15 @@ export default function ChecklistPortalPage() {
                   </label>
                   <input
                     type="text"
-                    readOnly
+                    readOnly={!manualOrgEntry}
                     value={orgName}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs text-slate-800 cursor-not-allowed"
+                    onChange={(e) => setOrgName(e.target.value)}
+                    placeholder={manualOrgEntry ? 'Tashkilot nomini kiriting' : "INN kiritilgach avtomatik to'ldiriladi"}
+                    className={`w-full px-3 py-2.5 border rounded-xl font-bold text-xs text-slate-800 ${
+                      manualOrgEntry
+                        ? 'bg-white border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none'
+                        : 'bg-slate-50 border-slate-200 cursor-not-allowed'
+                    }`}
                   />
                 </div>
               </div>
@@ -692,9 +818,15 @@ export default function ChecklistPortalPage() {
                   </label>
                   <input
                     type="text"
-                    readOnly
+                    readOnly={!manualOrgEntry}
                     value={region}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold text-xs text-slate-800 cursor-not-allowed select-all"
+                    onChange={(e) => setRegion(e.target.value)}
+                    placeholder={manualOrgEntry ? 'Masalan: Toshkent shahri' : "INN kiritilgach avtomatik to'ldiriladi"}
+                    className={`w-full px-3 py-2.5 border rounded-xl font-bold text-xs text-slate-800 ${
+                      manualOrgEntry
+                        ? 'bg-white border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none'
+                        : 'bg-slate-50 border-slate-300 cursor-not-allowed'
+                    }`}
                   />
                 </div>
 
@@ -702,15 +834,24 @@ export default function ChecklistPortalPage() {
                   <label className="block text-xs font-bold text-slate-800 mb-1">
                     Muassasa darajasi *
                   </label>
-                  <select
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-xs bg-white"
-                  >
-                    <option value="VILOYAT">Viloyat darajasi</option>
-                    <option value="RESPUBLIKA">Respublika darajasi</option>
-                    <option value="TUMAN">Tuman darajasi</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={level}
+                      onChange={(e) => setLevel(e.target.value)}
+                      required
+                      className={`w-full appearance-none pl-3 pr-10 py-2.5 border border-slate-300 rounded-xl text-xs bg-white cursor-pointer focus:ring-2 focus:ring-teal-500 focus:outline-none ${
+                        level ? 'text-slate-800' : 'text-slate-400'
+                      }`}
+                    >
+                      <option value="" disabled>
+                        Tanlang
+                      </option>
+                      <option value="VILOYAT">Viloyat darajasi</option>
+                      <option value="RESPUBLIKA">Respublika darajasi</option>
+                      <option value="TUMAN">Tuman darajasi</option>
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  </div>
                 </div>
               </div>
 
@@ -724,6 +865,8 @@ export default function ChecklistPortalPage() {
                     type="text"
                     value={fio}
                     onChange={(e) => setFio(e.target.value)}
+                    placeholder="Familiya Ism Otasining ismi"
+                    autoComplete="name"
                     className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"
                     required
                   />
@@ -736,6 +879,8 @@ export default function ChecklistPortalPage() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+998 90 123-45-67"
+                    autoComplete="tel"
                     className="w-full px-3 py-2.5 border border-slate-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-teal-500"
                     required
                   />
@@ -745,79 +890,71 @@ export default function ChecklistPortalPage() {
               {/* STEP 4: SERVICES APPLICABILITY CHECKBOXES */}
               <div className="pt-4 border-t border-slate-100">
                 <label className="block text-xs font-bold text-slate-800 mb-2">
-                  Amalda ko&apos;rsatilayotgan tibbiy xizmatlar (ТЭ qoidalariga binoan):
+                  Amalda ko&apos;rsatilayotgan tibbiy xizmatlar («Tegishli emas» qoidalariga binoan):
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-slate-700">
-                  <label className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                    <input
-                      type="checkbox"
-                      checked={services.has_emergency_blue_code}
-                      onChange={(e) => setServices({ ...services, has_emergency_blue_code: e.target.checked })}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <span>Шошилинч / «Кўк код»</span>
-                  </label>
-                  <label className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                    <input
-                      type="checkbox"
-                      checked={services.has_surgery}
-                      onChange={(e) => setServices({ ...services, has_surgery: e.target.checked })}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <span>Жарроҳлик бўлими</span>
-                  </label>
-                  <label className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                    <input
-                      type="checkbox"
-                      checked={services.has_laboratory}
-                      onChange={(e) => setServices({ ...services, has_laboratory: e.target.checked })}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <span>Лаборатория</span>
-                  </label>
-                  <label className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                    <input
-                      type="checkbox"
-                      checked={services.has_endoscopy}
-                      onChange={(e) => setServices({ ...services, has_endoscopy: e.target.checked })}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <span>Эндоскопия (Гастро/Колоно)</span>
-                  </label>
-                  <label className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                    <input
-                      type="checkbox"
-                      checked={services.has_mri}
-                      onChange={(e) => setServices({ ...services, has_mri: e.target.checked })}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <span>МРТ хизмати</span>
-                  </label>
-                  <label className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                    <input
-                      type="checkbox"
-                      checked={services.has_sterilization_dept}
-                      onChange={(e) => setServices({ ...services, has_sterilization_dept: e.target.checked })}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <span>Стерилизация бўлинмаси</span>
-                  </label>
+                  {SERVICE_OPTIONS.map(({ key, label }) => (
+                    <label key={key} className="flex items-center gap-2 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                      <input
+                        type="checkbox"
+                        checked={services[key]}
+                        onChange={(e) => setServices({ ...services, [key]: e.target.checked })}
+                        className="w-4 h-4 text-teal-600 rounded"
+                      />
+                      <span>{label}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
-              {/* Reset Draft Option */}
+              {/* Bitta INN — bitta topshirish */}
+              {alreadySubmitted && (
+                <div role="alert" className="flex items-start gap-2.5 p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-xs text-amber-900">
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+                  <div>
+                    <p className="font-bold">Ushbu INN bo&apos;yicha ariza allaqachon topshirilgan</p>
+                    <p className="mt-0.5">
+                      {alreadySubmitted.at
+                        ? `Topshirilgan sana: ${formatTashkentDateTime(alreadySubmitted.at).date}, ${formatTashkentDateTime(alreadySubmitted.at).time}. `
+                        : ''}
+                      Har bir tashkilot arizani faqat bir marta topshirishi mumkin. Qayta ko&apos;rib chiqish zarur bo&apos;lsa,
+                      administratorga murojaat qiling.
+                    </p>
+                  </div>
+                </div>
+              )}
+              {startError && (
+                <div role="alert" className="flex items-start gap-2.5 p-3.5 rounded-xl border border-rose-200 bg-rose-50 text-xs text-rose-800">
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{startError}</span>
+                </div>
+              )}
+
+              {/* Public Offer Consent */}
               <div className="pt-1">
                 <label className="flex items-center gap-2.5 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 cursor-pointer hover:bg-slate-100 transition">
                   <input
                     type="checkbox"
-                    checked={resetDraft}
-                    onChange={(e) => setResetDraft(e.target.checked)}
+                    checked={offerAccepted}
+                    onChange={(e) => setOfferAccepted(e.target.checked)}
                     className="w-4 h-4 text-teal-600 rounded"
+                    required
                   />
                   <div>
-                    <span className="font-bold text-slate-800">🧹 Yangi so&apos;rovnoma boshlash (qoralamani tozalash)</span>
+                    <span className="font-bold text-slate-800">
+                      <a
+                        href="/oferta"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-teal-700 underline underline-offset-2 hover:text-teal-900"
+                      >
+                        Ommaviy oferta
+                      </a>{' '}
+                      shartlariga roziman *
+                    </span>
                     <p className="text-[11px] text-slate-500">
-                      Ushbu INN bo&apos;yicha oldin kiritilgan javoblarni tozalab, yangidan toza chek-list boshlash
+                      Ommaviy oferta shartlari bilan tanishdim, shaxsga doir ma&apos;lumotlarimga ishlov berishga rozilik beraman
+                      va kiritilgan ma&apos;lumotlarning to&apos;g&apos;riligini tasdiqlayman
                     </p>
                   </div>
                 </label>
@@ -825,8 +962,8 @@ export default function ChecklistPortalPage() {
 
               <button
                 type="submit"
-                disabled={isInitializing}
-                className="w-full py-3.5 bg-gradient-to-r from-teal-700 to-cyan-700 hover:from-teal-800 hover:to-cyan-800 text-white font-bold text-sm rounded-xl shadow-lg transition cursor-pointer flex items-center justify-center gap-2 hover:shadow-xl"
+                disabled={isInitializing || !offerAccepted || Boolean(alreadySubmitted)}
+                className="w-full py-3.5 bg-gradient-to-r from-teal-700 to-cyan-700 hover:from-teal-800 hover:to-cyan-800 text-white font-bold text-sm rounded-xl shadow-lg transition cursor-pointer flex items-center justify-center gap-2 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
               >
                 <span>{isInitializing ? "Tayyorlanmoqda..." : "Chek-list Savolnomasini Boshlash (75 Standart)"}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -847,7 +984,7 @@ export default function ChecklistPortalPage() {
       {/* UNIFIED COMMAND HEADER (NAVBAR + LIVE READINESS METER + CONTROLS)         */}
       {/* ========================================================================= */}
       <header className="bg-white border-b border-slate-200 shrink-0 z-40 px-4 sm:px-6 h-14 flex items-center justify-between shadow-2xs">
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="CLAMO" className="h-7 w-auto object-contain" />
@@ -855,40 +992,19 @@ export default function ChecklistPortalPage() {
 
           <span className="text-slate-300 hidden sm:inline">|</span>
 
-          {/* Clinic & Session metadata */}
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-xs font-bold text-slate-800 truncate max-w-[160px] sm:max-w-xs md:max-w-sm">
+          {/* Clinic & Session metadata — long names truncate, full name on hover */}
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <span className="text-xs font-bold text-slate-800 truncate min-w-0 max-w-xl" title={orgName}>
               {orgName}
             </span>
-            <span className="text-[10px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 shrink-0">
+            <span className="text-[10px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 shrink-0 hidden sm:inline">
               № {activeSessionId}
             </span>
           </div>
         </div>
 
-        {/* Center: Checklist Completion Progress (No Score / Readiness shown to clinic) */}
-        <div className="hidden md:flex items-center gap-3 shrink-0">
-          <div className="text-right">
-            <div className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5 justify-end">
-              <span>To&apos;ldirilgan mezonlar:</span>
-              <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
-                {checklistProgress.answered} / {checklistProgress.total}
-              </span>
-            </div>
-            <div className="text-[10px] text-slate-500 font-medium">
-              {checklistProgress.pct}% savolga javob berildi
-            </div>
-          </div>
-          <div className="w-24 lg:w-32 bg-slate-200 h-2 rounded-full overflow-hidden shadow-inner">
-            <div
-              className="h-full rounded-full bg-teal-600 transition-all duration-300"
-              style={{ width: `${checklistProgress.pct}%` }}
-            ></div>
-          </div>
-        </div>
-
         {/* Right Actions */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3 shrink-0 ml-4">
           <span className="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="hidden lg:inline">Avtomatik saqlanmoqda</span>
@@ -904,8 +1020,9 @@ export default function ChecklistPortalPage() {
 
           <button
             onClick={handleSubmitAssessment}
-            disabled={isSubmitting}
-            className="px-3.5 py-1.5 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+            disabled={isSubmitting || !domainFlow.canSubmit}
+            title={domainFlow.canSubmit ? undefined : `Arizani topshirish uchun barcha bo'limlarni, jumladan yakuniy ${domainFlow.lastDomain?.id}-bo'limni to'liq to'ldiring`}
+            className="px-3.5 py-1.5 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-teal-700"
           >
             <span>{isSubmitting ? "Topshirilmoqda..." : "Arizani Topshirish"}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -919,13 +1036,32 @@ export default function ChecklistPortalPage() {
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT SIDEBAR: PURE NAVIGATION MENU (TOC) */}
         <aside className="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-2xs">
+          {/* Checklist Completion Progress (No Score / Readiness shown to clinic) */}
+          <div className="p-3.5 border-b border-slate-200">
+            <div className="flex items-center justify-between text-[11px] font-bold text-slate-700">
+              <span>To&apos;ldirilgan mezonlar</span>
+              <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                {checklistProgress.answered} / {checklistProgress.total}
+              </span>
+            </div>
+            <div className="mt-2 w-full bg-slate-200 h-2 rounded-full overflow-hidden shadow-inner">
+              <div
+                className="h-full rounded-full bg-teal-600 transition-all duration-300"
+                style={{ width: `${checklistProgress.pct}%` }}
+              ></div>
+            </div>
+            <div className="mt-1.5 text-[10px] text-slate-500 font-medium">
+              {checklistProgress.pct}% savolga javob berildi
+            </div>
+          </div>
+
           <div className="p-3.5 border-b border-slate-200 bg-slate-50/80 text-xs font-bold text-slate-800 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-teal-600" />
-              <span>7 та Асосий Бўлим Менюси</span>
+              <span>Asosiy bo&apos;limlar</span>
             </span>
             <span className="text-[10px] text-slate-500 font-mono font-medium">
-              {domains.length} та бўлим
+              {domains.length} ta bo&apos;lim
             </span>
           </div>
           <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
@@ -933,21 +1069,30 @@ export default function ChecklistPortalPage() {
               const isActive = activeDomainId === d.id;
               const dStats = domainStatsMap[d.id];
               const isCompleted = dStats && dStats.answeredCount === dStats.totalCriteria && dStats.totalCriteria > 0;
+              const isUnlocked = domainFlow.isUnlocked(d.id);
+              const isFinalGate = !isUnlocked && domainFlow.canEnterFinal && d.id === domainFlow.lastDomain?.id;
+              const lockedTitle = finalStage
+                ? `Yakuniy ${domainFlow.lastDomain?.id}-bo'limga o'tilgan — oldingi bo'limlarga qaytib bo'lmaydi`
+                : isFinalGate
+                ? `Yakuniy ${d.id}-bo'limga o'tish`
+                : `Avval ${domainFlow.gateDomain?.id}-bo'limni to'liq to'ldiring`;
 
               return (
                 <div
                   key={d.id}
-                  onClick={() => scrollToDomain(d.id)}
-                  className={`sidebar-nav-item p-3.5 cursor-pointer flex items-center justify-between gap-2 ${
-                    isActive ? 'active-nav-item shadow-2xs' : ''
-                  }`}
+                  onClick={() => handleSidebarDomainClick(d.id)}
+                  title={isUnlocked ? undefined : lockedTitle}
+                  aria-disabled={!isUnlocked && !isFinalGate}
+                  className={`sidebar-nav-item p-3.5 flex items-center justify-between gap-2 ${
+                    isActive && isUnlocked ? 'active-nav-item shadow-2xs' : ''
+                  } ${isUnlocked || isFinalGate ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                 >
                   <div className="min-w-0 flex-1">
                     <span className="text-xs line-clamp-2 leading-snug font-medium">
                       {d.name}
                     </span>
                     <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 font-normal">
-                      <span>{d.standards.length} та стандарт</span>
+                      <span>{d.standards.length} ta standart</span>
                       {dStats && (
                         <span className="font-mono text-[10px] text-slate-400">
                           • {dStats.answeredCount}/{dStats.totalCriteria}
@@ -958,14 +1103,14 @@ export default function ChecklistPortalPage() {
 
                   <span
                     className={`sidebar-badge w-6 h-6 rounded-full text-xs flex items-center justify-center shrink-0 transition-all ${
-                      isActive
+                      isActive && isUnlocked
                         ? 'bg-teal-600 text-white font-bold shadow-xs scale-105'
                         : isCompleted
                         ? 'bg-emerald-100 text-emerald-800 font-bold'
                         : 'bg-slate-100 text-slate-600 font-semibold'
                     }`}
                   >
-                    {isCompleted ? '✓' : d.id}
+                    {isCompleted ? '✓' : isUnlocked ? d.id : <Lock className="w-3 h-3" />}
                   </span>
                 </div>
               );
@@ -979,7 +1124,19 @@ export default function ChecklistPortalPage() {
           onScroll={handleScroll}
           className="relative flex-1 overflow-y-auto w-full bg-slate-100/70 pb-36"
         >
-          {domains.map((domain) => {
+          {finalStage && (
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-4">
+              <div className="flex items-start gap-2.5 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
+                <Lock className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>
+                  Siz yakuniy <strong>{domainFlow.lastDomain?.id}-bo&apos;lim</strong>dasiz. Oldingi bo&apos;limlar yopilgan.
+                  Ushbu bo&apos;limni to&apos;ldirib, arizani topshiring.
+                </span>
+              </div>
+            </div>
+          )}
+
+          {domainFlow.visibleDomains.map((domain) => {
             const dStats = domainStatsMap[domain.id];
             const isStuck = Boolean(stuckDomainIds[domain.id]);
             const isCompleted = dStats && dStats.answeredCount === dStats.totalCriteria && dStats.totalCriteria > 0;
@@ -1018,7 +1175,7 @@ export default function ChecklistPortalPage() {
                               : 'px-2 py-0.5 rounded text-[11px] bg-teal-700 text-white shadow-2xs'
                           }`}
                         >
-                          {domain.id}-БОБ
+                          {domain.id}-BO&apos;LIM
                         </span>
                         <h2
                           className={`font-bold text-slate-900 transition-all duration-200 truncate ${
@@ -1033,7 +1190,7 @@ export default function ChecklistPortalPage() {
                           )}
                         </h2>
                         <span className="text-xs text-slate-500 hidden sm:inline shrink-0 font-medium">
-                          ({domain.standards.length} та стандарт • {dStats?.totalCriteria || 0} та мезон)
+                          ({domain.standards.length} ta standart • {dStats?.totalCriteria || 0} ta mezon)
                         </span>
                       </div>
 
@@ -1112,7 +1269,7 @@ export default function ChecklistPortalPage() {
                       <div className="border-b border-slate-200/80 pb-2.5">
                         <div className="flex items-center justify-between text-xs text-slate-500">
                           <span className="font-extrabold text-teal-800 bg-teal-50/80 px-2 py-0.5 rounded border border-teal-200/70">
-                            Стандарт {st.id}
+                            Standart {st.id}
                           </span>
                           <span className="text-[11px] text-slate-500 italic">
                             {st.applicability}
@@ -1136,7 +1293,7 @@ export default function ChecklistPortalPage() {
                                 {c.is_critical && (
                                   <span className="ml-1.5 inline-flex items-center gap-1 text-[10px] text-rose-700 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-300 uppercase tracking-wider">
                                     <AlertTriangle className="w-3 h-3 text-rose-600" />
-                                    <span>Критик хавфсизлик талаби</span>
+                                    <span>Kritik xavfsizlik talabi</span>
                                   </span>
                                 )}
                               </span>
@@ -1154,7 +1311,7 @@ export default function ChecklistPortalPage() {
                                 }`}
                               >
                                 <Check className="w-3.5 h-3.5" />
-                                <span>Бор</span>
+                                <span>Bor</span>
                               </button>
 
                               <button
@@ -1167,7 +1324,7 @@ export default function ChecklistPortalPage() {
                                 }`}
                               >
                                 <Award className="w-3.5 h-3.5" />
-                                <span>Қисман</span>
+                                <span>Qisman</span>
                               </button>
 
                               <button
@@ -1180,7 +1337,7 @@ export default function ChecklistPortalPage() {
                                 }`}
                               >
                                 <X className="w-3.5 h-3.5" />
-                                <span>Йўқ</span>
+                                <span>Yo&apos;q</span>
                               </button>
 
                               <button
@@ -1191,10 +1348,10 @@ export default function ChecklistPortalPage() {
                                     ? 'bg-slate-700 text-white border-slate-700 shadow-xs ring-2 ring-slate-600/30'
                                     : 'bg-white text-slate-500 border-slate-300 hover:bg-slate-100 hover:text-slate-700'
                                 }`}
-                                title="Тааллуқли эмас"
+                                title="Tegishli emas"
                               >
                                 <Minus className="w-3.5 h-3.5" />
-                                <span>— Эмас</span>
+                                <span>Tegishli emas</span>
                               </button>
                             </div>
                           </div>
@@ -1206,8 +1363,106 @@ export default function ChecklistPortalPage() {
               </div>
             );
           })}
+
+          {/* SECTION GATE: next section unlock hint / final section entry / submit */}
+          <div className="max-w-3xl mx-auto px-4 sm:px-6">
+            {domainFlow.canEnterFinal ? (
+              <div className="p-5 bg-white border border-teal-200 rounded-2xl shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="text-xs text-slate-700">
+                  <div className="font-bold text-slate-900 text-sm">1–{domainFlow.maxUnlockedIdx + 1}-bo&apos;limlar to&apos;ldirildi</div>
+                  <div className="mt-0.5">Javoblaringizni tekshirib, yakuniy {domainFlow.lastDomain?.id}-bo&apos;limga o&apos;ting.</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowFinalStageModal(true)}
+                  className="px-4 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs transition cursor-pointer flex items-center justify-center gap-1.5 shrink-0"
+                >
+                  <span>{domainFlow.lastDomain?.id}-bo&apos;limga o&apos;tish</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : domainFlow.gateDomain ? (
+              <div className="p-4 bg-white/70 border border-dashed border-slate-300 rounded-2xl flex items-center gap-3 text-xs text-slate-600">
+                <Lock className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>
+                  Keyingi bo&apos;lim {domainFlow.gateDomain.id}-bo&apos;limdagi barcha mezonlar to&apos;ldirilgach ochiladi.
+                  Qoldi:{' '}
+                  <strong className="text-slate-800">
+                    {(domainStatsMap[domainFlow.gateDomain.id]?.totalCriteria || 0) -
+                      (domainStatsMap[domainFlow.gateDomain.id]?.answeredCount || 0)}{' '}
+                    ta
+                  </strong>{' '}
+                  mezon
+                </span>
+              </div>
+            ) : finalStage ? (
+              <button
+                type="button"
+                onClick={handleSubmitAssessment}
+                disabled={isSubmitting || !domainFlow.canSubmit}
+                className="w-full py-3.5 bg-gradient-to-r from-teal-700 to-cyan-700 hover:from-teal-800 hover:to-cyan-800 text-white font-bold text-sm rounded-xl shadow-lg transition cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>
+                  {isSubmitting
+                    ? 'Topshirilmoqda...'
+                    : domainFlow.canSubmit
+                    ? 'Arizani Topshirish'
+                    : `Arizani topshirish uchun ${domainFlow.lastDomain?.id}-bo'limni to'liq to'ldiring`}
+                </span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            ) : null}
+          </div>
         </section>
       </div>
+
+      {/* FINAL SECTION CONFIRMATION MODAL */}
+      {showFinalStageModal && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4"
+          onClick={() => !isEnteringFinalStage && setShowFinalStageModal(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="final-stage-title"
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </span>
+              <h2 id="final-stage-title" className="font-bold text-slate-900 text-base">
+                Yakuniy {domainFlow.lastDomain?.id}-bo&apos;limga o&apos;tish
+              </h2>
+            </div>
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              {domainFlow.lastDomain?.id}-bo&apos;lim oxirgi bo&apos;lim. Unga o&apos;tganingizdan so&apos;ng{' '}
+              <strong className="text-slate-900">1–{domainFlow.maxUnlockedIdx + 1}-bo&apos;limlarga qaytib, javoblarni o&apos;zgartira olmaysiz.</strong>{' '}
+              Davom etishdan oldin javoblaringizni tekshirib chiqing.
+            </p>
+            <div className="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowFinalStageModal(false)}
+                disabled={isEnteringFinalStage}
+                className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition cursor-pointer"
+              >
+                Orqaga, tekshiraman
+              </button>
+              <button
+                type="button"
+                onClick={handleEnterFinalStage}
+                disabled={isEnteringFinalStage}
+                className="px-4 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs transition cursor-pointer disabled:opacity-60"
+              >
+                {isEnteringFinalStage ? "O'tilmoqda..." : "Tushundim, o'tish"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

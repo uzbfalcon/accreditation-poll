@@ -1,0 +1,2487 @@
+{
+ "version": 2,
+ "domains": [
+  {
+   "id": 1,
+   "name": "Yetakchilik va boshqaruv"
+  },
+  {
+   "id": 2,
+   "name": "Bino va jihoz"
+  },
+  {
+   "id": 3,
+   "name": "Infektsion nazorat"
+  },
+  {
+   "id": 4,
+   "name": "Dori vositalari va tibbiy buyumlarni boshqarish"
+  },
+  {
+   "id": 5,
+   "name": "Bemorlar huquqlari"
+  },
+  {
+   "id": 6,
+   "name": "Klinik blok"
+  },
+  {
+   "id": 7,
+   "name": "Kadrlar boshqaruvi"
+  }
+ ],
+ "standards": [
+  {
+   "id": 1,
+   "domain_id": 1,
+   "title": "Tashkilot sifat va xavfsizlikni ta'minlashning muhim yoʻnalishlari boʻyicha malakali lavozimlar belgilangan boshqaruv tuzilmasini tasdiqlaydi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 2,
+   "domain_id": 1,
+   "title": "Tashkilot o’zining missiyasi, istiqbolli kelajak manzarasi va qadriyatlarini belgilab olgan va tashkilot ularni targ‘ib qiladi, shuningdek tashkilot o‘zining strategik maqsadlariga ega va tashkilotda ularga erishishni kuzatish mexanizmlari mavjud.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 3,
+   "domain_id": 1,
+   "title": "Tashkilotda tibbiy xizmatlarni ko‘rsatish bo‘yicha amaliy (operatsion) reja ishlab chiqilgan, amaliy (operatsion) maqsadlar aniqlangan va ularga erishishni nazorat qilish tizimi mavjud.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 4,
+   "domain_id": 1,
+   "title": "Tashkilot bemorlar va xodimlar xavfsizligini ta’minlash uchun asosiy xavf omillarini boshqarish jarayonini amalga oshiradi, shuningdek xavf omillarini kamaytirish bo‘yicha tadbirlar natijalari haqida rahbariyatni xabardor qilib turadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 5,
+   "domain_id": 1,
+   "title": "Tashkilot noxush holatlar (hodisalar) to'g'risida hisobot berish va tahlil qilishni ta'minlaydigan jazo qo’llanmaydigan xavfsizlik madaniyati tizimini joriy etadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 6,
+   "domain_id": 1,
+   "title": "Tashkilot tan olingan amaliyot asosida klinik qo‘llanmalar va davolash protokollarini ishlab chiqadi va amaliyotga joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 7,
+   "domain_id": 1,
+   "title": "Tashkilot tibbiy xizmatlar samaradorligini muntazam kuzatib borish va baholash uchun sifat ko‘rsatkichlari tizimini ishlab chiqadi va uni amaliyotga joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 8,
+   "domain_id": 1,
+   "title": "Tashkilot sifatni yaxshilash rejasini ishlab chiqadi va uni amalga oshiradi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 9,
+   "domain_id": 1,
+   "title": "Tashkilot belgilangan muddatlarda tibbiy yordam ko‘rsatishda yuzaga keladigan axloqiy muammolarni ko‘rib chiqish, boshqarish va hal qilish tartibini ishlab chiqadi va amaliyotga joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 10,
+   "domain_id": 1,
+   "title": "Tashkilot axborot tizimlarining texnik barqarorligi va himoyasini, shu jumladan ma’lumotlarni qayta tiklash imkonini va barqaror internet aloqasini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 11,
+   "domain_id": 1,
+   "title": "Tashkilot ichki hujjatlarni yuritishni standartlashtirish va tibbiy axborot tizimlaridan qonuniy foydalanish uchun qoidalarni ishlab chiqadi va amaliyotga joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 12,
+   "domain_id": 1,
+   "title": "Tashkilot ko‘rsatilayotgan tibbiy xizmatlarning sifati va ulardan foydalanish imkoniyati to‘g‘risida bemorlar va ularning vakillaridan muntazam ravishda fikr-mulohazalar to‘playdi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va xizmat profiliga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 13,
+   "domain_id": 1,
+   "title": "Tashkilot sog'liqni saqlash xizmatlarini yaxshilash maqsadida fikr-mulohazalar tahlili natijalaridan foydalanadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 14,
+   "domain_id": 1,
+   "title": "Tashkilot o’z faoliyati va kasalliklarning oldini olish to’g’risidagi ma’lumotlarni olish imkoniyatini yaratadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 15,
+   "domain_id": 2,
+   "title": "Tashkilotda infratuzilma holatini muntazam baholash hamda bemorlar va xodimlarga xavf-xatarlarni kamaytirish bo’yicha komissiya tashkil etilgan va tashkilot uning faoliyatini qoʼllab-quvvatlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 16,
+   "domain_id": 2,
+   "title": "Tashkilot uzluksiz tibbiy yordam koʼrsatish uchun tegishli muhandislik kommunikatsiya tarmoqlari, shu jumladan suv, elektr taʼminoti va zahira energiya manbalari bilan taʼminlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 17,
+   "domain_id": 2,
+   "title": "Tashkilot muhandislik tizimlari, shu jumladan ventilyatsiya, liftlar va tibbiy gazlarni yetkazish tizimlarini davriy ravishda tekshirish va ularga xizmat koʼrsatish tartiblarini ishlab chiqadi va joriy etadi.",
+   "gold": true,
+   "applicability": "Tegishli muhandislik tizimi (ventilyatsiya, lift yoki tibbiy gaz) mavjud boʻlsa; alohida mezon boʻyicha «Tegishli emas» tanlanishi mumkin."
+  },
+  {
+   "id": 18,
+   "domain_id": 2,
+   "title": "Tashkilot yongʼin xavfini kamaytirish hamda bemorlar va xodimlarni xavfsiz evakuatsiya qilish uchun yongʼinga qarshi himoya tizimlari bilan taʼminlangan.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 19,
+   "domain_id": 2,
+   "title": "Tashkilot bino va inshootlarning sanitar-texnik holatini saqlash uchun joriy ta’mirlash ishlarini olib boradi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 20,
+   "domain_id": 2,
+   "title": "Tashkilot bemorlar, tashrif buyuruvchilar va xodimlarning binolar ichida va tibbiy tashkilot hududida oson harakatlanishi uchun yoʼnalish koʼrsatkichlarini oʼrnatgan.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 21,
+   "domain_id": 2,
+   "title": "Tashkilot videokuzatuv tizimlari va noxush holatlar (hodisalar)ga tezkor javob berish mexanizmlaridan foydalangan holda bemorlar, xodimlar va tashkilot mulki xavfsizligini taʼminlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 22,
+   "domain_id": 2,
+   "title": "Tashkilot tibbiy yordamni xavfsiz va samarali taʼminlash maqsadida tibbiy jihozlarga rejali texnik xizmat koʼrsatish, tekshirish va almashtirish qoidalarini ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 23,
+   "domain_id": 2,
+   "title": "Tashkilot xodimlarga tibbiy jihozlar va tibbiy buyumlardan xavfsiz foydalanish boʼyicha oʼquv mashgʼulotlarini oʼtkazadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 24,
+   "domain_id": 2,
+   "title": "Tashkilot tibbiy va ma’muriy yozuvlarni (hujjatlarni) xavfsiz saqlash, arxivlash va yo‘q qilish bo‘yicha tartiblarni ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 25,
+   "domain_id": 3,
+   "title": "Tashkilot infektsion nazorat tizimini ishlab chiqadi va amalga oshiradi, ushbu tizim tibbiy yordam ko‘rsatish bilan bog‘liq infektsiyalarning oldini olish bo’yicha tadbirlar rejasini va javobgar shaxsni tayinlashni ham o’z ichiga oladi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 26,
+   "domain_id": 3,
+   "title": "Tashkilot qo‘l gigiyenasini ta’minlash bo‘yicha chora-tadbirlarni amalga oshiradi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 27,
+   "domain_id": 3,
+   "title": "Tashkilot shifoxona ichi infektsiyalarining oldini olish va bemorlar hamda xodimlar xavfsizligini ta’minlash maqsadida bino va xonalarni rejali tozalash va dezinfektsiya ishlarini amalga oshiradi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 28,
+   "domain_id": 3,
+   "title": "Tashkilot tibbiy yordam ko‘rsatish bilan bog‘liq kasbiy xavf-xatarlardan xodimlarni himoya qilishni ta’minlaydi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 29,
+   "domain_id": 3,
+   "title": "Tashkilot infektsiya tarqalishining oldini olish va boshqa bemorlar hamda xodimlarning xavfsizligini ta’minlash maqsadida yuqumli kasallikka chalingan bemorlarni saralash tizimini joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 30,
+   "domain_id": 3,
+   "title": "Tashkilot infektsiya bilan zararlanish xavfining oldini olish, xodimlar xavfsizligini ta’minlash va tashqi muhitni muhofaza qilish maqsadida tibbiy chiqindlarni boshqarish tizimini joriy qiladi",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 31,
+   "domain_id": 3,
+   "title": "Tashkilot infektsiyalarning oldini olish hamda bemorlar va xodimlarning xavfsizligini ta’minlash maqsadida tibbiy asbob-anjomlar va buyumlarni dekontaminatsiya va sterilizatsiya qilish tartiblarini joriy etadi.",
+   "gold": true,
+   "applicability": "Qayta ishlatiladigan tibbiy asbob-anjomlar sterilizatsiya qilinsa."
+  },
+  {
+   "id": 32,
+   "domain_id": 3,
+   "title": "Tashkilot kesishgan infektsiyaning oldini olish hamda bemorlar va xodimlarning xavfsizligini ta’minlash uchun gastroskop, bronxoskop va kolonoskoplarni tozalash, dezinfeksiyalash va saqlash tartibini joriy etadi.",
+   "gold": true,
+   "applicability": "Endoskopik xizmat (gastroskopiya, bronxoskopiya yoki kolonoskopiya) mavjud boʻlsa."
+  },
+  {
+   "id": 33,
+   "domain_id": 3,
+   "title": "Tashkilot infektsiyalarning oldini olish va bemorlar xavfsizligini ta’minlash uchun invaziv muolajalar, xususan jarrohlik amaliyotlari o‘tkazishda aseptika qoidalarini joriy etadi va ularga rioya qiladi.",
+   "gold": false,
+   "applicability": "Invaziv muolajalar yoki jarrohlik amaliyotlari bajarilsa."
+  },
+  {
+   "id": 34,
+   "domain_id": 4,
+   "title": "Tashkilot dori vositalarining sifati, xavfsizligi va ulardan foydalanish imkonini ta’minlash uchun ularni sotib olish tartibini ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 35,
+   "domain_id": 4,
+   "title": "Tashkilot dori vositalari, vaktsinalar va reaktivlarning sifati va xavfsizligini ta'minlash uchun tegishli saqlash sharoitlarini ta'minlaydi",
+   "gold": false,
+   "applicability": "Dori vositalari, vaksinalar yoki laboratoriya reaktivlari saqlansa."
+  },
+  {
+   "id": 36,
+   "domain_id": 4,
+   "title": "Tashkilot bemorlar xafsizligi va davolash samaradorligini ta’minlash uchun dori vositalarini buyurish, tayyorlash, tarqatish va qo‘llash tartibini ishlab chiqadi va joriy etadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 37,
+   "domain_id": 4,
+   "title": "Tashkilot dori vositalarini ro‘yxatga olish va ulardan xavfsiz foydalanish tartiblarini ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 38,
+   "domain_id": 4,
+   "title": "Tashkilot xatolar xavfini kamaytirish uchun yuqori xavfdagi dori vositalari (noto‘g‘ri dozada yoki noto‘g‘ri qo‘llanganda bemor soglig‘iga jiddiy zarar yetkazishi mumkin bo‘lgan dori vositalari), nomi yoki tashqi ko‘rinishi o‘xshash bo‘lgan dorilar, shuningdek kontsentrlangan elektrolitlardan xavfsiz foydalanishni ta’minlaydi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 39,
+   "domain_id": 4,
+   "title": "Tashkilot antimikrob dori vositalariga rezistentlik rivojlanishining oldini olish va bemorlar davolanish natijalarini yaxshilash maqsadida antimikrob dori vositalaridan ratsional foydalanish tizimini joriy etadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 40,
+   "domain_id": 4,
+   "title": "Tashkilot shoshilinch va kechiktirib bo‘lmaydigan holatlarda klinik ehtiyojlar va harakatlar algoritmlariga muvofiq jihozlangan shoshilinch tibbiy yordam to‘plamlari mavjudligi orqali shoshilinch yordam ko‘rsatishga tayyorgarlikni ta’minlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 41,
+   "domain_id": 5,
+   "title": "Tashkilot tibbiy yordam ko‘rsatishning barcha bosqichlarida bemorlar haqidagi ma’lumotlarning maxfiyligi va konfidentsialligini ta’minlash bo‘yicha tadbirlarni amalga oshiradi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 42,
+   "domain_id": 5,
+   "title": "Bemorlar tibbiy tashkilotga murojaat qilganida o‘z huquq va majburiyatlari haqida sodda va tushunarli tilda xabardor qilinadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 43,
+   "domain_id": 5,
+   "title": "Tibbiy xizmatlarni ko‘rsatishda tashkilot bemorlar madaniyatini (madaniy xilma-xilligini) e’tiborga oladi va turli diniy e’tiqodlarga nisbatan hurmat ko‘rsatadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 44,
+   "domain_id": 5,
+   "title": "Tashkilot bemorlarga ularining kasallik holati, ehtiyojlari va mumkin bo‘lgan parvarish/davolash usullari to‘g‘risida tushunarli va sodda shaklda ma’lumotlarni taqdim etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 45,
+   "domain_id": 5,
+   "title": "Tashkilot bemorning individual ehtiyojlarini inobatga olgan holda birgalikda qaror qabul qilish qoidalari va amaliyotini joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 46,
+   "domain_id": 5,
+   "title": "Tashkilot infratuzilmani moslashtirish va xodimlarni tayyorlash orqali tayanch-harakat tizimi, ko‘rish, eshitish va nutqida nuqsonlari (buzilishlari) bo‘lgan shaxslar uchun tibbiy yordamdan teng va to‘siqsiz foydalanish imkoniyatini ta’minlaydi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 47,
+   "domain_id": 6,
+   "title": "Tashkilot tibbiy xatolar xavfini kamaytirish maqsadida har qanday diagnostik tekshiruvlar, tibbiy muolajalar va davolash tadbirlaridan oldin bemorlarni identifikatsiya qilish qoidalarini ishlab chiqadi va joriy etadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 48,
+   "domain_id": 6,
+   "title": "Tashkilot xatolarni kamaytirish va tibbiyot xodimlari o‘rtasidagi muloqotni yaxshilash maqsadida tibbiy ma’lumotlarni og‘zaki tarzda xavfsiz yetkazish tartiblarini ishlab chiqadi va joriy etadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 49,
+   "domain_id": 6,
+   "title": "Tashkilot o‘tkir va hayot uchun xavfli holatdagi bemorlarni o‘z vaqtida aniqlash va taqsimlash maqsadida tibbiy saralash (triaj) tizimini joriy etadi.",
+   "gold": true,
+   "applicability": "Qabul boʻlimi, shoshilinch yordam yoki bemorlarni saralash jarayoni mavjud boʻlsa."
+  },
+  {
+   "id": 50,
+   "domain_id": 6,
+   "title": "Tashkilot bemorlardan tibbiy muolajalar va davolanishga xabardorlik asosida rozilik olish tartiblarni ishlab chiqadi va joriy etadi, shuningdek ushbu tartiblar tibbiy yordamdan bosh tortish holatlarini ham o‘z ichiga oladi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 51,
+   "domain_id": 6,
+   "title": "Tashkilot bemorlarni malakali mutaxassislar tomonidan ko‘rikdan o‘tkazish tartiblarini ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 52,
+   "domain_id": 6,
+   "title": "Tashkilot bemorlar holati va ehtiyojlarini baholash asosida ishlab chiqilgan individual davolash va parvarish qilish rejasini tuzish va yuritish jarayonini amalga oshiradi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 53,
+   "domain_id": 6,
+   "title": "Tashkilot bemorlarni bo‘limlar va tibbiyot tashkilotlariga xavfsiz ko‘chirish tartiblarini ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 54,
+   "domain_id": 6,
+   "title": "Tashkilot bemorlarning to‘liq, aniq va hozirgi vaqtda muhim bo’lgan tibbiy ma’lumotlarni yaratish va yuritish qoidalarini ishlab chiqadi va amalga oshiradi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 55,
+   "domain_id": 6,
+   "title": "Tashkilot jarrohlik nazorat varag‘idan foydalanish qoidalarini ishlab chiqadi va amalga oshiradi, ushbu qoidalar quyidagi majburiy bosqichlarni: anesteziya boshlanishidan oldin «sayn-in», terini kesishdan oldin «taym-aut», bemor operatsiya xonasidan chiqishidan oldin «sayn-aut» bosqichlarini va Jahon sog‘liqni saqlash tashkiloti tavsiyalariga muvofiq jarrohlik maydonini belgilashni o‘z ichiga oladi.",
+   "gold": true,
+   "applicability": "Jarrohlik amaliyotlari bajarilsa."
+  },
+  {
+   "id": 56,
+   "domain_id": 6,
+   "title": "Tashkilot jarrohlik amaliyotining barcha bosqichlarida – jarrohlik amaliyotidan oldingi ko‘rikdan to jarrohlik amaliyotidan keyingi rejani amalga oshirishgacha bo‘lgan harakatlarning ketma-ketligini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Jarrohlik amaliyotlari bajarilsa."
+  },
+  {
+   "id": 57,
+   "domain_id": 6,
+   "title": "Tashkilot kasbiy standartlar va klinik protokollarga muvofiq anesteziya va sedatsiyani standartlashtirilgan tarzda o‘tkazilishini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Anesteziya yoki sedatsiya oʻtkazilsa."
+  },
+  {
+   "id": 58,
+   "domain_id": 6,
+   "title": "Tashkilot o‘z hududida «Ko‘k kod» doirasida shoshilinch tibbiy yordam ko‘rsatishga 24 soat davomida tayyor turadi, shu jumladan malakali xodimlar, zarur uskuna va dori vositalarning mavjudligi hamda ulardan foydalanish imkoniyatini ta’minlaydi.",
+   "gold": true,
+   "applicability": "24/7 statsionar yoki shoshilinch tibbiy yordam tizimi mavjud boʻlsa."
+  },
+  {
+   "id": 59,
+   "domain_id": 6,
+   "title": "Tashkilot xodimlar malakasi, tekshiruvdan o‘tgan (soz) uskunalar, zonalarga ajratish hamda foydalanish talablariga rioya qilish orqali laboratorya tekshiruvlari xavfsizligi va sifatini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Tashkilotda laboratoriya xizmati mavjud boʻlsa."
+  },
+  {
+   "id": 60,
+   "domain_id": 6,
+   "title": "Tashkilot laboratoriya tekshiruvlarini sifat standartlari, sanitariya rejimi va biologik xavfsizlik talablariga rioya etgan holda amalga oshiradi.",
+   "gold": false,
+   "applicability": "Tashkilotda laboratoriya xizmati mavjud boʻlsa."
+  },
+  {
+   "id": 61,
+   "domain_id": 6,
+   "title": "Tashkilot biomaterialni olish, saqlash va transportirovka qilish, shuningdek shoshilinch (Cito) tekshiruvlarni o‘z ichiga olgan holda laboratoriya tekshiruvlarining xavfsizligi, aniqligi va o‘z vaqtida bajarilishini ta’minlaydi.",
+   "gold": true,
+   "applicability": "Tashkilotda laboratoriya xizmati mavjud boʻlsa."
+  },
+  {
+   "id": 62,
+   "domain_id": 6,
+   "title": "Tashkilot radiologik tashxislash va ultratovush tekshiruvlar o‘tkazishda bemorlar xavfsizligini hamda diagnostik muolajalarning belgilangan talablarga muvofiqligini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Radiologiya va/yoki UTT xizmati mavjud boʻlsa."
+  },
+  {
+   "id": 63,
+   "domain_id": 6,
+   "title": "Tashkilot radiologik tashxislash va ultratovush tekshiruvlari vaqtida uskunalarning texnik sozligi hamda xodimlar xavfsizligini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Radiologiya va/yoki UTT xizmati mavjud boʻlsa."
+  },
+  {
+   "id": 64,
+   "domain_id": 6,
+   "title": "Tashkilot magnit-rezonans tomografiyasi o‘tkazilishida bemorlar xavfsizligini va tekshiruv shart-sharoitlari ustidan nazoratni ta’minlaydi.",
+   "gold": false,
+   "applicability": "MRT xizmati mavjud boʻlsa."
+  },
+  {
+   "id": 65,
+   "domain_id": 7,
+   "title": "Tashkilot xodimlarni identifikatsiya qilishni, xodimlar hujjatlarini yuritishni hamda klinik bo‘limlarning xodimlar bilan ta’minlanganligini nazorat qilishni ta’minlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 66,
+   "domain_id": 7,
+   "title": "Tashkilot barcha xodimlarning ma’lumoti, malakasi va litsenziyalarini tekshirish tartiblarini ishlab chiqadi va joriy etadi hamda ularning belgilangan talablarga muvofiqligini ta’minlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 67,
+   "domain_id": 7,
+   "title": "Tashkilot tibbiyot xodimlarini ishga qabul qilishda klinik ko‘nikmalarni baholash va ularni davriy ravishda qayta ko‘rib chiqish uchun tartiblarni ishlab chiqadi va joriy etadi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 68,
+   "domain_id": 7,
+   "title": "Tashkilot har yili tibbiyot xodimlarining kasbiy faoliyatini baholaydi, shu jumladan ularning malakasi, klinik ko‘nikmalari hamda etika me’yorlariga rioya qilishini tekshiradi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 69,
+   "domain_id": 7,
+   "title": "Tashkilot xodimlarning zarur kasbiy malaka (kompetentlik) darajasini saqlab qolish va ko‘nikmalarini rivojlantirish maqsadida uzluksiz ta’lim olishini (o‘quv mashg‘ulotlaridan o‘tishini) ta’minlaydi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 70,
+   "domain_id": 7,
+   "title": "Tashkilot xodimlar salomatligi va xavfsizligini muhofaza qilishga qaratilgan chora-tadbirlarni ishlab chiqadi va joriy etadi, bu orqali kasb kasalliklari va jarohatlar xavfini kamaytiradi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 71,
+   "domain_id": 7,
+   "title": "Tashkilot xodimlarni zo‘ravonlik, tajovuz va adolatsiz muomaladan himoya qilish bo‘yicha chora-tadbirlarni ishlab chiqadi va joriy etadi, ushbu tadbirlar mehnat nizolarini ko‘rib chiqish va ularga yechim topish mexanizmlarini ham qamrab oladi.",
+   "gold": true,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 72,
+   "domain_id": 7,
+   "title": "Tashkilot yangi xodimlarni xavfsizlik, etika va tashkilot qoidalariga oid asosiy talablar bilan tanishtirish maqsadida ular uchun dastlabki majmuaviy yo‘riqnomani ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 73,
+   "domain_id": 7,
+   "title": "Tashkilot xodimlarning psixologik va emotsional farovonligini ta’minlash uchun shart-sharoit yaratadi, stress darajasi va kasbiy \"yonish\"ni kamaytiradi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 74,
+   "domain_id": 7,
+   "title": "Tashkilot xodimlarning fikr-mulohazalarni yig‘ish va tahlil qilish, shuningdek xodimlarning ishdan qoniqishini oshirish hamda kadrlar qo‘nimsizligini kamaytirish uchun ularning farovonlik ko‘rsatkichlarini monitoring qilish bo‘yicha tizimli yondashuvni ishlab chiqadi va joriy etadi.",
+   "gold": false,
+   "applicability": "Tashkilot faoliyati va tibbiy xizmat turiga muvofiq qoʻllaniladi."
+  },
+  {
+   "id": 75,
+   "domain_id": 7,
+   "title": "Tashkilot talabalar, rezidentlar (magistrlar, ordinatorlar) va boshqa ta’lim olayotgan shaxslarning ta’lim faoliyatini nazorat qilish qoidalarini ishlab chiqadi va joriy etadi, xavfsiz va nazorat qilinadigan joylarda ularni tayyorlashni ta’minlaydi.",
+   "gold": false,
+   "applicability": "Talabalar, rezidentlar, magistrlar, ordinatorlar yoki boshqa taʼlim oluvchilar klinik jarayonda ishtirok etsa."
+  }
+ ],
+ "criteria": [
+  {
+   "standard_id": 1,
+   "number": 1,
+   "description": "Umumiy klinik boshqaruv uchun mas’ul malakali shaxs tayinlangan, u tashkilotning tibbiy faoliyatini muvofiqlashtiradi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 1,
+   "number": 2,
+   "description": "Sanitar-epidemiologik nazorat, tibbiy xizmat ko‘rsatish bilan bog‘liq infektsiyalar profilaktikasi va nazorati bo’yicha mas’ul malakali shaxs tayinlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 1,
+   "number": 3,
+   "description": "Sifat nazorati tizimi, sifat auditini muvofiqlashtirish va yaxshilash bo‘yicha tadbirlarni amalga oshirisga hamda shikoyatlarni tahlil qilishga mas’ul malakali shaxs tayinlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 1,
+   "number": 4,
+   "description": "O‘rta tibbiyot xodimlarini nazorat qilish, ular faoliyatini tashkil etish va sifatiga mas’ul malakali shaxs tayinlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 1,
+   "number": 5,
+   "description": "Bino, muhandislik tizimi, tibbiy jihozlar, tibbiy maqsadda ishlatiladigan gazlar xavfsizligi tizimini muvofiqlashtirish va yong‘in xavfsizligiga mas’ul shaxs tayinlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 2,
+   "number": 1,
+   "description": "Tashkilotning 2–5 yillik muddatga tasdiqlangan strategik rejasi mavjud, unda tashkilotni, tibbiy xizmatlarni va kadrlar salohiyatini rivojlantirishga qaratilgan maqsadlar ko‘rsatilgan",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 2,
+   "number": 2,
+   "description": "Tashkilotning missiyasi, istiqbolli kelajak manzarasi va qadriyatlari strategik rejaga kiritilgan, xodimlar va aholiga ishonchli manbalar (masalan, veb-sayt, axborot stendlari, identifikatsiya beydjlari) orqali taqdim etiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 2,
+   "number": 3,
+   "description": "Tashkilotning yuqori rahbariyati strategik rejaning amalga oshirilishini har bir strategik yo‘nalish bo‘yicha taraqqiyotni aks ettiradigan ko‘rsatkichlar (KPI) monitoringi orqali nazorat qiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 3,
+   "number": 1,
+   "description": "Tashkilotda strategik reja asosida ishlab chiqilgan va tasdiqlangan yillik amaliy (operatsion) reja mavjud, unda aniq natijalar va ko‘rsatkichlarga erishishga qaratilgan yillik maqsadlar bayon etilgan",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 3,
+   "number": 2,
+   "description": "Amaliy (operatsion) rejani amalga oshirishni nazorat qilish tizimi yo‘lga qo‘yilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 3,
+   "number": 3,
+   "description": "Tashkilotning yuqori rahbariyati amaliy (operatsion) rejaning bajarilishini nazorat qiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 4,
+   "number": 1,
+   "description": "Tashkilot yuqori rahbariyati ehtimollik darajasi va ta’sir kuchi bo‘yicha baholanadigan xavf omillari reestrini belgilaydi \n-Har bir aniqlangan xavf omili paydo bo‘lish ehtimolligi (past -1 ball, o‘rtacha – 3 ball, yuqori – 5 ball) va bemorlar sog‘lig‘i va xodimlar xavfsizligiga potentsial ta’siri (sezilarsiz – 1 ball, o‘rtacha – 3 ball, o‘ta yuqori – 5 ball) bo‘yicha baholanadi\n-Xavf omillari reestri bajarilgan tadbirlar asosida xavf omillari bartaraf etilishi yoki kamaytirilishi va yangi xavf omillari aniqlanishi bilan yangilanib boriladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 4,
+   "number": 2,
+   "description": "Tashkilotda aniqlangan xavf omillarini bartaraf etish bo‘yicha mas’ul shaxslar va muddatlari ko’rsatilgan tadbirlar rejasi mavjud: \n-Tadbirlar rejasi aniq-tiniq hujjatlashtirilgan, rahbariyat tomonidan ma’qullangan bo‘lishi va davriy ravishda yangilanib borilishi zarur \n-Tadbirlar rejasi xavf omillarini kamaytirish yoki bartaraf etish bo‘yicha aniq qadamlar ketma-ketligini, javobgarlik taqsimlanishi va bajarilish muddatlari nazoratini o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 4,
+   "number": 3,
+   "description": "Xavf omillarini boshqarish bo‘yicha tadbirlar tashkilotning tasdiqlangan ichki qoidalari bilan tartibga solinadi: \n-Ushbu qoidalar xavf omillarini aniqlash, ro‘yxatga olish, tahlil qilish va boshqarish tartibini o‘z ichiga oladi (masalan, xodimlardan olingan fikr-mulohazalar, aniqlangan noxush holatlar (hodisalar) va shikoyatlar orqali)\n-Ushbu qoidalarda xavf omillar reetrini qayta ko‘rib chiqish davriyligi bayon etilgan",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 4,
+   "number": 4,
+   "description": "Tashkilotda xavf omillarini boshqarish masalalari bilan shug‘ullanuvchi, ularni bartaraf etish bo‘yicha tadbirlar bajarilishini nazorat qiluvchi va ular yuzasidan tashkilot yuqori rahbariyatiga hisobotlar tayyorlovchi mas’ul shaxs tayinlangan\n-Mas’ul shaxs xavf omillarini kamaytirish bo‘yicha tadbirlarni muvofiqlashtiradi, harakatlar rejasi bajarilishini nazorat qiladi va ularning samaradorligini tahlil qiladi\n-Mas’ul shaxs tashkilot rahbariyatini xavf omillarining joriy holati va ko‘rilgan chora-tadbirlar natijalari haqida doimiy ravishda xabardor qilib turadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 4,
+   "number": 5,
+   "description": "Tashkilot oliy rahbariyatiga xavf omillarini boshqarish va kamaytirish natijalari, shuningdek ularni kamaytirish bo‘yicha ko‘rilgan chora-tadbirlar haqida hisobot taqdim etiladi\n-Hisobotlar erishilgan natijalar haqidagi ma’lumotlar, o‘tkazilgan tadbirlar samaradorligi tahlili hamda bemorlar va xodimlar xavfsizligini yanada yaxshilash bo‘yicha rejalarni o‘z ichiga oladi\n-Hisobotlar xavf omillari reestridagi o‘zgarishlar va yangi aniqlangan xavf omillarini hisobga olgan holda davriy ravishda taqdim etiladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 5,
+   "number": 1,
+   "description": "Jazo choralarini istisno qiladigan hodisalarni aniqlash, qayd etish, tahlil qilish va ularning takrorlanish xavfini kamaytirish uchun tuzatish choralarini ko'rish tartibini tartibga soluvchi qoidalar ishlab chiqilgan va tasdiqlangan. \nNoxush holatlar (hodisalar) quyidagi tushunchalarni o'z ichiga oladi:\n-Deyarli xato - bu bemorga yoki xodimlarga zarar etkazmaydigan holat\n-Xato - o'rtacha zararga olib keladigan hodisa (masalan, noto'g'ri qo'llanilgan dori vositalari ta'sirida yoki ularning noto'g'ri dozasi tufayli)",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 5,
+   "number": 2,
+   "description": "Tashkilotda bemor va xodimlar xavfsizligi bilan bog'liq holatlarni (hodisalarni) aniqlash va qayd etish uchun ularni (masalan, dorilarni qo’llash bilan bog’liq xatolar, bemorlarning yiqilishi, tasdiqlangan shifoxona ichi infektsiyasi) jazosiz ro’yxatga olish, hisobot berish va tahlil qilish tizimi joriy etilgan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 5,
+   "number": 3,
+   "description": "Noxush holatlarni (hodisalarni) ro'yxatga olish va tahlil qilish tizimini, shuningdek ularni yaxshilash bo’yicha ko'rilayotgan chora-tadbirlarni nazorat qiluvchi mas'ul shaxslar yoki xizmatlar tayinlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 5,
+   "number": 4,
+   "description": "Tashkilot xodimlarga xavfsizlik madaniyati bo'yicha o’quv mashg’ulotlari o'tkazadi, xodimlar ushbu mavzudan xabardorligini namoyish etadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 5,
+   "number": 5,
+   "description": "Tashkilot xavfsizlik madaniyati tizimiga bo'lgan ishonch to'g'risida xodimlar o'rtasida anonim so'rovnoma o'tkazish orqali xavfsizlik madaniyati darajasini muntazam ravishda baholaydi, shuningdek, ro’yxatga olingan noxush holatlar (hodisalar) soni va tabiati bo'yicha umumiy tahlil o'tkazadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 6,
+   "number": 1,
+   "description": "Tashkilot ilg‘or amaliyot, dalillarga asoslangan tibbiyot, Sog‘liqni saqlash vazirligi va kasbiy birlashmalarning tavsiyalari asosida, bunday tavsiyalar bo‘lmagan taqdirda ekspert xulosasi va mutaxassislarning umumiy xulosasiga asoslangan ichki qarorlar bo‘yicha klinik ko‘rsatmalar va protokollarni ishlab chiqadi va tasdiqlaydi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 6,
+   "number": 2,
+   "description": "Tashkilot bemorlarni davolashda haddan tashqari xilma-xillik va xatolarni kamaytirish uchun tibbiy kartalarni/kasallik tarixini to‘ldirishda tasdiqlangan klinik qo‘llanmalar va protokollarga rioya etilayotganligini tekshirish qoidalari va tizimini ishlab chiqadi hamda amaliyotga joriy etadi. Tashkilotning yuqori rahbariyati davriy ravishda tibbiy kartalarni/kasallik tarixini tekshirish natijalari to‘g‘risida xabardor qilib boriladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 6,
+   "number": 3,
+   "description": "Bemorlarni davolashda xatolarni va haddan tashqari xilma-xillikni kamaytirish uchun klinik bo‘limlar ichida klinik qo‘llanmalar va protokollarni qo‘llash bo‘yicha o‘quv mashg‘ulotlari tizimli ravishda yo‘lga qo‘yilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 7,
+   "number": 1,
+   "description": "Tashkilot tibbiy yordamning asosiy jihatlarini qamrab oluvchi sifat ko‘rsatkichlarini ishlab chiqadi, ular quyidagi yo‘nalishlarni o‘z ichiga oladi, lekin ular bilan cheklanmaydi:\n-Shifoxonaga bemorlarni qayta yotqizish va asoratlar sonini kamaytirish (masalan, jarrohlik amaliyotidan keyingi asoratlar soni, shifoxona ichi infektsiyalari darajasi)\n-Ko‘rsatilayotgan tibbiy xizmatlarning o‘z vaqtidaligi (tibbiy yordamni kutish vaqti, shu jumladan o‘tkir koronar sindromli bemorlar uchun \"eshik-ballon\" tizimi ko‘rsatkichlari, shoshilinch kesarcha kesishda qaror qabul qilingandan to kesishgacha bo‘lgan vaqt, o‘tkir ishemik insult bemorlari uchun \"eshikdan ignagacha\" bo‘lgan vaqt, navbatda turishda yoki shifoxonaga yotqizishda o‘rtacha kutish vaqti)\n-Innovatsiyalarni joriy etish (reabilitatsiya muddatlarini yoki bemorning shifoxonada qolish davomiyligini qisqartirishga imkon beradigan yangi tashxislash va davolash usullaridan foydalanish, minimal invaziv texnologiyalarni qo‘llash)\n-Xodimlar uchun mehnat sharoitlarini yaxshilash (kasbiy “yonish” va kadrlar qo’nimsizligini kamaytirish, mehnat sharoitlarini yaxshilash va xodimlarning ishdan qoniqish darajasini oshirish)",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 7,
+   "number": 2,
+   "description": "Tashkilot belgilangan sifat ko‘rsatkichlari bo‘yicha ma’lumotlarni muntazam ravishda yig‘ish, tahlil qilish va talqin etish uchun tartiblarni, raqobatdosh tashkilotlar bilan trend tahlili, benchmarking o‘tkazishni amaliyotga joriy etadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 7,
+   "number": 3,
+   "description": "Tashkilotning yuqori rahbariyati ko‘rsatkichlar monitoringi natijalari haqida xabardor qilinadi va tashkilot maqsadli ko‘rsatkichlarga erishish choralarini ko‘radi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 8,
+   "number": 1,
+   "description": "Tibbiy tashkilot rahbariyati tashkilot uchun muhim ahamiyatga ega bo‘lgan ko‘rsatkichlarni hisobga olgan holda bemorlar xavfsizligi va tibbiy yordam sifati sohasidagi ustuvor yo‘nalishlarni belgilaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 8,
+   "number": 2,
+   "description": "Ushbu yo‘nalishlar asosida tashkilot sifatni yaxshilash rejasini ishlab chiqadi. Sifatni yaxshilash rejasi quyidagilarni o‘z ichiga oladi:\n– tadbir (lar) nomi\n – maqsadga erishish uchun zarur harakatlar\n – mas’ul shaxslar\n – amalga oshirish muddatlari",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 8,
+   "number": 3,
+   "description": "Ushbu reja doimiy ravishda yangilanadi va to‘ldiriladi hamda barcha manfaatdor tomonlar, shu jumladan tadbirlarni amalga oshirishga jalb etilgan shaxslarga yetkaziladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 8,
+   "number": 4,
+   "description": "Mas’ul shaxs har chorakda sifatni yaxshilash rejasining bajarilishi to‘g‘risida tashkilot yuqori rahbariyatiga hisobot beradi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 8,
+   "number": 5,
+   "description": "Sifatni yaxshilash rejasidagi tadbirlarni amalga oshirish uchun zarur bo‘lgan xarajatlarni tibbiyot tashkiloti byudjeti hisobga oladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 9,
+   "number": 1,
+   "description": "Tashkilot davolash jarayonida yuzaga keladigan axloqiy muammolar, xususan bemorning hayotiy muhim davolanishdan bosh tortishi, majburiy davolashning axloqiy jihatlari, kognitiv (aqliy faoliyatning) buzilishi mavjud yoki hushsiz bemorlarda invaziv muolajalarni o‘tkazish, e’tiqodiy sabablarga ko‘ra qon quyishdan bosh tortish, shuningdek bemor oila a’zolarining uning xohishiga qarshiligi kabilarni ko‘rib chiqish va hal etish uchun etika qo‘mitasini tashkil qiladi yoki mas’ul shaxslarni tayinlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 9,
+   "number": 2,
+   "description": "Tashkilot tibbiyot xodimlari tomonidan axloqiy masalalarni ko‘rib chiqish tartibi, shuningdek ko‘rib chiqish va qaror qabul qilish muddatlari, komissiya muhokamasini bayonnoma tarzida rasmiylashtirish bo‘yicha qoidalarni ishlab chiqadi va amaliyotga joriy etadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 9,
+   "number": 3,
+   "description": "Shifokorlar tibbiy xizmat ko‘rsatishda yuzaga keladigan axloqiy muammolarni ko‘rib chiqish va hal qilish qoidalari bo‘yicha o‘qitilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 10,
+   "number": 1,
+   "description": "Tashkilotda axborot xavfsizligi tizimi joriy etilgan bo'lib, u muhim ma'lumotlarni zahiralash, kiberxavflardan himoya qilish, shuningdek, favqulodda holatlarda qayta tiklash rejasi va uning muntazam ravishda sinovdan o'tkazilishini o'z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 10,
+   "number": 2,
+   "description": "Tashkilot xodimlarga axborot texnologiyalaridan xavfsiz foydalanish qoidalari va ma'lumotlarni himoya qilish bo‘yicha ichki chora-tadbirlarni o‘rgatadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 10,
+   "number": 3,
+   "description": "Tashkilot bilan ishonchli provayder o’rtasida barqaror internet aloqasini ta’minlash bo’yicha shartnoma mavjud",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 11,
+   "number": 1,
+   "description": "Tashkilot ichki qoidalar va standartlashtirilgan operatsion protseduralarni (SOP) ishlab chiqish va tasdiqlash talablari va shaklini tartibga soluvchi qoidalarni ishlab chiqadi va joriy etadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 11,
+   "number": 2,
+   "description": "Tashkilot litsenziyalangan antivirus dasturiy ta'minoti va operatsion tizimlardan foydalanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 11,
+   "number": 3,
+   "description": "Tashkilot litsenziyalangan elektron tibbiy axborot tizimlari, shu jumladan laboratoriya axborot tizimi va tasvirlarni arxivlash va uzatish tizimidan foydalanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 12,
+   "number": 1,
+   "description": "Bemorlar o’rtasida ko‘rsatilayotgan tibbiy xizmatlardan qoniqishi va/yoki tibbiy yordamdan foydalanish tajribasi to‘g‘risida so‘rovnomalar o‘tkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 12,
+   "number": 2,
+   "description": "Bemorlar tomonidan shikoyatlar qoldirish uchun qulay sharoitlar yaratilgan va ularni ro‘yxatga olish yo‘lga qo‘yilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 12,
+   "number": 3,
+   "description": "Bemorlar asosli shikoyatlarni ko‘rib chiqish natijalari to‘g‘risida tibbiy tashkilot qoidalarida belgilangan muddatlar ichida xabardor etiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 13,
+   "number": 1,
+   "description": "So‘rovnoma natijalari tibbiy xizmatlar ko‘rsatish jarayonlarini yaxshilash uchun qo‘llaniladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 13,
+   "number": 2,
+   "description": "Shikoyatlar tahlil qilinib, ularning natijalari asosida tibbiy xizmatlarni yaxshilash choralari ko‘riladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 13,
+   "number": 3,
+   "description": "Tashkilot bemorni davolash bilan bog‘liq noxush holatlar (xatoliklar) yuz berganida uni xabardor qilish tartibini joriy etadi, shuningdek bemorga noxush holat bo’yicha o‘tkazilgan tahlil natijalari va xizmat ko‘rsatishni yaxshilash uchun qabul qilingan chora-tadbirlar haqida ma’lumot beradi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 14,
+   "number": 1,
+   "description": "Tashkilotning rasmiy veb-sayti mavjud bo‘lib, unda tashkilot haqida ma’lumot (tashkiliy tuzilmasi, joylashgan manzili, aloqa ma’lumotlari), shuningdek ko‘rsatiladigan tibbiy xizmatlar ro‘yxati undan foydalanuvchilar toifasi (kattalar, bolalar, statsionar, shoshilinch yordam va boshqalar) ko‘rsatilgan holda joylashtirilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 14,
+   "number": 2,
+   "description": "Tashkilot tibbiy xizmatlardan foydalanish tartibi (qabul soatlari, shifokorga yo‘llanmaning zarurligi, statsionarda davolanish shartlari, ayrim cheklovlar) haqidagi ma’lumotlarni rasmiy veb-sayt, axborot stendlari va qo‘llanmalar orqali barcha foydalanuvchilarga tushunarli tarzda yetkazadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 14,
+   "number": 3,
+   "description": "Tashkilot bemorlarga kasalliklarning oldini olish va sog‘liqni mustahkamlash, shuningdek emlash, profilaktik tekshiruvlar, antibiotiklardan oqilona foydalanish, sog‘lom ovqatlanish, jismoniy faollik, zararli odatlardan voz kechish kabi masalalar bo‘yicha ma’lumotlar taqdim etadi. Ma’lumotlar veb-sayt, ijtimoiy tarmoqlar, ochiq eshiklar kunlari va bemorlar maktablari orqali yetkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 14,
+   "number": 4,
+   "description": "Tashkilot o‘z faoliyati natijalari va tibbiy yordam ko‘rsatish sifati ko‘rsatkichlari, shu jumladan davolash natijalari to‘g‘risidagi ma’lumotlarni (mavjud bo‘lgan taqdirda) veb-sayt, axborot stendlari va qonunchilik talablariga muvofiq boshqa kanallar orqali ommaga taqdim etadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 14,
+   "number": 5,
+   "description": "Joylashtirilgan ma’lumot muntazam ravishda yangilanib turiladi va aktual holatda saqlanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 15,
+   "number": 1,
+   "description": "Tashkilotda binolar va muhandislik tizimlarini baholash uchun binolar xavfsizligi boʼyicha komissiya tashkil etilgan, unga texnik xizmat, oʼrta tibbiyot xodimlari, epidemiologik nazorat vakillari va sifat nazorati xizmati vakili kiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 15,
+   "number": 2,
+   "description": "Xavfsizlik boʼyicha komissiya binolardagi sodir bo’lish ehtimoli yuqori xavf-xatarlar va nuqsonlar hamda xavfsizlik talablarining buzilishlarni aniqlash uchun har chorakda bir marta binolar va muhandislik tizimlarining tekshiruvini oʼtkazadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 15,
+   "number": 3,
+   "description": "Xavfsizlik boʼyicha komissiya tekshiruv natijalari yuzasidan unda aniqlangan kamchiliklarni bartaraf etish boʼyicha takliflar va ularning bajarilishini nazorat qilish muddatlarini koʼrsatgan holda hisobotlar tayyorlaydi, tashkilot yuqori rahbariyatiga komissiya yiliga ikki yoki undan koʼproq marta hisobot beradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 16,
+   "number": 1,
+   "description": "Tashkilot uzluksiz suv va elektr bilan ta’minlangan, shu jumladan markazlashgan suv va elektr tarmoqlariga ulangan hamda ularning muntazam ishlashini ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 16,
+   "number": 2,
+   "description": "Tashkilot favqulodda elektr taʼminoti uzilgan taqdirda oʼta muhim tibbiy jihozlar va tizimlarning uzluksiz ishlashini taʼminlash uchun zahira elektr taʼminoti (generatorlar, akkumulyatorlar) tizimini ishlab chiqadi va joriy etadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 16,
+   "number": 3,
+   "description": "Tashkilot suv taʼminotida uzilishlar paydo boʼlganida foydalanish uchun zahira suv manbalari (suv saqlash rezervuarlari, boshqa taʼminotchilar bilan shartnomalar) bilan taʼminlanga",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 17,
+   "number": 1,
+   "description": "Tashkilot binolarda adekvat (yetarli) havo almashinuvi va havo sifatini nazorat qilishni taʼminlash maqsadida ventilyatsiya tizimlarini muntazam tekshiradi va ularga texnik xizmat koʼrsatadi.",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 17,
+   "number": 2,
+   "description": "Bemorlar va xodimlar uchun ishonchli va xavfsiz muhitni taʼminlash maqsadida liftlar muntazam ravishda tekshiruvlardan oʼtkaziladi va ularga texnik xizmat koʼrsatiladi.",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 17,
+   "number": 3,
+   "description": "Tibbiy gazlarni yetkazish tizimlari (kislorod, vakuum, siqilgan havo) gazlar sizib chiqishi va kesishgan ifloslanishning oldini olish maqsadida germetiklik, gaz tozaligiga va xavfsizlik talablariga mosligiga muntazam tekshiriladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 17,
+   "number": 4,
+   "description": "Konditsionerlarga muntazam ravishda profilaktik tozalash oʼtkaziladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 17,
+   "number": 5,
+   "description": "Texnik xonalar, jumladan yerto’lalardagi markazlashgan muhandislik tizimlari (elektr va suv taʼminoti, ventilyatsiya, tibbiy gazlarni yetkazish tizimlari va boshqalar) taʼmirlash ishlari yoki favqulodda vaziyatlarda tez va xavfsiz qisman yoki toʼliq oʼchirish uchun markirovkalangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 18,
+   "number": 1,
+   "description": "Tashkilot binosi (lari) milliy talablarga muvofiq yongʼinga qarshi himoya tizimlari, jumladan tutun detektorlari, oʼt oʼchirgichlar, yongʼin signalizatsiyasi va avtomatik yongʼin oʼchirish tizimi, evakuatsiya rejalari bilan taʼminlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 18,
+   "number": 2,
+   "description": "Tashkilot xodimlarga yongʼin chiqqanda harakatlanish qoidalari, shu jumladan oʼt oʼchirgichlardan foydalanish qoidalari, evakuatsiya usullari, yongʼin haqida xabar berish va gaz taʼminotini oʼchirish kabilar bo’yicha muntazam ravishda o’quv mashg’ulotlari o’tkazadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 18,
+   "number": 3,
+   "description": "Xodimlar yongʼin chiqqan vaqtda harakatlanish qoidalaridan xabardorligini namoyish etadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 19,
+   "number": 1,
+   "description": "Tashkilot suv oqishi, germetiklik buzilishining oldini olish va binolarda xavfsiz sanitariya sharoitlarini taʼminlash uchun eskirgan/ ishdan chiqqan trubalar, joʼmraklar, rakovinalar va derazalarni muntazam tekshirish va almashtirishni amalga oshiradi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 19,
+   "number": 2,
+   "description": "Tashkilot bemorlar va xodimlar foydalanadigan joylardagi pol qoplamalari, devorlar, eshiklar va muhandislik tarmoqlarining soz holatda ishlashini taʼminlaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 19,
+   "number": 3,
+   "description": "Tashkilot binolardan xavfsiz foydalanish maqsadida taʼmirlash ishlarining muddatlarini hisobga olgan holda joriy taʼmirlash rejasini ishlab chiqadi va amalga oshiradi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 20,
+   "number": 1,
+   "description": "Tashkilot binolari ichida bemorlar, tashrif buyuruvchilar va xodimlar harakatini osonlashtirish uchun aniq va koʼzga tashlanib turadigan navigatsiya belgilari, shu jumladan yoʼnalish koʼrsatkichlari, kabinet va qavatlar raqamlari hamda shartli belgilar oʼrnatilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 20,
+   "number": 2,
+   "description": "Tashkilot hududida jismoniy imkoniyati cheklangan aholi qatlami ehtiyojlarini hisobga olgan holda asosiy binolar, mashinalar toʼxtash joylari, qabul boʼlimlari, avariya chiqish joylari va kutish joylariga yoʼnaltiruvchi navigatsion belgilar joylashtirilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 20,
+   "number": 3,
+   "description": "Tashkilot bemorlar va xodimlar xavfsizligini taʼminlash maqsadida xavfsizlik belgilarini oʼrnatadi, bu belgilarga shuningdek magnit maydoni (MRT) va radiatsiya (PET) zonalari uchun ogohlantiruvchi belgilar, shuningdek oʼt oʼchirish va boshqa yongʼin oʼchirish vositalarining joylashgan joyini belgilash ishoralari ham kiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 21,
+   "number": 1,
+   "description": "Tashkilotda bemorlarning shaxsiy hayotiga dahldor boʼlmagan hududlarda (masalan, kirish joylari, koridorlar, zallar, liftlar) videokuzatuv tizimlari oʼrnatilgan boʼlib, videokuzatuv kechayu kunduz yozib olinadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 21,
+   "number": 2,
+   "description": "Videokuzatuv yozuvlaridan faqat vakolatli shaxslar foydalana oladi; ularni koʼrish va saqlash tashkilot ichki tartib-qoidalari va amaldagi qonun talablariga muvofiq amalga oshiriladi.",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 21,
+   "number": 3,
+   "description": "Tibbiyot tashkilotida noxush holatlar (hodisalar) yuzaga kelganda xodimlar tomonidan qoʼriqlash xizmatini tezkor (jumladan, \"vahima tugmalari\" va (yoki ) ichki aloqa vositalari orqali) chaqirish imkoniyati mavjud.",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 22,
+   "number": 1,
+   "description": "Tashkilot tibbiy jihozlar, shu jumladan diagnostika asbob-uskunalariga texnik xizmat koʼrsatish, qiyoslashdan oʼtkazish va taʼmirlash boʼyicha maʼsul shaxs(lar)ni tayinlaydi va/yoki vakolatli kompaniya bilan shartnoma tuzadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 22,
+   "number": 2,
+   "description": "Tashkilot ishlab chiqilgan texnik xizmat koʼrsatish rejasiga muvofiq tibbiy jihozlarning aniqligi va ishonchliligini taʼminlash uchun tibbiy jihozlar, shuningdek tibbiy diagnostika asbob-uskunalariga muntazam inspektsiyalar oʼtkazish, texnik xizmat koʼrsatish, kalibrovka va qiyoslashdan oʼtkazish ishlarni olib boradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 22,
+   "number": 3,
+   "description": "Tashkilot tibbiy jihozlar, shuningdek tibbiy diagnostika asbob-uskunalariga oʼtkazilgan barcha inspektsiyalar, koʼrsatilgan texnik xizmat, kalibrovka va qiyoslashdan oʼtkazish ishlarini hisobga oladi. Hisobga olish maʼlumotlari oʼtkazilgan tekshiruv sanalari, tekshiruvlar natijalari va jihozlarning foydalanishga tayyorligini tasdiqlashni oʼz ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 23,
+   "number": 1,
+   "description": "Tashkilot tibbiy jihozlar, shu jumladan invaziv tibbiy o‘lchov asbob-uskunalari bilan ishlovchi yangi tibbiy va texnik xodimlar uchun ulardan xavfsiz va to‘g‘ri foydalanishni ta’minlash maqsadida batafsil yo‘riqnoma ishlab chiqadi va joriy etadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 23,
+   "number": 2,
+   "description": "Tibbiy jihozlar bilan ishlovchi yangi xodimlarga faqat instruktaj o‘tkazilgandan va tibbiy asbob-uskunalardan foydalanish bo‘yicha yetarli malakaga egaligini tasdiqlovchi sinovlarni muvaffaqiyatli topshirgandan so‘nggina tibbiy jihozlar, shu jumladan invaziv tibbiy o‘lchov asbob-uskunalari bilan ishlashga ruxsat beriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 23,
+   "number": 3,
+   "description": "Xodimlarga tibbiy jihozlar va tibbiy asbob-uskunalarda nosozlik aniqlanganda mas’ul shaxslarni xabardor qilish bo‘yicha o‘quv mashg‘ulotlari o‘tkazilgan. Nosoz jihozlar va tibbiy asbob-uskunalardan tasodifiy foydalanilishining oldini olish maqsadida ularni markirovkalash va alohidalash tizimi joriy etilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 24,
+   "number": 1,
+   "description": "Arxiv tibbiy va ma’muriy yozuvlarni ularning maxfiyligini, ruxsatsiz foydalanishdan himoya qiladigan, yong‘in xavfi va namlik ta’siridan saqlaydigan sharoitlarda, shu jumladan himoyalangan elektron tibbiy tizimlardan foydalangan holda saqlashni ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 24,
+   "number": 2,
+   "description": "Tashkilot tibbiy kartalarni/kasallik tarixini saqlashni, zarur tibbiy kartalarni/kasallik tarixini tezkor qidirish va topish imkoniyatini (sana va bo‘lim nomi ko‘rsatilgan holda) ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 24,
+   "number": 3,
+   "description": "Tibbiy kartalar/kasallik tarixi va ma’muriy hujjatlar milliy qonunchilikda belgilangan muddatlar davomida saqlanadi. Tashkilot ularni qonunchilik talablariga muvofiq tarzda saqlash muddati tugaganidan so‘ng xavfsiz yo‘q qilish yoki ularni tegishli arxivga topshirish tartibini ishlab chiqadi va joriy etadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 25,
+   "number": 1,
+   "description": "Tashkilot infektsiyalar profilaktikasi va nazorat qilishning barcha jihatlarni boshqarish, shuningdek kasallanish holatini monitoring qilish va profilaktik chora-tadbirlarni joriy etish bo‘yicha malakali mas’ul shaxsni (masalan, shifokor-epidemiologni) tayinlaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 25,
+   "number": 2,
+   "description": "Tashkilot qo‘llar gigiyenasi qoidalari, dezinfektsiya, tibbiy chiqindilar bilan ishlash, shaxsiy himoya vositalaridan foydalanish va shifoxona ichi infektsiyalari xavfini kamaytirish bo‘yicha tadbirlarni o‘z ichiga olgan inektsion nazorat dasturini ishlab chiqadi va tasdiqlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 25,
+   "number": 3,
+   "description": "Tashkilot infektsion nazorat bo‘yicha aniq harakatlar, mas’ul shaxslar, bajarilish muddatlari hamda nazorat ko‘rsatkichlarini o‘z ichiga olgan tadbirlar rejasini ishlab chiqadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 25,
+   "number": 4,
+   "description": "Tashkilot infektsion nazorat dasturi doirasidagi asosiy yutuqlar, muammolar va keyinchalik takomillashtirilishi lozim bo‘lgan yo‘nalishlar to‘g‘risida tashkilot birinchi rahbari va klinika xodimlariga muntazam ravishda hisobot taqdim etilishini ta’minlaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 25,
+   "number": 5,
+   "description": "Tashkilotda tibbiy yordam ko‘rsatish bilan bog‘liq infektsiyalar, shu jumladan shifoxona ichi infeksiyalarining oldini olish bo‘yicha tadbirlarni muvofiqlashtiradigan, shuningdek tibbiy yordam ko‘rsatish bilan bog‘liq infektsiyalar holatlarini ko‘rib chiqadigan va qayta kasallanish holatlarining oldini olishga va infektsion nazoratni yaxshilashga qaratilgan boshqaruv qarorlarini qabul qiladigan infektsion nazorat bo‘yicha komissiya faoliyat yuritadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 26,
+   "number": 1,
+   "description": "Tashkilot Jahon sog‘liqni saqlash tashkiloti tavsiyalari asosida qo‘l gigiyenasiga oid qoidalar va algoritmlarni ishlab chiqadi va joriy etadi, ular qo‘l gigiyenasining beshta muhim jihatlarini (bemor bilan muloqot oldidan va undan so‘ng, aseptik muolajalar oldidan, organizm suyuqliklari bilan kontaktda bo‘lgandan so‘ng va bemor joylashgan muhit/joy bilan muloqotdan so‘ng) o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 26,
+   "number": 2,
+   "description": "Tashkilot qo‘l gigiyenasi masalalari, shu jumladan qo‘l yuvish texnikasi, qo‘l yuvishga ko‘rsatmalar, antiseptiklar va sovundan foydalanish hamda bir marotaba ishlatiladigan qo‘lqoplardan to‘g‘ri foydalanish bo‘yicha xodimlar uchun muntazam o‘quv mashg‘ulotlarini o‘tkazadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 26,
+   "number": 3,
+   "description": "Tashkilot xodimlar tomonidan qo‘l gigiyenasi qoidalariga rioya etilishini ta’minlash uchun shart-sharoitlar yaratadi, shuningdek antiseptik vositalar, bir marotaba ishlatiladigan qo‘lqoplar, rakovina va qo‘l yuvish uchun suv, sovun hamda qo‘llarni xavfsiz quritish vositalarning mavjudligini ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 26,
+   "number": 4,
+   "description": "Tashkilot bemorlarga qo‘l gigiyenasi qoidalariga rioya etish zarurligi to‘g‘risida broshyuralar va raqamli resurslar orqali ma’lumotlar taqdim etadi.",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 26,
+   "number": 5,
+   "description": "Tashkilot bemorlar tomonidan qo‘l gigiyenasi qoidalariga rioya qilinishi uchun shart-sharoitlar (masalan, koridorlarda antiseptik vositalar, hojatxonalarda sovun kabilar mavjudligini ta’minlash orqali) yaratadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 27,
+   "number": 1,
+   "description": "Tashkilot kontaminatsiya xavfi va ko‘rsatilayotgan xizmatlar xususiyatlarini inobatga olgan holda turli bino xonalarini (palatalar, koridorlar, operatsiya xonalari, muolaja xonalari) tozalash davriyligi va tartibini o‘z ichiga olgan rejali tozalash rejasini ishlab chiqadi va amalga oshiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 27,
+   "number": 2,
+   "description": "Tashkilot surtma olish va ekma usullaridan foydalangan holda ishchi yuzalarining mikrobli kontaminatsiya darajasini nazorat qilish uchun steril zonalarni (operatsiya bloklari, muolaja xonalari, jonlantirish bo‘limlari) muntazam ravishda mikrobiologik nazoratdan o‘tkazadi va surtma/ekma natijalari qoniqarsiz bo‘lganda zarur chora-tadbirlarni amalga oshiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 27,
+   "number": 3,
+   "description": "Dezinfektsiyalovchi eritmalarni tayyorlash va saqlash uchun ishlatiladigan barcha idishlar ushbu eritmaning nomi, kontsentratsiyasi va tayyorlangan sanasi ko‘rsatilgan holda markirovkalanadi, bu esa ularni qo‘llashda xatoliklarning oldini olishga imkon beradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 28,
+   "number": 1,
+   "description": "Tashkilot ko‘rsatilayotgan tibbiy yordam yo’nalishlari va infektsiyalarni yuqtirib olish xavfi darajasini inobatga olgan holda xodimlarni bir marotaba ishlatiladigan qo‘lqoplar, niqoblar, himoya ko‘zoynaklari, himoya ekranlari va xalatlar kabi shaxsiy himoya vositalari bilan ta’minlaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 28,
+   "number": 2,
+   "description": "Tashkilot xodimlarni kasbiy xavf tug‘diruvchi infektsiyalarga (masalan, gepatit B, gripp) qarshi emlash dasturini, shuningdek, kasb kasalliklarini aniqlash maqsadida muntazam tibbiy ko‘rikdan o‘tkazilishini nazorat qiladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 28,
+   "number": 3,
+   "description": "Tashkilot igna sanchilishi va kesilish holatlari bilan bog‘liq noxush holatlar (hodisalar)ning oldini olish va ular sodir bo‘lganda amalga oshiriladigan harakatlar tartibini ishlab chiqadi va joriy etadi, shu jumladan holatlar (hodisalar) bo’yicha xodimlarga o‘quv mashg‘ulotlari o‘tkazish hamda ular sodir bo‘lgan taqdirda shoshilinch tibbiy yordam ko‘rsatilishini ta’minlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 29,
+   "number": 1,
+   "description": "Tashkilot yuqumli kasallikka chalingan bemorlar murojaat qilganida ularni saralash algoritmlarini ishlab chiqadi va joriy etadi, ushbu algoritmlar shu jumladan vaqtinchalik izolyatsiya qilish uchun alohida zona (hudud)larni ajratish, tibbiy tekshiruvdan o‘tkazish va shifoxonaga yotqizish to‘g‘risida qaror qabul qilish kabilarni o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 29,
+   "number": 2,
+   "description": "Tashkilot yuqumli kasallikka chalingan bemorlarni izolyatsiya qilish uchun zarur bo‘lgan resurslar, shu jumladan alohida bokslar, maxsus ventilyatsiya filtrlari, dezinfektsiya vositalari va shaxsiy himoya vositalari bilan ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 29,
+   "number": 3,
+   "description": "Tashkilot xodimlarga yuqumli kasalliklar belgilarini aniqlash, yuqumlilik ehtimoli yuqori bo’lgan bemorlarni tezkor aniqlash usullari va ular aniqlanganda zarur chora-tadbirlarni amalga oshirish, shuningdek, kesishgan infektsiya yuqishining oldini olish uchun ehtiyot choralari bo‘yicha o‘quv mashg‘ulotlari o‘tkazadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 30,
+   "number": 1,
+   "description": "Tashkilot tibbiy chiqindlarni yig‘ish, saralash va xavfsiz saqlash qoidalarini ishlab chiqadi va joriy etadi. Bu qoidalar chiqindlar turlariga ko‘ra konteynerlar va (yoki) qoplarning turli ranglar bilan belgilanishini o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 30,
+   "number": 2,
+   "description": "Tashkilot tibbiy chiqindlarni yopiq idishlarda xavfsiz saqlash va tashishni ta’minlaydi. Tibbiy chiqindlarni utilizatsiya qilish milliy talablar va qabul qilingan standartlarga muvofiq amalga oshiriladi, shuningdek ushbu jarayonga tibbiy chiqindlar bilan ishlash uchun maxsus ruxsatnomaga ega pudratchi tashkilotlar jalb etilishi ham mumkin",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 30,
+   "number": 3,
+   "description": "Tibbiy chiqindlarni yig‘ish, saralash va utilizatsiya qilishga mas’ul xodimlarga chiqindilarni yig‘ish va utilizatsiya qilish qoidalari va algoritmlari, shuningdek shaxsiy himoya vositalaridan foydalanish bo‘yicha muntazam o‘quv mashg‘ulotlari o’tkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 31,
+   "number": 1,
+   "description": "Tashkilot tibbiy asbob-anjomlar va buyumlarni sterilizatsiya qilishdan oldin talab etiladigan tozalik darajasiga erishish uchun sertifikatlangan dezinfektsiyalovchi vositalardan foydalangan holda va tavsiya etilgan ekspozitsiya vaqtiga rioya qilgan holda dezinfektsiya o‘tkazadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 31,
+   "number": 2,
+   "description": "Tashkilot biologik ifloslanishlarni olib tashlash uchun tibbiy asbob-anjomlar va buyumlarni sterilizatsiya qilishdan oldin tozalash bo‘yicha tartiblarni ishlab chiqadi va joriy etadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 31,
+   "number": 3,
+   "description": "Tashkilot tibbiy asbob-anjomlar va buyumlarning sterilligini nazorat qilish tizimini joriy etadi, ushbu tizim tibbiy asbob-anjomlar va buyumlar qadoqlarining butunligini tekshirish, kimyoviy, biologik va fizik indikatorlardan foydalanish, shuningdek qayta kontaminatsiyaning oldini olish uchun ularni steril saqlash sharoitlarini nazorat qilishni o’z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 31,
+   "number": 4,
+   "description": "Tashkilot sterilizatsiya jarayonlari uchun bino xonalarini zonalarga ajratadi, bunda bino xonalari toza va notoza zonalarga ajratiladi, tibbiy asbob-anjomlar va buyumlarning qayta kesishgan ifloslanishining oldini olish uchun ularning harakatlanish oqimini tashkil etiladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 31,
+   "number": 5,
+   "description": "Tashkilot faqat soz sterilizatsiya jihozlaridan foydalanadi, ularga ishlab chiqaruvchi tomonidan berilgan tavsiyalarga muvofiq muntazam texnik xizmat ko‘rsatiladi, rejali tekshiruvlar o‘tkaziladi, kalibrovka qilinadi va ularning ish samaradorligi nazorat qilinadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 32,
+   "number": 1,
+   "description": "Tashkilot gastroskop, bronxoskop va kolonoskoplarni darhol ishlatilganidan so‘ng dastlabki tozalash bo’yicha tartiblarni ishlab chiqadi va joriy etadi. Bu tartiblar ularning kanallarini yuvish, biologik ifloslanishlarni olib tashlash va biologik materiallar qoldiqlari qurib qolishining oldini olishni o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 32,
+   "number": 2,
+   "description": "Tashkilot ishlab chiqaruvchining tavsiyalari va qabul qilingan talablarga muvofiq ravishda sertifikatlangan dezinfeksiyalovchi vositalar yordamida gastroskop, bronxoskop va kolonoskoplarning yuqori darajali dezinfeksiyasini o‘tkazadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 32,
+   "number": 3,
+   "description": "Tashkilot kesishgan infektsiyaning oldini olish va sanitariya normalariga rioya qilish maqsadida endoskoplarni tashish, qayta ishlov berish va saqlash jarayonlarida toza va notoza zonalarga ajratishni ta’minlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 32,
+   "number": 4,
+   "description": "Tashkilot gastroskoplar, bronxoskoplar va kolonoskoplarga ishlov berish sifatini nazorat qiladi, ushbu jarayon biologik, kimyoviy va mexanik indikatorlardan muntazam foydalanish, shuningdek kesishgan infektsiyaning oldini olish uchun ular kanallarining germetikligini tekshirishni o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 32,
+   "number": 5,
+   "description": "Tashkilot tozalangan va dezinfektsiyalangan endoskoplarni xavfsiz saqlashni ta’minlaydi, bunda yopiq shkaflardan foydalaniladi, sterillangan jihozlar markirovkalanadi, har bir endoskopga individual raqam berilgan holda maxsus jurnalda ishlov berish tsikli qayd etiladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 33,
+   "number": 1,
+   "description": "Tashkilot operatsiya va muolaja xonalarida steril sharoitlarni, xususan steril asbob-anjomlar, qoplamalar (choyshablar) va sarf materiallaridan foydalanishni, shuningdek sertifikatlangan antiseptiklar yordamida jarrohlik maydonini tayyorlashni ta’minlaydi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 33,
+   "number": 2,
+   "description": "Invaziv muolajalarda ishtirok etuvchi xodimlar aseptika qoidalariga rioya qiladi, bularga steril kiyim, qo‘lqop, maska va himoya ekranlaridan foydalanish ham kiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 33,
+   "number": 3,
+   "description": "Tashkilot kesishgan infektsiyalar xavfini kamaytirish uchun faqat steril asbob-anjomlar va materiallardan, shu jumladan asboblar uchun steril qoplamalar va bir marotabalik sarf materiallaridan foydalanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 34,
+   "number": 1,
+   "description": "Tashkilot sotib olayotgan dori vositalariga tegishli sertifikat va ularning ro‘yxatdan o‘tkazilganligi to‘g‘risidagi guvohnomalari mavjud hamda litsenziyaga ega ta’minotchilardangina dori vositalarini sotib oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 34,
+   "number": 2,
+   "description": "Tashkilot dori vositalariga bo‘lgan ehtiyojni foydalanilgan dori vositalari haqidagi ma’lumotlar, shu jumladan nojo‘ya ta’sirlar tahlili asosida baholaydi va dori vositalarining yetarli zahirasini ta’minlash uchun ularning xaridini rejalashtiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 34,
+   "number": 3,
+   "description": "Tashkilot dori vositalarini tashish shart-sharoitlarini, jumladan termolabil dori vositalari uchun harorat rejimiga rioya qilish, qadog‘i butunligini tekshirish va tashish shartlariga rioya qilinganini tasdiqlovchi hujjatlarning mavjudligini nazorat qiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 35,
+   "number": 1,
+   "description": "Dori vositalari ularning buzilishi va samaradorligini yo‘qotishning oldini olish uchun ishlab chiqaruvchi talablariga mos keladigan sharoitlarda saqlanadi, ushbu sharoitlar harorat, namlik va yorug‘likdan himoyani nazorat qilishni ham o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 35,
+   "number": 2,
+   "description": "Termolabil dori vositalari, vaktsinalar va reaktivlar «sovuqlik zanjiri»ga rioya qilgan holda saqlanadi, shuningdek ushbu saqlash sharoitlari haroratni doimiy nazorat qilish, muzlatkichdan foydalanish va favqulodda elektr o‘chgan taqdirda zahira quvvatlash rejalari mavjudligini ham o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 35,
+   "number": 3,
+   "description": "Muzlatkich jihozlaridagi termometrlar o‘lchash aniqligini va o‘lchov asboblariga qo‘yiladigan talablarga mosligini tasdiqlovchi muntazam tekshiruvlardan o‘tkazib boriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 36,
+   "number": 1,
+   "description": "Dori vositalarini buyurishda davolashda adashish va xatolarning oldini olish maqsadida dori vositalarining to‘liq nomlari yoki tashkilot tomonidan tasdiqlangan qisqartma va abbreviaturalar ishlatiladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 36,
+   "number": 2,
+   "description": "Tashkilot 5 \"T\" (to‘g‘ri bemor, to‘g‘ri dori vositasi, to‘g‘ri doza, to‘g‘ri vaqt va to‘g‘ri qo‘llash usuli) qoidasiga amal qilib, dori vositalarini xavfsiz tarqatish va qo‘llash tartiblarini joriy etadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 36,
+   "number": 3,
+   "description": "Tashkilot dori vositalari qo‘llanganidan keyin nojo‘ya ta’sirlar va allergik reaksiyalarni o‘z vaqtida aniqlash, shuningdek ularni ro‘yxatga olish va tahlil qilish uchun bemorlar holatini monitoring qiladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 37,
+   "number": 1,
+   "description": "Tashkilot foydalanishga ruxsat etilgan dori vositalari ro‘yxati, ularning ruxsat etilgan dozalari, ishlab chiqarilish shakllari va asosiy qo‘llash shartlarini o‘z ichiga olgan dori formulyarini (asosiy dorilar ro‘yxatini) ishlab chiqadi va tasdiqlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 37,
+   "number": 2,
+   "description": "Tashkilot aynan bir dorini turli ko‘rinishlarda takroran qabul qilishga yo‘l qo‘ymaslik, ularni o‘zaro o‘rinma-o‘rin qabul qilinishini istisno qilish va polipragmaziyaning oldini olish maqsadida bemor tomonidan qabul qilinayotgan yoki shifoxonaga yotqizilganda tashqaridan olib kelingan barcha dori vositalarini ro‘yxatga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 37,
+   "number": 3,
+   "description": "Tashkilot foydalanilmagan yoki yaroqlilik muddati o‘tgan dori vositalarini milliy talablarga muvofiq mustaqil holda utilizatsiya qiladi yoki utilizatsiya qilish vakolatiga ega tashkilot(lar)ga topshiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 38,
+   "number": 1,
+   "description": "Yuqori xavfdagi dori vositalari, nomi yoki tashqi ko‘rinishi o‘xshash bo‘lgan dorilar, shuningdek konsentrlangan elektrolitlar alohida (rangli stikerlar bilan) markirovkalanadi, ishlab chiqaruvchilarning talablariga muvofiq maxsus ajratilgan joylarda yoki shkaflarda saqlanadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 38,
+   "number": 2,
+   "description": "Tashkilot yuqori xavfdagi dori vositalari va konsentrlangan elektrolitlarni qo‘llashdan oldin ikkinchi tibbiy xodim tomonidan 5 \"T\" (to‘g‘ri bemor, to‘g‘ri dori vositasi, to‘g‘ri doza, to‘g‘ri vaqt va to‘g‘ri qo‘llash usuli) qoidasidan foydalangan holda ikki karra tekshirish qoidasini ishlab chiqadi va joriy etadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 38,
+   "number": 3,
+   "description": "Tashkilot yuqori xavfdagi dori vositalari, nomi yoki tashqi ko‘rinishi o‘xshash bo‘lgan dorilar, shuningdek konsentrlangan elektrolitlardan foydalanish qoidalarini ishlab chiqadi. Dori vositalarini tasiya etish (buyurish), tayyorlash va qo‘llash jarayonlarida ishtirok etadigan shifokorlar va o‘rta tibbiyot xodimlariga ushbu qoidalar bo‘yicha o‘quv mashg‘ulotlari o‘tkaziladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 39,
+   "number": 1,
+   "description": "Tashkilot milliy va xalqaro qo‘llanmalarga asosan antimikrob dori vositalarini buyurish, dozalash va davolash muddatini belgilash qoidalarini o‘z ichiga oladigan antimikrob vositalaridan oqilona foydalanish siyosatini ishlab chiqadi va joriy etadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 39,
+   "number": 2,
+   "description": "Tashkilot antimikrob vositalaridan foydalanishni muntazam audit qiladi, shuningdek antimikrob vositalarini qo‘llash to‘g‘risidagi ma’lumotlar tahlili va klinik protokollar tavsiyalariga rioya qilinishi nazoratini o‘tkazadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 39,
+   "number": 3,
+   "description": "Antimikrob dori vositalarini buyuruvchi tibbiyot xodimlariga antimikrob dori vositalaridan ratsional foydalanish tamoyillari va antimikrob dori vositalariga rezistentlik rivojlanishining oldini olish bo‘yicha muntazam o‘quv mashg‘ulotlari o‘tkaziladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 40,
+   "number": 1,
+   "description": "O‘tkir allergik reaksiyalar rivojlanish xavfi yuqori bo‘lgan joylarda (emlash xonalari, stomatologiya kabinetlari, kunduzgi statsionar bo‘limlari, (dori vositalari yuboriladigan) muolaja xonalari) anafilaktik shokda yordam ko‘rsatish uchun maxsus to‘plamlar joylashtiriladi. Akusherlik va ginekologiya bo‘limlarida, shuningdek homiladorlar uchun qabul bo‘limlarida shoshilinch holatlarda yordam ko‘rsatish uchun tibbiy yordam to‘plamlari joylashtiriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 40,
+   "number": 2,
+   "description": "Har bir to‘plam shoshilinch holatlarda yordam ko‘rsatish uchun zarur bo‘lgan tegishli dori vositalari, tibbiy asbob va buyumlar bilan jihozlangan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 40,
+   "number": 3,
+   "description": "To‘plam ichida ko’rinarli joyda shoshilinch holatlarda tibbiy xodim harakatlarining qisqa va tushunarli algoritmi mavjud. Mas’ul tibbiy xodimlar to‘plam tarkibi va undan foydalanish algoritmi haqida xabardor qilingan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 41,
+   "number": 1,
+   "description": "Tashkilotning tartib qoidalari va xodimlarga o‘tkaziladigan o‘quv mashg‘ulotlari shifokor sirini saqlash va tibbiy hujjatlardan (ruxsatsiz) foydalanishni cheklashni ta’minlaydi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 41,
+   "number": 2,
+   "description": "Tashkilot tibbiy ko‘rik yoki tibbiy muolajalar vaqtida tibbiy shirmalar, pardalar, alohida xonalardan foydalanishni, shuningdek bemorlarga sanitariya xonalaridan foydalanganda ularning maxfiyligini ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 41,
+   "number": 3,
+   "description": "Xodimlar ma’lumotlarni oshkor etmaslik to‘g‘risidagi majburiyatnomani imzolaydi hamda ularga etika masalalari va bemorlarning shaxsiy ma’lumotlarini himoya qilish bo‘yicha tashkilot ichida va tashqarisida o‘quv mashg‘ulotlari o‘tkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 42,
+   "number": 1,
+   "description": "Bemorlar huquqlari to‘g‘risidagi ma’lumotlar davlat tilida taqdim etiladi, ushbu ma’lumotlar ko‘zga ko‘rinarli joylarga joylashtiriladi va bosma materiallar ko‘rinishida va (yoki) raqamli manbalar orqali taqdim etiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 42,
+   "number": 2,
+   "description": "Bemorlar majburiyatlari to‘g‘risidagi ma’lumotlar davlat tillida taqdim etiladi, ushbu ma’lumotlar ko‘zga ko‘rinarli joylarga joylashtiriladi va bosma materiallar ko‘rinishida va (yoki) raqamli manbalar orqali taqdim etiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 42,
+   "number": 3,
+   "description": "Xodimlarga bemorlar huquqlari va majburiyatlariga rioya qilish masalalari bo‘yicha tashkilot ichida rejali o‘quv mashg‘ulotlari o‘tkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 43,
+   "number": 1,
+   "description": "Tibbiy ko‘rik jarayonida, agar bemor uchun diniy yoki madaniy sabablarga ko‘ra muhim bo‘lsa, jinsi bo‘yicha shifokorni tanlash imkoniyati taqdim etiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 43,
+   "number": 2,
+   "description": "Bemorning diniy kiyimlarni kiyish va ibodat qilish bilan bog‘liq iltimoslari hurmat bilan e’tiborga olinadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 43,
+   "number": 3,
+   "description": "O‘quv mashg‘ulotlari madaniy xilma-xillik, bag‘rikenglikni hisobga olgan va bemorlarga hurmat ko‘rsatgan holda muloqot ko‘nikmalarini rivojlantirishga qaratilgan voqealar va vaziyatli masalalarni o‘z ichiga olgan",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 44,
+   "number": 1,
+   "description": "Ma’lumotlar bemorga tushunarli tilda, bemor tushunadigan sodda va oson so‘zlardan foydalangan holda taqdim etiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 44,
+   "number": 2,
+   "description": "Tibbiyot xodimlari bemorlarga har bir davolash usulining afzalliklari va ehtimolli xavflarini tushuntirib beradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 44,
+   "number": 3,
+   "description": "Taqdim etilayotgan davolash-diagnostika muolajalari murakkabligiga qarab, ma’lumotlar turlicha ko‘rinishda: bosma materiallar, og‘zaki tushuntirishlar va video materiallar ko‘rinishida yetkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 45,
+   "number": 1,
+   "description": "Xodimlar bemorni muloqot va davolash rejasini tuzish jarayoniga jalb etishga o’rgatilgan",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 45,
+   "number": 2,
+   "description": "Bemorlarga parvarish (davolash)ga nisbatan o‘zlarining xohish-istaklarini bildirish huquqi taqdim etiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 45,
+   "number": 3,
+   "description": "Bemorlar o‘z xohishlariga ko‘ra muhokamaga yaqinlarini, vakillarini yoki boshqa shaxslarni jalb etishlari mumkin",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 46,
+   "number": 1,
+   "description": "Binoga kirish joyi, yo’laklar, bo‘limlar, bemorlar xonalari, liftlar, sanitariya xonalari va muolaja xonalari jismoniy imkoniyati cheklangan, shuningdek nogironlar aravachasida harakatlanuvchi shaxslar uchun moslashtirilgan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 46,
+   "number": 2,
+   "description": "Binoga mustaqil kirishni ta’minlash maqsadida panduslar, avtomatik eshiklar, chaqiruv tugmalari yoki zinapoyalarda yon qo‘l ushlagichlar o‘rnatilgan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 46,
+   "number": 3,
+   "description": "Barcha qavatlarga chiqish harakatlanish imkoniyati cheklangan bemorlar tomonidan foydalanishga mo‘ljallangan liftlar yoki ko‘targichlar orqali ta’minlanadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 46,
+   "number": 4,
+   "description": "Sensor buzilishlari mavjud bemorlarga yo‘nalish berish maqsadida asosiy zonalarda (hududlarda) (ro‘yxatxona, bo‘limlar, kabinetlar) vizual va taktil yo‘naltiruvchi belgilar joylashtirilgan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 46,
+   "number": 5,
+   "description": "Xodimlarga jismoniy imkoniyati cheklangan, shu jumladan harakatlanish imkoniyati cheklangan shaxslar va ko‘rish, eshitish va nutqida nuqsonlar (buzilishlar) mavjud shaxslarga zarurat tug‘ilganda ularga nogironlar aravachalari, hassalar yoki yurish uchun mo‘ljallangan moslamalar taqdim etish orqali bemorlar bilan o‘zaro munosabat va ularga hamrohlik qilish asoslari bo‘yicha o‘quv mashg‘ulotlari o‘tkazilgan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 47,
+   "number": 1,
+   "description": "Tashkilot bemorlarni identifikatsiya qilish qoidalarini ishlab chiqadi va joriy etadi, ushbu qoidalar kamida ikkita o‘ziga xos identifikatordan foydalanishni nazarda tutadi (birinchi identifikator — bemorning familiyasi va ismi, ikkinchi identifikator — to‘liq tug‘ilgan sanasi yoki milliy identifikatsiya raqami). Qoidalar hushsiz va hujjatlarsiz shoshilinch holatda keltirilgan bemorlarni, shuningdek ko‘p homilali homiladorlikdan yangi tug‘ilgan chaqaloqlarni identifikatsiya qilish tartiblarini ham o‘z ichiga oladi.",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 47,
+   "number": 2,
+   "description": "Tashkilot statsionar va kunduzgi statsionar bemorlari uchun o‘ziga xos identifikatorlarga ega brasletlar yoki beyjlardan foydalanishni ta’minlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 47,
+   "number": 3,
+   "description": "Bemorlar har qanday davolash, diagnostik tekshiruv, qon quyish, jarrohlik amaliyoti yoki invaziv muolajadan oldin xatolik tufayli “boshqa bemor” bilan adashtirib qo‘yishning oldini olish maqsadida ikki xil identifikator orqali aniqlanadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 47,
+   "number": 4,
+   "description": "Tashkilot har qanday tibbiy muolajalardan oldin bemorlarni identifikatsiya qilish, shu jumladan brasletlardan foydalanish va ikki xil identifikator qo‘llash qoidalari bo‘yicha tibbiy xodimlarga o‘quv mashg‘ulotlarini o‘tkazadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 47,
+   "number": 5,
+   "description": "Tashkilot muntazam ravishda xodimlar tomonidan bemorlarni identifikatsiya qilish qoidalariga rioya etilishini baholaydi va doimiy ichki auditlarni o‘tkazadi, bu jarayon tibbiy shakllarda, braslet yoki beyjlarda noto‘g‘ri identifikatsiya holatlarini, braslet yoki beyjlarning yo‘qligi va tuzatish chora-tadbirlarining joriy etilishini o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 48,
+   "number": 1,
+   "description": "Tashkilot bemorni davolash va tashxisiga oid og‘zaki ma’lumotlarni yetkazish tartib-qoidalarini ishlab chiqadi va joriy etadi, u qoidalar xatoliklar ehtimolini kamaytirish uchun «yozib oldi — yozganini o‘qib eshittirdi — tasdiq oldi» algoritmini o‘z ichiga oladi. So‘rovnoma o‘tkazilganda xodimlarning ushbu qoidalarni bilishi va ularni kundalik amaliyotda qo‘llashlari tasdiqlanadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 48,
+   "number": 2,
+   "description": "Laboratoriyada og‘zaki ma’lumot yetkazish qoidalariga muvofiq davolovchi shifokorni zudlik bilan xabardor qilishni talab etuvchi tasdiqlangan tahlillar natijalari ro‘yxati mavjud (masalan, troponin miqdorining oshishi)",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 48,
+   "number": 3,
+   "description": "Diagnostika bo‘limlarida (KT, MRT, UTT) davolovchi shifokorni zudlik bilan xabardor qilishni talab etuvchi tasdiqlangan tekshiruvlar natijalari ro‘yxati mavjud (masalan, miyaga qon quyilishi belgilari, o‘pka arteriyasi tromboemboliyasi)",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 49,
+   "number": 1,
+   "description": "Tashkilotda bemorlarni “qizil” (hayot uchun xavfli va shoshilinch holatlar) va “sariq” (potensial xavf tug‘diradigan holatlar) zonalarga tegishliligini belgilash mezonlarini bayon etuvchi triaj qoidalari tasdiqlangan. Qabul bo‘limi xodimlari, shu jumladan o‘ra tibbiyot xodimlari, ro‘yxatga oluvchilar va qo‘riqlash xizmati xodimlari ushbu qoidalar hamda harakat algoritmlari bilan tanishtirilgan",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 49,
+   "number": 2,
+   "description": "Qabul bo‘limidan jarrohlik amaliyoti va jonlantirish bo’limigacha bo‘lgan “qizil” yo‘nalish bo‘ylab to‘siqsiz harakatlanish ta’minlangan",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 49,
+   "number": 3,
+   "description": "Tashkilotda o‘tkir va hayot uchun xavfli holatda bo‘lmagan, lekin ko‘proq e’tibor va shoshilinch tibbiy yordam talab qiladigan bemorlar uchun “sariq” zona tashkil etilgan. Ushbu zona zarur tibbiy asbob-uskuna va buyumlar bilan jihozlangan bo‘lib, bemorni tegishli bo‘limiga o‘tkazilgunga qadar vaqtincha joylashtirish imkonini beradi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 49,
+   "number": 4,
+   "description": "Triaj marshruti qabul bo‘limi va ro‘yxatxonadan boshlanib “sariq yo‘nalish” “sariq” zonaga, “qizil yo‘nalish” esa jarrohlik va jonlantirish bo‘limlariga olib boradi va yaqqol ko‘rinib turishi lozim",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 49,
+   "number": 5,
+   "description": "Triajning “sariq” va “qizil” zonalari shoshilinch tibbiy yordam ko‘rsatish uchun dori vositalari, tibbiy asbob-uskunalar va buyumlar bilan jihozlangan yoki ulardan zudlik bilan foydalanish imkoniyatiga ega",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 50,
+   "number": 1,
+   "description": "Tashkilot invaziv muolajalar, jarrohlik amaliyotlari, anesteziya, sedatsiya (o‘rta yoki chuqur darajadagi) o‘tkazish, shuningdek ilmiy tadqiqotlar va tajribalarda ishtirok etish uchun bemorlardan xabardorlik asosida rozilik olish tartiblarini ishlab chiqadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 50,
+   "number": 2,
+   "description": "Tashkilot invaziv muolaja, jarrohlik amaliyoti, anesteziya yoki sedatsiya o‘tkazish, shuningdek ilmiy tadqiqotlar va tajribalarda ishtirok etish bilan bog‘liq ehtimoliy xavf-xatarlar va nojo‘ya ta’sirlarni ko‘rsatgan holda xabardorlik asosida olingan bemorning roziligini bemorning tibbiy kartasida/kasallik tarixida hujjatlashtirilishini ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 50,
+   "number": 3,
+   "description": "Tashkilot taklif etilgan davolashdan bosh tortish huquqi to‘g‘risida bemorlarni xabardor qilish tartiblarini joriy etadi, ushbu tartiblar bemor tomonidan davolash rad etilgan taqdirda bemorning bosh tortishini hujjatlashtirish shakllari va uning sog‘lig‘ida kuzatilishi mumkin bo‘lgan oqibatlarni tushuntirishni ham o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 51,
+   "number": 1,
+   "description": "Bemorlarning birlamchi, qayta va dinamik ko‘riklar, tibbiy kartalarda/kasallik tarixida qayd etilgan holda, malakali mutaxassislar tomonidan amalga oshiriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 51,
+   "number": 2,
+   "description": "Birlamchi ko‘rik bemorning tibbiy kartasida/kasallik tarixida hujjatlashtiriladi va u anamnez yig‘ish, funksional baholash, ob’ektiv ko‘rik, epidemiologik anamnez, shuningdek shifoxonaga yotqizish vaqtida bajarilgan laborator va instrumental tekshiruvlar ma’lumotlarini o‘z ichiga oladi. Funksional baholashga bemorning mustaqil harakatlanish va o‘ziga-o‘zi xizmat ko‘rsata olish (yurish, yuqoriga ko‘tarilish hamda o‘tirib-turish, ovqatlanish, kiyinish va shaxsiy gigiyena) ko‘nikmalarini bajarish qobiliyati kiradi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 51,
+   "number": 3,
+   "description": "Tashkilotda murakkab klinik holatlarni muhokama qilish va og‘ir bemorlarni olib borish bo‘yicha jamoaviy tarzda qaror qabul qilish bo‘yicha komissiya faoliyat olib boradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 52,
+   "number": 1,
+   "description": "Davolash va parvarishlash bo‘yicha individual reja bemorning tibbiy, jismoniy, psixologik holati va funksional imkoniyatlari hamda ehtiyojlarini baholash asosida ishlab chiqiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 52,
+   "number": 2,
+   "description": "Davolash va parvarishlash bo‘yicha individual rejalar bemorning tibbiy kartasida/kasallik tarixida rasmiylashtiriladi va davolashdan kutilayotgan natijalarni o‘z ichiga oladi. Davolash va parvarishlash bo‘yicha individual rejadan bemorni davolash va parvarishlash jarayonida qatnashayotgan mutaxassislar foydalana oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 52,
+   "number": 3,
+   "description": "Davolash bo‘yicha individual reja o‘z vaqtida amalga oshiriladi. Shifokor va o‘rta tibbiyot xodimlari individual davolash va parvarishlash rejasining bajarilishini monitoring qiladi hamda bemor holatidagi o‘zgarishlar va davolash maqsadlariga erishishga qarab unga o‘zgartirish yoki tuzatishlar kiritadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 53,
+   "number": 1,
+   "description": "Tashkilot jonlantirish va rejali bo‘limlar o‘rtasida bemorlarni ko‘chirish qoidalarini ishlab chiqadi va amalga oshiradi, bunda ob’ektiv ko‘rsatkichlar (arterial bosim, yurak urishlari soni, nafas olish soni, saturatsiya darajasi, tana harorati), joriy davolash sxemasi hamda nafas olishni qo‘llab-quvvatlash parametrlarini (agar lozim bo‘lsa) majburiy tarzda hujjatlashtirishni o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 53,
+   "number": 2,
+   "description": "Tashkilot davolash va parvarishlashning uzluksizligini ta’minlash maqsadida bo‘limlar o‘rtasida tibbiy yordam ko‘rsatishni muvofiqlashtirish qoidalarini ishlab chiqadi va joriy qiladi, ushbu qoidalar o‘z vaqtida ma’lumot almashish, birgalikda maslahatlashuvlar (konsultatsiyalar) o‘tkazish va keyingi davolashni rejalashtirishni o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 53,
+   "number": 3,
+   "description": "Tashkilot bemorni boshqa tibbiy muassasaga davolash va parvarishlashning boshqa darajasiga o‘tkazish, shu jumladan shoshilinch tibbiy yordam jarayonlarini ham o‘z ichiga olgan qoidalarni ishlab chiqadi va joriy qiladi, unda o‘tkazish vaqtida bemorning to‘liq klinik ma’lumotlari, qabul qilingan dorilar ro‘yxati, olib borilgan davolash hamda zarur bo‘lganda bog’lanish uchun vakolatli tibbiy xodimning aloqa ma’lumotlarini taqdim etish belgilanadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 53,
+   "number": 4,
+   "description": "Shifoxonadan chiqarilayotganda bemor va uning vakillari o‘tkazilgan davo choralari, bemorning joriy holati, reabilitatsiya davri, zarur muolajalar va dori vositalarini qabul qilish haqida xabardor qilinadi. Bu ma’lumotlar chiqaruv epikrizida qayd etiladi, unga bemor mazkur ma’lumotlar bilan tanishgani va tushunganini tasdiqlab, imzolaydi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 53,
+   "number": 5,
+   "description": "Bemor shifoxonadan chiqarilgandan so‘ng qo‘shimcha tibbiy parvarish zarur bo‘lsa, statsionar belgilangan tartibda poliklinika xizmati bilan o‘zaro hamkorlikni amalga oshiradi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 54,
+   "number": 1,
+   "description": "Bemorlarning tibbiy yozuvlari to‘g‘ri, to‘liq va o‘z vaqtida yuritilishga oid barcha talablarga binoan litsenziyalangan elektron tibbiy axborot tizimlari yoki qog‘oz shakllardan foydalangan holda olib boriladi, bunda faqat qabul qilingan qisqartmalar va abbreviaturalar ishlatiladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 54,
+   "number": 2,
+   "description": "Tibbiy kartalar/kasallik tarixi va yozuvlardan faqat vakolatli tibbiy xodimlar foydalana oladi (shifokorlar va hamshiralar bemorlarning elektron tibbiy kartalaridan avtorizatsiyadan o‘tgandan so‘ng foydalana oladilar, bemorlarni davolash va parvarishlashga bevosita bog‘liq bo‘lmagan xodimlarga hamshiralik postlari, shifokorlar xonalari va arxivlardagi tibbiy kartalardan/kasallik tarixidan foydalanish taqiqlanadi)",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 54,
+   "number": 3,
+   "description": "Tibbiy kartalar/kasallik tarixi ko‘riklar va diagnostik tekshiruvlar natijalarini, davolash rejasi va uning bajarilishini, kundalik qaydlar va dinamik ko‘rik yozuvlarini, maslahatlashuv (konsultatsiya) xulosalarini, xabardorlik asosida roziliklarni hamda allergiya va dorilarni individual ko‘tara olmaslik to‘g‘risidagi ma’lumotlarni o‘z ichiga oladi. Har bir yozuv va shakl mas’ul tibbiy xodim tomonidan sana va vaqtni ko‘rsatgan holda imzolanadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 55,
+   "number": 1,
+   "description": "Jarrohlik amaliyoti va anesteziyadan oldin rejalashtirilayotgan jarrohlik amaliyoti bemor va shifokor tomonidan verifikatsiya (tekshirish va tasdiqlash) qilinadi, shu jumladan jarrohlik amaliyoti joyini tanlashda xatolar xavfini kamaytirish maqsadida amaliyot o‘rni yagona belgi bilan markirovkalash orqali tasdiqlanadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 55,
+   "number": 2,
+   "description": "Jarrohlik amaliyoti boshlanishidan va terini kesishdan oldin bemorning shaxsi, jarrohlik brigadasining tayyorligi, jarrohlik maydoni va rejalashtirilayotgan amaliyotning to‘g‘ri ekanligi hamda zarur uskunalarning tayyorligi tekshiriladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 55,
+   "number": 3,
+   "description": "Bemor operatsiya xonasidan chiqib ketishidan oldin mazkur amaliyotning yakunlanganligi, barcha jarrohlik asbob-uskunalari va tamponlar hisob-kitobi, asoratlar bo‘yicha izohlar hamda gistologik tekshiruv uchun namunalar olinganligi tasdiqlanadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 55,
+   "number": 4,
+   "description": "Tashkilot anesteziya boshlanishidan oldingi, terini kesishdan oldingi va bemor operatsiya xonasidan chiqishidan oldingi bosqichlarni o‘z ichiga olgan standartlashtirilgan jarrohlik nazorat varag‘ini ishlab chiqadi va joriy etadi, unda har bir bosqich majburiy tarzda qayd etiladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 55,
+   "number": 5,
+   "description": "Tashkilot jarrohlik nazorat varag‘idan foydalanish qoidalariga rioya qilinishini, shu jumladan uning barcha bosqichlari bajarilishini muntazam tekshirib boradi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 56,
+   "number": 1,
+   "description": "Shifokor-jarroh bemorni jarrohlik amaliyotidan oldingi ko‘rikdan o‘tkazadi, bemorning tashxisi, amaliyot hajmi hamda jarrohlik amaliyotiga roziligini hujjatlashtirgan holda tasdiqlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 56,
+   "number": 2,
+   "description": "Jarrohlik amaliyoti tugagandan so‘ng shifokor-jarroh amaliyotning borishini va zarur bo‘lsa yuzaga kelgan asoratlarni aks ettiruvchi protokolni to‘ldiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 56,
+   "number": 3,
+   "description": "Shifokor-jarroh davolash va diagnostika bo‘yicha ko‘rsatmalarni o‘z ichiga olgan jarrohlik amaliyotidan keyingi parvarishlash va davolashning individual rejasini tuzadi; mazkur reja tibbiy hujjatlarda rasmiylashtiriladi va undan uni amalga oshirishda ishtirok etadigan xodimlar foydalana oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 56,
+   "number": 4,
+   "description": "Tibbiyot xodimlari jamoasi jarrohlik amaliyotidan keyingi rejaning bajarilishini ta’minlaydi va uning bajarilishini tibbiy hujjatlarda qayd etadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 56,
+   "number": 5,
+   "description": "Bo‘limda rejali yig‘ilishlar doirasida eng yaxshi jarrohlik amaliyotlari hamda odatiy klinik holatlar bo‘yicha muntazam muhokamalar o‘tkaziladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 57,
+   "number": 1,
+   "description": "Tashkilot rahbariyati anesteziologiya xizmati faoliyatini nazorat qilish uchun malakali mas’ul shaxsni tayinlaydi; uning vazifalari lavozim yo‘riqnomasida belgilangan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 57,
+   "number": 2,
+   "description": "Shifokor-anesteziolog amaliyotning xavflari, afzalliklari va mumkin bo‘lgan variatlari to‘g‘risidagi ma’lumotlarni qamrab olgan xabardorlik asosida rozilikni majburiy ravishda rasmiylashtirish orqali jarrohlik amaliyotidan oldingi ko‘rikni, shu jumladan predinduksion (anesteziyadan oldingi) baholashni o‘tkazadi va hujjatlashtiradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 57,
+   "number": 3,
+   "description": "Anesteziologik smena boshlanishidan oldin anesteziya o‘tkazish uchun zarur bo‘lgan uskunalar, monitoring vositalari va dori vositalari tekshiriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 57,
+   "number": 4,
+   "description": "Anesteziolog anesteziyaning barcha bosqichlarida, shu jumladan anestetiklar yuborishni to‘xtatish, hayotiy funksiyalarning tiklanishi va operatsiya xonasidan bemorni ko‘chirishga tayyorgarlikni baholashda bemorning holatini uzluksiz kuzatadi va hujjatlashtiradi. Bemorning uyg‘otish xonasi yoki intensiv terapiya bo‘limidan ko‘chirishga tayyorligi belgilangan klinik mezonlarga asosan mas’ul tibbiy xodim tomonidan aniqlanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 57,
+   "number": 5,
+   "description": "Anesteziya jarayonida shoshilinch yordam ko‘rsatish uchun zarur reanimatsiya uskunalari, dori vositalari va tibbiy buyumlarning mavjudligi va ulardan foydalanish imkoniyati ta’minlanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 58,
+   "number": 1,
+   "description": "Tashkilot «Ko‘k kod» faollashtirilganda mas’ul shaxslarni darhol xabardor qilish hamda bemorda yurak yoki nafas to‘xtashi belgilari aniqlanganda 3 daqiqa ichida zarur dori vositalari, tibbiy buyumlar va uskunalar, shuningdek «Ko‘k kod» jamoasini shoshilinch reanimatsiya yordami ko‘rsatish joyiga tezkor yetkazish bo‘yicha qoidalarni ishlab chiqadi va joriy etadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 58,
+   "number": 2,
+   "description": "Tashkilot minimal va keng qamrovli yurak-o‘pka reanimatsiyasi uchun zarur dori vositalari, tibbiy buyumlar va asbob-uskunalarning standart to‘plamini doimo tayyor holatda saqlaydi va ularning mavjudligi hamda sozligini muntazam tekshirib boradi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 58,
+   "number": 3,
+   "description": "Tashkilot «Ko‘k kod» bo‘yicha muntazam, kamida har yarim yilda bir marotaba, o‘quv mashg‘ulotlari o‘tkazadi, shu jumladan ushbu mashg‘ulotlar jamoaning «ko‘k kod» bo‘yicha javob berish vaqtini, jamoa harakatlarini muvofiqlashtirishni, uskuna va dori vositalaridan foydalanishni tekshirishni, keyinchalik natijalar tahlili va harakatlar rejasiga o‘zgartirishlar kiritishni o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 58,
+   "number": 4,
+   "description": "Tashkilot «Ko‘k kod» jamoasiga kiruvchi va keng qamrovli yurak–o‘pka reanimatsiyasini amalga oshirish uchun mas’ul xodimlarga kattalar uchun yurak–o‘pka reanimatsiyasining ilg‘or usullari (Advanced Cardiovascular Life Support -ACLS), bolalar bo‘limi mavjud bo‘lganda - bolalar uchun dasturlari (Pediatric Advanced Life Support -PALS) bo‘yicha sertifikatlangan o‘quv mashg‘ulotlaridan o‘tishini va o‘z ko‘nikmalarini muntazam tasdiqlab borishini ta’minlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 58,
+   "number": 5,
+   "description": "Tashkilot barcha tibbiy xodimlar, ro‘yxatxona xodimlari, qo‘riqlash xizmati va boshqa xodimlarga minimal yurak–o‘pka reanimatsiyasi (Basic Life Support — BLS) asoslari bo‘yicha o‘quv mashg‘ulotlari o‘tkazadi, shu jumladan ularning ko‘nikmalarini muntazam yangilab turish va shoshilinch holatlarga ularning tayyorligini tekshirishni ta’minlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 59,
+   "number": 1,
+   "description": "Laboratoriya tekshiruvlari malakali xodimlar tomonidan bajariladi va talqin etiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 59,
+   "number": 2,
+   "description": "Tashkilot kesishgan ifloslanish xavfini kamaytirish maqsadida laboratoriya (binosi) ishchi zonalarini alohidalashni ta’minlaydi. PZR tekshiruvlari, mikrobiologik va biokimyoviy tahlillar o‘tkaziladigan ish zonalari ketma-ketlik tamoyillari asosida tashkil etilgan va bir-biri bilan kesishmaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 59,
+   "number": 3,
+   "description": "Laboratoriyada havoni olib keluvchi va olib ketuvchi ventilyatsiya tizimlari o‘rnatilgan. Potensial xavfli biologik materiallar bilan ish olib boriladigan zonalarda (masalan, mikrobiologik tekshiruvlar vaqtida) biologik xavfsizlik shkaflaridan foydalaniladi, ularning filtrlari ishlab chiqaruvchining texnik hujjatlariga muvofiq ravishda almashtiriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 59,
+   "number": 4,
+   "description": "Ishga qabul qilinganda laboratoriya xodimlariga laboratoriya uskunalaridan xavfsiz va to‘g‘ri foydalanish bo‘yicha yo‘riqnoma o’tkaziladi; ular ish algoritmlari va foydalanish yo‘riqnomalari bilan ish joylarida yoki tuzilma bo‘limlari ichida tanishishlari mumkin",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 59,
+   "number": 5,
+   "description": "Metrologik nazoratdan o‘tkazilishi kerak bo‘lgan uskunalar belgilangan muddatlarda majburiy qiyoslashdan o‘tkaziladi. Barcha laboratoriya uskunalariga ishlab chiqaruvchi tomonidan yoki ichki me’yoriy hujjatlarga binoan belgilangan jadval asosida texnik mutaxassislar tomonidan xizmat ko‘rsatiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 60,
+   "number": 1,
+   "description": "Laboratoriya reaktivlarini saqlash sharoitlari ishlab chiqaruvchi tomonidan belgilangan harorat, namlik va yaroqlilik muddati talablariga muvofiq ta’minlanadi, shuningdek ularning hisob-kitobi va nazorati olib boriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 60,
+   "number": 2,
+   "description": "Laboratoriyada tasdiqlangan tartiblarga muvofiq natijalarning aniqligi va natijalar berilishini muntazam tekshirishni o‘z ichiga olgan ichki sifat nazorati tizimi joriy etilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 60,
+   "number": 3,
+   "description": "Laboratoriya kamida yiliga bir marta tashqi sifat nazorati tizimida ishtirok etadi, ularning natijalari tahlil qilinadi va ulardan tuzatish chora-tadbirlari uchun foydalaniladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 60,
+   "number": 4,
+   "description": "Laboratoriya ishchi zonalarida laboratoriya xavfsizligi talablariga qat’iy rioya qilinadi: ovqatlanish, ichimlik iste’mol qilish, tamaki chekish, kosmetikadan foydalanish hamda ko‘z va lablarga tegish qat’iyan taqiqlanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 60,
+   "number": 5,
+   "description": "Laboratoriyada biologik suyuqliklar to‘kilganda ularni xavfsiz yo‘q qilish uchun mo‘ljallangan jihozlar to‘plami (shaxsiy himoya vositalari, zararsizlantirish va yo‘q qilish uchun mo‘ljallangan buyumlar) mavjud. Xodimlarga «Sariq kod» holatida harakat algoritmlari — shaxsiy himoya vositalari va to‘kilgan biologik suyuqliklarni zararsizlantirish va yo‘q qilish uchun mo‘ljallangan buyumlarni qo‘llash bo‘yicha o‘quv mashg‘ulotlari o‘tkazilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 61,
+   "number": 1,
+   "description": "Qon namunalarini olish tasdiqlangan tartiblarga muvofiq amalga oshiriladi, ushbu tartiblar namuna olishdan oldin bemorning identifikatsiya ma’lumotlarini tekshirish, qo‘l gigiyenasiga rioya qilish, shaxsiy himoya vositalaridan foydalanish hamda barcha bosqichlarda bemor va xodimlar xavfsizligini ta’minlashga qaratilgan harakatlar ketma-ketligini o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 61,
+   "number": 2,
+   "description": "Qon namunalari belgilangan tekshiruv turlariga muvofiq ravishda ma’lum harorat rejimi va vaqt oralig‘ida saqlanadi va transportirovka qilinadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 61,
+   "number": 3,
+   "description": "Shoshilinch (Cito) laboratoriya tekshiruvlari tayinlanganda tasdiqlangan quyidagi algoritmlarga qat’iy rioya qilinadi: namunalarni markirovkalash, qabul qilish, namunalarni tayyorlash va tekshiruvni ustuvor tartibda bajarish",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 61,
+   "number": 4,
+   "description": "Shoshilinch (Cito) tekshiruvlar natijalari klinik bo‘limlarga o‘z vaqtida yetkaziladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 61,
+   "number": 5,
+   "description": "Barcha probirkalar, vakutaynerlar va konteynerlar namuna olishdan oldin bemorning identifikatsiya ma’lumotlari ko‘rsatilgan holda markirovkalanadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 62,
+   "number": 1,
+   "description": "Barcha tekshiruvlar tegishli tayyorgarlik va ruxsatnomaga ega bo‘lgan malakali tibbiy xodimlar tomonidan amalga oshiriladi va talqin qilinadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 62,
+   "number": 2,
+   "description": "Kontrast moddalaridan foydalangan holda muolajalar o‘tkazilishidan oldin bemorda allergiyasi bor-yo‘qligi va zarur laboratoriya tekshiruvlari mavjudligi tekshiriladi. Kontrast moddalar ishlab chiqaruvchi tomonidan belgilangan sharoitlarda saqlanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 62,
+   "number": 3,
+   "description": "Kontrast moddalardan foydalanib diagnostik tekshiruvlar o‘tkazilganda shokka qarshi jihozlar to‘plamidan foydalanish imkoniyati mavjud. Xodimlar «Ko‘k kod» jamoasini chaqirish tartibi haqida xabardor qilingan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 62,
+   "number": 4,
+   "description": "Radiologik tekshiruvlar o‘tkazilayotganda bemor va xodimlarga radiatsiya ta’sirini kamaytirish maqsadida operatorlar ALARA (\"As Low As Reasonably Achievable\" — \"Iloji boricha eng past darajada\") tamoyiliga rioya qiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 62,
+   "number": 5,
+   "description": "Ultratovush tekshiruvlari vaqtida bemor tanasi bilan muloqotda bo‘ladigan datchiklar va uskunalar har safar ishlatilganidan so‘ng dezinfeksiya qilinadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 63,
+   "number": 1,
+   "description": "Ultratovush va radiologik tashxislash uskunalariga muntazam texnik xizmat ko‘rsatiladi, radiologik tashxislash uskunalari esa muntazam kalibrovkadan o‘tkaziladi hamda barcha amalga oshirilgan tekshiruv tadbirlari hujjatlashtiriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 63,
+   "number": 2,
+   "description": "Nur tashxisotida ishtirok etayotgan xodimlar individual dozimetrlar, rentgendan himoyalovchi kiyimlar va himoya ekranlaridan foydalanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 63,
+   "number": 3,
+   "description": "Dozimetrlarning ishlashi har chorakda nazorat qilinadi, bunda asosiy dozimetrlar tekshirilayotgan vaqtda xodimlar qo‘shimcha dozimetrlar bilan ta’minlanadi. Rentgendan himoyalovchi kiyimlarning holati kamida har ikki yilda bir marta tekshiriladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 63,
+   "number": 4,
+   "description": "Ishchi zonalarda, shuningdek rentgen va KT xonalariga tutash xonalarda ham yiliga bir marta nurlanish dozasi o‘lchanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 63,
+   "number": 5,
+   "description": "Murakkab holatlarda tekshiruv natijalarini talqin qilish sifati ustidan tashqi nazorat amalga oshiriladi; tashqi mutaxassislarga murojaatlar rasman qayd etiladi va ularning malakasi tegishli hujjatlar orqali tasdiqlanadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 64,
+   "number": 1,
+   "description": "Magnit-rezonans tomografiyasi o‘tkazilishidan oldin bemordan metall buyumlar va implantlar (pirsing, stentlar, endoprotezlar hamda boshqalar) mavjudligi haqida so‘raladi hamda mazkur ma’lumotni taqdim etishning muhimligi to‘g‘risida xabardor qilinadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 64,
+   "number": 2,
+   "description": "MRT xonasida magnit induksiyasi darajasi yuqori zonalarda foydalanish xavfsiz bo‘lgan, soz holatdagi yong‘inni o‘chirish vositalari joylashtirilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 64,
+   "number": 3,
+   "description": "Tashkilot ichki sifat nazoratini amalga oshiradi, unga binoan MRT tekshiruvlari vaqtida tibbiyot xodimi bemorni yolg‘iz qoldirmaydi va u bilan ovozli aloqada bo‘ladi. Bemorga muolajaning borishi haqida tushuntiriladi hamda butun tekshiruv davomida tibbiyot xodimi aloqada bo‘lishiga ishontiriladi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 65,
+   "number": 1,
+   "description": "Tashkilot barcha xodimlarni shaxsiy identifikatsiya beyjlari bilan ta’minlaydi, ushbu beyjlarda xodimning ismi, lavozimi va tegishli bo‘lim ko‘rsatilgan",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 65,
+   "number": 2,
+   "description": "Tashkilot xodimlarning standartlashtirilgan shaxsiy hujjatlar yig‘ma jildini yuritish bo‘yicha qoidalarni ishlab chiqadi va joriy etadi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 65,
+   "number": 3,
+   "description": "Tashkilot tasdiqlangan shtat jadvaliga muvofiq klinik bo‘limlarning xodimlar bilan haqiqiy ta’minlanganligini hisobga oladi, band bo‘lgan va bo‘sh lavozimlar bo‘yicha taqqoslama jadval tuzadi hamda klinik bo‘limlardagi shtat birliklarining to‘liqligini ta’minlashga qaratilgan ishlarni olib boradi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 66,
+   "number": 1,
+   "description": "Tashkilot ishga qabul qilishdan oldin barcha xodimlar, shu jumladan shifokorlar, o‘rta tibbiyot xodimlari va boshqa mutaxassislarning amaldagi malaka va sertifikatlarga ega ekanligini tekshiradi hamda ularning malaka oshirishga oid ma’lumotlarini shaxsiy hujjatlar yig‘ma jildida muntazam yangilab boradi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 66,
+   "number": 2,
+   "description": "Tashkilot shifokorlarning diplomlari haqiqiyligini birinchi manbadan verifikatsiya qilish, shuningdek ta’lim muassasalariga yoki milliy reestrlarga so‘rovlar yuborish orqali tekshiradi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 66,
+   "number": 3,
+   "description": "Tashkilot o‘rta tibbiyot xodimlarining diplomlari haqiqiyligini birinchi manbadan verifikatsiya qilish, shuningdek ta’lim muassasalariga yoki milliy reestrlarga so‘rovlar yuborish orqali tekshiradi",
+   "gold": false,
+   "sop_required": true
+  },
+  {
+   "standard_id": 67,
+   "number": 1,
+   "description": "Tashkilot shifokorlarni ishga qabul qilishda ularning klinik ko‘nikmalarini baholaydi, shu jumladan ushbu tibbiyot tashkilotida amalga oshirishga ruxsat etilgan yuqori xavfdagi jarrohlik amaliyotlari va muolajalar turlarini belgilaydigan individual klinik imtiyozlar ro‘yxatini tasdiqlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 67,
+   "number": 2,
+   "description": "Tashkilot invaziv muolajalarni bajaradigan o‘rta tibbiyot xodimlarining (statsionar bo‘limlarida, intensiv terapiya xonalarida va jarrohlik bloklarida ishlaydigan) ko‘nikmalarini baholaydi hamda shaxsiy malakalari (kompetentsiyalari) ro‘yxatini tasdiqlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 67,
+   "number": 3,
+   "description": "Tashkilot shifokorlarning klinik imtiyozlari va o‘rta tibbiy xodimlarning kompetentsiyalarini (malakalarini) har uch yilda kamida bir marta yoki undan ko’proq marta qayta ko‘rib chiqadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 68,
+   "number": 1,
+   "description": "Tashkilot shifokorlarni yillik baholash tartibini tasdiqlaydi va amalga oshiradi, bunda ularning klinik bilimlari, malaka oshirganligi, shaxsiy hamda ish jarayonida bemorlar va hamkasblar bilan muloqot ko‘nikmalari baholanadi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 68,
+   "number": 2,
+   "description": "Tashkilot o‘rta tibbiyot xodimlari, jumladan hamshiralar, feldsherlar va akusherlarni yillik baholashni o‘tkazadi, bunda ularning kasbiy ko‘nikmalari, muolaja va manipulyatsiyalarni bajarish darajasi, malaka oshirganligi, shuningdek shaxsiy hamda ish jarayonida bemorlar va hamkasblari bilan muloqot ko‘nikmalariga alohida e’tibor qaratiladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 68,
+   "number": 3,
+   "description": "Tashkilot xodimlarni baholash bo‘yicha to‘ldirilgan shakllarni ularning shaxsiy hujjatlar yig‘ma jildlarida saqlashni, shuningdek ularni baholash natijalari bilan tanishtirishni hamda ular bilan kasbiy o‘sish va rivojlanish imkoniyatlarini muhokama qilishni ta’minlaydi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 69,
+   "number": 1,
+   "description": "Tashkilot xodimlarning muntazam ravishda o‘quv mashg‘ulotlarida, shu jumladan tashkilot ichida o‘tkaziladigan treninglar, tashkilotdan tashqarida o‘tkaziladigan o‘quv kurslari hamda yo‘nalishi bo‘yicha konferentsiyalarda ishtirok etishini va malaka oshirishini ta’minlaydi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 69,
+   "number": 2,
+   "description": "Tashkilot ish jarayoniga ta’limni integratsiya qilish uchun shart-sharoit yaratadi, shu jumladan ustoz-shogird munosabatlari, tajriba almashinuvi va simulyatsion treninglarda ishtirok etish kabilarni qamrab oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 69,
+   "number": 3,
+   "description": "Bo‘lim mudirlari va boshqa rahbar xodimlarning lavozim yo‘riqnomalari ularning bevosita faoliyatiga tadbiq etiladigan akkreditatsiya standartlari talablarini bajarishga oid vazifalarni, shu jumladan bemorlar xavfsizligini ta’minlash bo‘yicha tadbirlarni o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 70,
+   "number": 1,
+   "description": "Tashkilot xodimlarni radiatsiya, zaharli moddalar va biologik agentlar bilan zararlanishning oldini olish maqsadida zarur bo‘lgan shaxsiy himoya vositalari, shu jumladan himoya kiyimi, qo‘lqoplar, niqoblar, respiratorlar, himoya ekranlari va boshqa buyumlar bilan ta’minlaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 70,
+   "number": 2,
+   "description": "Tashkilot bemorlar va og‘ir buyumlarni ko‘chirish, yiqilish, elektr toki hamda haddan tashqari jismoniy zo’riqish bilan bog‘liq jarohatlarning oldini olish uchun shart-sharoit yaratadi, ushbu shart-sharoitlar ixtisoslashtirilgan jihozlardan foydalanish va xodimlarga xavfsiz ish usullarini o‘rgatishni ham o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 70,
+   "number": 3,
+   "description": "Tashkilot xodimlarni emlash tadbirlarini, shu jumladan milliy va xalqaro tavsiyalarga muvofiq kasbiy faoliyat bilan bog‘liq yuqori xavfga ega infeksiyalarga qarshi immunizatsiyani amalga oshirishni nazorat qiladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 70,
+   "number": 4,
+   "description": "Tashkilot igna sanchilish holatlarining oldini olish bo‘yicha algoritmlarni ishlab chiqadi va joriy etadi, ushbu algoritmlar xodimlarga igna sanchilishining oldini olish usullari bo‘yicha o‘quv mashg‘ulotlari o‘tkazish, ignalarni utilizatsiya qilish uchun konteynerlarning mavjudligi va ulardan to‘g‘ri foydalanish, igna sanchilishi sodir bol’lganda amalga oshiriladigan chora-tadbirlar hamda noxush holatlarni qayd etish va tahlil qilish uchun tegishli hujjatlarni yuritishni o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 70,
+   "number": 5,
+   "description": "Tashkilot patogenlar va kimyoviy (moddalar) agentlar miqdori yuqori bo’lgan binolarda ventilyatsiya tizimlarini, shu jumladan laboratoriyalar, jarrohlik zallari va tsitostatiklarni eritish uchun mo‘ljallangan xonalarda havo tortish shkaflari, majburiy ventilyatsiya tizimlari va tegishli joylarda filtrlar bo‘lishini ta’minlaydi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 71,
+   "number": 1,
+   "description": "Tashkilot bemorlar va tashrif buyuruvchilar tomonidan sodir etiladigan zo‘ravonlik va tajovuz holatlariga javob berish uchun “Oq kod” deb nomlangan tezkor xabardor qilish tizimini joriy etadi, ushbu tizim jismoniy va ruhiy zarar xavfini kamaytirish maqsadida tezkor xabar berish, qo‘riqlash xizmatini chaqirish va xodimlar harakatini muvofiqlashtirish algoritmlarini ham o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 71,
+   "number": 2,
+   "description": "Tashkilot «Oq kod» doirasidagi zo‘ravonlik va tajovuz holatlariga javob berish bo‘yicha muntazam ravishda amaliy o‘quv mashg‘ulotlarini o‘tkazadi, ushbu mashg‘ulotlar murakkab vaziyatlar imitatsiyasi, xodimlarning tayyorgarlik darajasini baholash va tezkor algoritmlarning samaradorligini tekshirishni ham o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 71,
+   "number": 3,
+   "description": "Tashkilot kasbiy etika me’yorlarining buzilishi, tashkilot qoidalariga rioya qilmaslik, adolatsiz muomala va diskriminatsiya (kamsitish) holatlari to‘g‘risida shikoyat bildirish va xabar berish bo‘yicha qoidalarni ishlab chiqadi, shu jumladan ushbu qoidalar noxush holatlarni xolis ko‘rib chiqish va tegishli tuzatish choralarini ko‘rish maqsadida mustaqil komissiya tashkil etishni ham o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 71,
+   "number": 4,
+   "description": "Tashkilot ish joyida shilqimlik va (mansab vakolatini) suiiste’mol qilish holatlarining oldini olishga qaratilgan chora-tadbirlarni joriy etadi, shu jumladan ushbu chora-tadbirlar bunday harakatlarga (masalan, istalmagan teginish, intim hatti-harakatlar, shuningdek haqoratli yoki tahqirlovchi hazillar) nisbatan mutlaqo toqatsizlik siyosati, bunday holatlarning barchasini ko‘rib chiqish, jabrlangan xodimlarni qo‘llab-quvvatlash hamda shikoyat bildirishning xavfsiz yo‘llarini yaratishni ham o‘z ichiga oladi",
+   "gold": true,
+   "sop_required": true
+  },
+  {
+   "standard_id": 71,
+   "number": 5,
+   "description": "Tashkilot xodimlarga shikoyat bildirish va qonunbuzarliklar to‘g‘risida xabar berish, (mansab vakolatini) suiste’mol qilish va shilqimlikka nisbatan mutlaqo toqatsizlik siyosati, shuningdek ta’qib va diskriminatsiyadan himoyalanish bo‘yicha xodimlarning huquqlari mavzularida o‘quv mashg‘ulotlarini o‘tkazadi",
+   "gold": true,
+   "sop_required": false
+  },
+  {
+   "standard_id": 72,
+   "number": 1,
+   "description": "Tashkilot kadrlar bo‘limi tomonidan umumiy dastlabki majmuaviy yo‘riqnoma o‘tkazish uchun prezentatsiyalar yoki video materiallar ishlab chiqadi, ular tashkilotning tarixi va tuzilishi, korporativ madaniyat, shilqimlik va (mansab vakolatini) suiste’mol qilishga (masalan, istalmagan teginish, intim hatti-harakatlar, shuningdek haqoratli yoki tahqirlovchi hazillar) nisbatan mutlaqo toqatsizlik siyosati bo‘yicha ma’lumotlarni,shuningdek bunday holatlar yuz berganda ko‘riladigan chora-tadbirlarga oid ko‘rsatmalarni ham o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 72,
+   "number": 2,
+   "description": "Infektsion nazorat bo‘yicha mas’ul shaxslar tomonidan yo‘riqnoma o’tkaziladi va yo’riqnoma infektsiyalarning oldini olish chora-tadbirlari, shaxsiy himoya vositalaridan foydalanish, qo‘l gigiyenasi hamda tibbiy chiqindilar bilan xavfsiz ishlash bo‘yicha algoritmlarini o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 72,
+   "number": 3,
+   "description": "Texnika xavfsizligi va yong‘in xavfsizligi bo‘yicha yo‘riqnoma mas’ul shaxslar tomonidan o‘tkaziladi va u evakuatsiya qoidalari, yong‘in o‘chirgichlardan foydalanish, jarohatlarni oldini olish usullari hamda favqulodda holatlar yuz berganda amalga oshiriladigan harakatlar tartibini o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 73,
+   "number": 1,
+   "description": "Tashkilot xodimlarning ish yuklamasini muntazam nazorat qilib boradi hamda kasbiy stressning oldini olish maqsadida vazifalarning muvozanatli taqsimlanishi va mehnat muhofazasi qoidalariga rioya qilinishini ta’minlaydi.",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 73,
+   "number": 2,
+   "description": "Tashkilot xodimlar uchun antistress xonalari, meditatsiya yoki yolg‘iz qolish uchun xonalar kabi dam olish va emotsional yengillashish uchun mo‘ljallangan maxsus zonalarni yaratadi, shuningdek stress darajasini kamaytirishga qaratilgan tadbirlarni tashkil etadi.",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 73,
+   "number": 3,
+   "description": "Tashkilot psixologik yordam dasturlarini joriy etadi, ushbu dasturlar professional psixologik yordamdan foydalanish imkoniyatini, stressga chidamlilik bo‘yicha treninglarni va kasbiy \"yonish\"ning oldini olishga qaratilgan tadbirlarni ham o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 74,
+   "number": 1,
+   "description": "Tashkilot xodimlarning mehnat sharoiti bilan bog‘liq fikrlari, takliflari va muammolarini aniqlash uchun ularning ishdan qoniqish darajasini bo‘yicha muntazam so‘rovnomalar o‘tkazadi, ushbu so‘rovnomalar anketa to‘ldirish, ishdan bo‘shash vaqtidagi suhbatlar va xodimlar bilan konsultatsiyalar o‘tkazish kabilarni ham o‘z ichiga oladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 74,
+   "number": 2,
+   "description": "Tashkilot xodimlarning fikr-mulohazalari tahlili natijalari asosida chora-tadbirlarni ishlab chiqadi va joriy etadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 74,
+   "number": 3,
+   "description": "Tashkilot qaytalanuvchi muammolarni aniqlash hamda ularni bartaraf etish chora-tadbirlarini ishlab chiqish maqsadida xodimlarning ishdan bo‘shash va kasallik varaqasini rasmiylashtirish sabablari monitoringini o‘tkazadi va ularni tahlil qiladi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 75,
+   "number": 1,
+   "description": "Tashkilot talabalar, rezidentura (magistratura, ordinatura) tinglovchilari va boshqa ta’lim olayotgan shaxslarning ta’lim jarayonini nazorat qilish qoidalarini ishlab chiqadi va joriy etadi, ushbu qoidalar tibbiy yordam ko‘rsatishda mustaqillik darajasini aniqlash va beyj taqishni majburiyligini ham o‘z ichiga oladi. Qoidalar tibbiy tashkilot hamda oliy ta’lim muassasasi o‘rtasidagi shartnoma doirasida ishlab chiqilishi va amalga oshirilishi mumkin",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 75,
+   "number": 2,
+   "description": "Ta’lim jarayonini nazorat qilish uchun mas’ul bo‘lgan xodimlar (kafedra o‘qituvchilari, murabbiylar, maxsus yo‘nalishdagi mutaxassislar) nazorat tartiblari bilan tanishib chiqqan va belgilangan ta’lim standartlariga rioya etilish uchun javobgar hisoblanadilar. Kadrlar bo‘limi ta’lim jarayoni uchun mas’ul shaxslar ro‘yxatini yuritadi",
+   "gold": false,
+   "sop_required": false
+  },
+  {
+   "standard_id": 75,
+   "number": 3,
+   "description": "Tashkilot barcha ta’lim olayotgan shaxslar uchun maxfiylik, infektsion nazorat va yong‘in xavfsizligi masalalari bo‘yicha majburiy yo‘riqnoma o‘tkazilishini, shu jumladan yo‘riqnomadan o‘tganlikni tasdiqlovchi ta’lim olayotgan shaxslar tomonidan imzolangan ro‘yxat yuritilishini ta’minlaydi. Yo‘riqnoma ma’lum yo‘nalishdagi mutaxassislar yoki ta’lim jarayonini nazorat qiluvchi mas’ul shaxslar tomonidan o‘tkaziladi",
+   "gold": false,
+   "sop_required": false
+  }
+ ]
+}

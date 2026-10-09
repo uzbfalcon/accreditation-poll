@@ -18,3 +18,18 @@ venv/
 # Env & OS
 .env*
 .DS_Store
+
+# Local tooling
+.claude/
+
+# Django admin paneli
+admin_panel/.venv/
+admin_panel/admin.db
+admin_panel/staticfiles/
+admin_panel/.admin_credentials
+
+# Lokal baza zaxiralari
+backups/
+
+# Backoffice paroli (lokal va serverda alohida)
+backoffice.env

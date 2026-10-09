@@ -1,0 +1,40 @@
+/* CLAMO logotipi keng (156x40) va to'q rangli: Jazzmin standart dumaloq kesishi o'rniga
+   to'q sidebar ustida oq fonda to'liq ko'rsatiladi */
+.brand-image-clamo {
+    height: 30px;
+    width: auto;
+    margin: 0 0.5rem 0 0.6rem;
+    padding: 3px 8px;
+    background: #fff;
+    border-radius: 6px;
+    float: none;
+    vertical-align: middle;
+}
+
+/* Login sahifasidagi logotip */
+.login-logo img {
+    max-height: 48px;
+    width: auto;
+}
+
+/* Audit sessiyasi → «Javoblar» tabi: jadval yorliqsiz, to'liq kenglikda */
+.form-group.field-answers_table > .row > label,
+.form-group.field-answers_table > .row > .col-sm-2,
+.form-group.field-answers_table > .row > .col-sm-3 {
+    display: none;
+}
+.form-group.field-answers_table > .row > .field-answers_table {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.field-answers_table .readonly {
+    width: 100%;
+}
+.field-answers_table table td,
+.field-answers_table table th {
+    padding: 6px 8px;
+    vertical-align: middle;
+}
+.field-answers_table table tbody tr:nth-child(even) td {
+    background: rgba(148, 163, 184, 0.08);
+}

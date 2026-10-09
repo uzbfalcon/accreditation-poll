@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { submitSession, FlowError, AlreadySubmittedError } from '@/lib/db';
+import { enterFinalStage, FlowError } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,15 +8,9 @@ export async function POST(
   { params }: { params: { sessionId: string } }
 ) {
   try {
-    const result = submitSession(params.sessionId);
+    const result = enterFinalStage(params.sessionId);
     return NextResponse.json(result);
   } catch (error: any) {
-    if (error instanceof AlreadySubmittedError) {
-      return NextResponse.json(
-        { error: error.message, code: 'ALREADY_SUBMITTED', submitted_at: error.submittedAt },
-        { status: 409 }
-      );
-    }
     const status = error instanceof FlowError ? 409 : 500;
     return NextResponse.json({ error: error.message }, { status });
   }

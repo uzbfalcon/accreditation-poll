@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
+import { formatTashkentDateTime } from '@/lib/format';
 import {
   Building2,
   TrendingUp,
@@ -12,6 +13,7 @@ import {
   FileSpreadsheet,
   Search,
   Filter,
+  Clock,
 } from 'lucide-react';
 
 interface SummaryData {
@@ -52,7 +54,8 @@ interface ClinicItem {
   totalCriteria: number;
   score: number;
   status: 'ready' | 'partial' | 'risk';
-  date: string;
+  date: string | null;
+  submitted: boolean;
 }
 
 interface PassportData {
@@ -105,6 +108,64 @@ const DISTRICT_MAPPING: Record<string, string[]> = {
   'Buxoro viloyati': ['Barchasi', 'Buxoro sh.', "G'ijduvon", 'Kogon sh.'],
 };
 
+// Uzun tashkilot nomi «...» bilan qisqaradi; hover/focus'da to'liq nom va INN box ichida chiqadi.
+// Tooltip position: fixed — jadval konteynerining overflow'i uni kesmaydi; pastda joy bo'lmasa yuqorida ochiladi.
+function TruncatedOrgName({ name, inn }: { name: string; inn: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ left: number; top?: number; bottom?: number } | null>(null);
+
+  const show = () => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    const openUp = window.innerHeight - r.bottom < 110;
+    setPos(openUp ? { left: r.left, bottom: window.innerHeight - r.top + 6 } : { left: r.left, top: r.bottom + 6 });
+  };
+  const hide = () => setPos(null);
+
+  // Fixed tooltip skroll paytida qatordan ajralib qolmasligi uchun yashiriladi
+  useEffect(() => {
+    if (!pos) return;
+    window.addEventListener('scroll', hide, true);
+    return () => window.removeEventListener('scroll', hide, true);
+  }, [pos]);
+
+  return (
+    <div
+      ref={ref}
+      tabIndex={0}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+      aria-label={`${name}, INN ${inn}`}
+      className="max-w-[260px] xl:max-w-[340px] outline-none focus-visible:ring-2 focus-visible:ring-teal-500 rounded"
+    >
+      <strong className="text-slate-900 block font-semibold truncate">{name}</strong>
+      <span className="block text-[11px] font-mono text-slate-400 truncate">INN: {inn}</span>
+      {pos && (
+        <div
+          role="tooltip"
+          style={{ left: pos.left, top: pos.top, bottom: pos.bottom }}
+          className="pointer-events-none fixed z-50 w-max max-w-[420px] rounded-lg bg-slate-900 text-white px-3 py-2 shadow-lg text-xs leading-snug whitespace-normal"
+        >
+          <span className="block font-semibold">{name}</span>
+          <span className="block font-mono text-[11px] text-slate-300 mt-0.5">INN: {inn}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Sessiya tugagan bo'lsa (401) — login sahifasiga qaytariladi
+async function backofficeFetch(url: string): Promise<Response> {
+  const res = await fetch(url);
+  if (res.status === 401) {
+    window.location.href = `/backoffice/login?next=${encodeURIComponent(window.location.pathname)}`;
+    throw new Error('Avtorizatsiya talab qilinadi');
+  }
+  return res;
+}
+
 export default function BackofficeDashboardPage() {
   // Data states
   const [summary, setSummary] = useState<SummaryData | null>(null);
@@ -140,7 +201,7 @@ export default function BackofficeDashboardPage() {
 
   const fetchSummary = async () => {
     try {
-      const res = await fetch('/api/v1/backoffice/dashboard/summary');
+      const res = await backofficeFetch('/api/v1/backoffice/dashboard/summary');
       const data = await res.json();
       setSummary(data);
     } catch (e) {
@@ -150,7 +211,7 @@ export default function BackofficeDashboardPage() {
 
   const fetchRegions = async (sort: string) => {
     try {
-      const res = await fetch(`/api/v1/backoffice/dashboard/regions-breakdown?sort_by=${sort}`);
+      const res = await backofficeFetch(`/api/v1/backoffice/dashboard/regions-breakdown?sort_by=${sort}`);
       const data = await res.json();
       setRegions(data);
     } catch (e) {
@@ -160,7 +221,7 @@ export default function BackofficeDashboardPage() {
 
   const fetchDomains = async () => {
     try {
-      const res = await fetch('/api/v1/backoffice/dashboard/domains-breakdown');
+      const res = await backofficeFetch('/api/v1/backoffice/dashboard/domains-breakdown');
       const data = await res.json();
       setDomains(data);
     } catch (e) {
@@ -177,7 +238,7 @@ export default function BackofficeDashboardPage() {
         status: selectedStatus,
         search: searchQuery,
       });
-      const res = await fetch(`/api/v1/backoffice/clinics?${params}`);
+      const res = await backofficeFetch(`/api/v1/backoffice/clinics?${params}`);
       const data = await res.json();
       setClinics(data);
     } catch (e) {
@@ -192,7 +253,7 @@ export default function BackofficeDashboardPage() {
 
   const handleOpenPassport = async (sessionId: string) => {
     try {
-      const res = await fetch(`/api/v1/backoffice/clinics/${sessionId}/audit-passport`);
+      const res = await backofficeFetch(`/api/v1/backoffice/clinics/${sessionId}/audit-passport`);
       const data = await res.json();
       setPassportData(data);
       setIsModalOpen(true);
@@ -450,8 +511,8 @@ export default function BackofficeDashboardPage() {
               >
                 <option value="all">Barchasi</option>
                 <option value="ready">Tayyor (&ge;80%)</option>
-                <option value="partial">Qisman (55 - 79%)</option>
-                <option value="risk">Xavfli (&lt;55%)</option>
+                <option value="partial">Qisman tayyor (55–79%)</option>
+                <option value="risk">Tayyor emas (&lt;55%)</option>
               </select>
             </div>
 
@@ -479,7 +540,7 @@ export default function BackofficeDashboardPage() {
                 <tr className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
                   <th className="py-3 px-4">Tashkilot nomi va INN</th>
                   <th className="py-3 px-3">Hudud & Tuman</th>
-                  <th className="py-3 px-3">Daraja & Quvvat</th>
+                  <th className="py-3 px-3">Yuborilgan sana</th>
                   <th className="py-3 px-3 text-center">Mezonlar</th>
                   <th className="py-3 px-3 text-center">Tayyorgarlik Bali</th>
                   <th className="py-3 px-3 text-center">Holat</th>
@@ -497,34 +558,41 @@ export default function BackofficeDashboardPage() {
                   clinics.map((c) => {
                     const badge =
                       c.status === 'ready' ? (
-                        <span className="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px]">
-                          ✓ Tayyor
+                        <span className="inline-flex items-center gap-1 whitespace-nowrap bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold px-2 py-0.5 rounded-full text-[11px]">
+                          <CheckCircle2 className="w-3 h-3" />
+                          Tayyor
                         </span>
                       ) : c.status === 'partial' ? (
-                        <span className="bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded text-[10px]">
-                          ⏳ Qisman
+                        <span className="inline-flex items-center gap-1 whitespace-nowrap bg-amber-50 text-amber-700 border border-amber-200 font-semibold px-2 py-0.5 rounded-full text-[11px]">
+                          <Clock className="w-3 h-3" />
+                          Qisman tayyor
                         </span>
                       ) : (
-                        <span className="bg-rose-50 text-rose-700 font-semibold px-2 py-0.5 rounded text-[10px]">
-                          ⚠️ Xavfli
+                        <span className="inline-flex items-center gap-1 whitespace-nowrap bg-rose-50 text-rose-700 border border-rose-200 font-semibold px-2 py-0.5 rounded-full text-[11px]">
+                          <AlertTriangle className="w-3 h-3" />
+                          Tayyor emas
                         </span>
                       );
+                    const submittedAt = c.date ? formatTashkentDateTime(c.date) : null;
 
                     return (
                       <tr key={c.session_id} className="hover:bg-slate-50 transition border-b border-slate-100">
                         <td className="py-3 px-4">
-                          <strong className="text-slate-900 block font-semibold">{c.name}</strong>
-                          <span className="text-[11px] font-mono text-slate-400">INN: {c.inn}</span>
+                          <TruncatedOrgName name={c.name} inn={c.inn} />
                         </td>
-                        <td className="py-3 px-3">
+                        <td className="py-3 px-3 whitespace-nowrap">
                           <span>{c.region}</span>
                           <span className="block text-[11px] text-slate-400">{c.district}</span>
                         </td>
-                        <td className="py-3 px-3">
-                          <span className="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded text-[10px] font-bold">
-                            {c.level}
-                          </span>
-                          <span className="block text-[11px] text-slate-400">{c.capacity}</span>
+                        <td className="py-3 px-3 whitespace-nowrap">
+                          {submittedAt ? (
+                            <>
+                              <span className="block text-slate-800 font-medium">{submittedAt.date}</span>
+                              <span className="block text-[11px] text-slate-400">{submittedAt.time}</span>
+                            </>
+                          ) : (
+                            <span className="text-[11px] text-slate-400 italic">Topshirilmagan</span>
+                          )}
                         </td>
                         <td className="py-3 px-3 text-center font-mono">
                           {c.criteriaDone} <span className="text-slate-400">/ {c.totalCriteria}</span>
@@ -534,7 +602,7 @@ export default function BackofficeDashboardPage() {
                             className={`font-mono text-xs ${
                               c.score >= 80
                                 ? 'text-emerald-600'
-                                : c.score >= 60
+                                : c.score >= 55
                                 ? 'text-amber-600'
                                 : 'text-rose-600'
                             }`}
@@ -546,7 +614,7 @@ export default function BackofficeDashboardPage() {
                         <td className="py-3 px-4 text-right">
                           <button
                             onClick={() => handleOpenPassport(c.session_id)}
-                            className="px-2.5 py-1 rounded bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold text-xs transition cursor-pointer"
+                            className="px-2.5 py-1 rounded bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold text-xs transition cursor-pointer whitespace-nowrap"
                           >
                             Pasport & PDF
                           </button>

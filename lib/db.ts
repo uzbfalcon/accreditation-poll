@@ -1,7 +1,10 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+// Standart va mezonlarning o'zbekcha matnlari (scripts/import_standards_xlsx.py yaratadi)
+import standardsContent from '@/data/standards_uz.json';
+import { OFERTA_SEED } from '@/data/oferta_seed';
 
-const DB_PATH = path.join(process.cwd(), 'clamo_accreditation.db');
+const DB_PATH = process.env.CLAMO_DB_PATH || path.join(process.cwd(), 'clamo_accreditation.db');
 
 let dbInstance: Database.Database | null = null;
 
@@ -9,8 +12,120 @@ export function getDb(): Database.Database {
   if (!dbInstance) {
     dbInstance = new Database(DB_PATH);
     dbInstance.pragma('journal_mode = WAL');
+
+    // Migration: yakuniy bo'limga o'tilgan vaqt (shundan keyin oldingi bo'limlar yopiladi)
+    const sessionCols = dbInstance.prepare('PRAGMA table_info(audit_sessions)').all() as Array<{ name: string }>;
+    if (!sessionCols.some((c) => c.name === 'final_stage_at')) {
+      dbInstance.exec('ALTER TABLE audit_sessions ADD COLUMN final_stage_at TEXT');
+    }
+
+    if ((dbInstance.pragma('user_version', { simple: true }) as number) < standardsContent.version) {
+      applyStandardsContent(dbInstance);
+    }
+
+    // Statik sahifalar (oferta va h.k.): matn Django admin'da tahrirlanadi, bu yerda faqat boshlang'ich tahrir yoziladi
+    dbInstance.exec(`
+      CREATE TABLE IF NOT EXISTS site_pages (
+        slug TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        updated_at TEXT
+      )
+    `);
+    dbInstance
+      .prepare("INSERT OR IGNORE INTO site_pages (slug, title, content, updated_at) VALUES (?, ?, ?, datetime('now'))")
+      .run(OFERTA_SEED.slug, OFERTA_SEED.title, OFERTA_SEED.content);
   }
   return dbInstance;
+}
+
+export interface SitePage {
+  slug: string;
+  title: string;
+  content: string;
+  updated_at: string | null;
+}
+
+export function getSitePage(slug: string): SitePage | null {
+  const row = getDb().prepare('SELECT slug, title, content, updated_at FROM site_pages WHERE slug = ?').get(slug);
+  return (row as SitePage | undefined) ?? null;
+}
+
+// Standart/mezon matnlarini JSON'dan yangilaydi. Mezonlar (standart, raqam) bo'yicha moslanadi —
+// ID'lar saqlanadi, shuning uchun mavjud javoblar o'z mezoniga bog'langanicha qoladi; yangilari qo'shiladi.
+// Gold / SOP belgilari faqat ma'lumot uchun (admin'da ko'rsatiladi) — ball hisobiga ta'sir qilmaydi.
+function applyStandardsContent(db: Database.Database) {
+  const addColumn = (table: string, column: string) => {
+    const cols = db.prepare(`PRAGMA table_info(${table})`).all() as Array<{ name: string }>;
+    if (!cols.some((c) => c.name === column)) {
+      db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} INTEGER DEFAULT 0`);
+    }
+  };
+  addColumn('standards', 'is_gold');
+  addColumn('criteria', 'is_gold');
+  addColumn('criteria', 'sop_required');
+
+  const domainNames = new Map(standardsContent.domains.map((d) => [d.id, d.name]));
+  const updateStandard = db.prepare(`
+    UPDATE standards SET title = ?, domain_id = ?, domain_name = ?, applicability_condition = ?, is_gold = ? WHERE id = ?
+  `);
+  const updateCriterion = db.prepare(`
+    UPDATE criteria SET description = ?, is_gold = ?, sop_required = ? WHERE standard_id = ? AND criterion_number = ?
+  `);
+  const insertCriterion = db.prepare(`
+    INSERT INTO criteria (id, standard_id, criterion_number, description, is_critical, is_gold, sop_required)
+    VALUES ((SELECT COALESCE(MAX(id), 0) + 1 FROM criteria), ?, ?, ?, 0, ?, ?)
+  `);
+
+  db.transaction(() => {
+    for (const s of standardsContent.standards) {
+      updateStandard.run(s.title, s.domain_id, domainNames.get(s.domain_id), s.applicability, s.gold ? 1 : 0, s.id);
+    }
+    for (const c of standardsContent.criteria) {
+      const gold = c.gold ? 1 : 0;
+      const sop = c.sop_required ? 1 : 0;
+      if (updateCriterion.run(c.description, gold, sop, c.standard_id, c.number).changes === 0) {
+        insertCriterion.run(c.standard_id, c.number, c.description, gold, sop);
+      }
+    }
+    db.pragma(`user_version = ${standardsContent.version}`);
+  })();
+}
+
+// Bo'limlar ketma-ketligi buzilganda (409) qaytariladigan xato
+export class FlowError extends Error {}
+
+// Kiritilgan ma'lumot noto'g'ri yoki to'liq emas (400)
+export class InputError extends Error {}
+
+// Bitta tashkilot (INN) arizani faqat bir marta topshiradi
+export class AlreadySubmittedError extends FlowError {
+  constructor(public submittedAt: string | null) {
+    super("Ushbu INN bo'yicha ariza allaqachon topshirilgan. Har bir tashkilot arizani faqat bir marta topshirishi mumkin.");
+  }
+}
+
+export function getSubmittedSessionByInn(inn: string): { id: string; submitted_at: string | null } | null {
+  const row = getDb().prepare(`
+    SELECT s.id, s.submitted_at FROM audit_sessions s
+    JOIN organizations o ON o.id = s.org_id
+    WHERE o.inn = ? AND s.status = 'SUBMITTED'
+    ORDER BY s.submitted_at ASC LIMIT 1
+  `).get(inn) as { id: string; submitted_at: string | null } | undefined;
+  return row ?? null;
+}
+
+// Har bir bo'lim bo'yicha jami va javob berilgan mezonlar soni (domain_id tartibida)
+function getDomainProgress(sessionId: string) {
+  const db = getDb();
+  return db.prepare(`
+    SELECT st.domain_id AS domain_id, COUNT(c.id) AS total, COUNT(sa.answer_value) AS answered
+    FROM standards st
+    JOIN criteria c ON c.standard_id = st.id
+    LEFT JOIN session_answers sa ON sa.criterion_id = c.id AND sa.session_id = ?
+    GROUP BY st.domain_id
+    ORDER BY st.domain_id
+  `).all(sessionId) as Array<{ domain_id: number; total: number; answered: number }>;
 }
 
 export const STANDARD_SERVICE_RULES: Record<number, string> = {
@@ -37,91 +152,6 @@ export const CRITICAL_STOP_FACTORS: [number, number][] = [
   [55, 4], // Jarrohlik nazorat varag'i (Sign-in, Time-out, Sign-out)
   [58, 1], // «Ko'k kod» 3 daqiqalik shoshilinch reanimatsiya
 ];
-
-export interface InnLookupResult {
-  inn: string;
-  found: boolean;
-  name: string;
-  region: string;
-  district: string;
-  address: string;
-  status: string;
-}
-
-export function lookupInnData(inn: string): InnLookupResult {
-  const mockDb: Record<string, Omit<InnLookupResult, 'inn' | 'found'>> = {
-    '304882190': {
-      name: '«SHIFO MED SERVIS KOP TARMOQLI KLINIKASI» MCHJ',
-      region: 'Toshkent shahri',
-      district: 'Yunusobod',
-      address: "Amir Temur ko'chasi, 12-uy",
-      status: 'ACTIVE',
-    },
-    '305119284': {
-      name: '«AKFA MEDLINE RESPUBLIKA TIBBIYOT MARKAZI» MCHJ',
-      region: 'Toshkent shahri',
-      district: 'Olmazor',
-      address: "Kichik halqa yo'li 5-A",
-      status: 'ACTIVE',
-    },
-    '305123456': {
-      name: '«CLAMO DIGITAL HEALTH SOLUTIONS» MCHJ',
-      region: 'Toshkent shahri',
-      district: 'Mirobod',
-      address: "Nukus ko'chasi 24-uy",
-      status: 'ACTIVE',
-    },
-    '201994821': {
-      name: "«SAMARQAND VILOYAT BOLALAR KO'P TARMOQLI TIBBIYOT MARKAZI»",
-      region: 'Samarqand viloyati',
-      district: 'Samarqand sh.',
-      address: "Dahbed ko'chasi 45-uy",
-      status: 'ACTIVE',
-    },
-    '203114992': {
-      name: "«QO'QON SHAHAR 2-SONLI SHOSHILINCH YORDAM SHIFOXONASI»",
-      region: "Farg'ona viloyati",
-      district: "Qo'qon sh.",
-      address: 'Turkiston ko\'chasi 14',
-      status: 'ACTIVE',
-    },
-    '204992110': {
-      name: "«ASAKA TUMAN TIBBIYOT BIRLASHMASI TUG'RUQ MAJMUASI»",
-      region: 'Andijon viloyati',
-      district: 'Asaka',
-      address: 'Qorasuv ko\'chasi 2',
-      status: 'ACTIVE',
-    },
-    '308221004': {
-      name: '«BUXORO KARVON SINO NEVROLOGIYA VA REABILITATSIYA» MCHJ',
-      region: 'Buxoro viloyati',
-      district: 'Buxoro sh.',
-      address: 'Ibn Sino ko\'chasi 18',
-      status: 'ACTIVE',
-    },
-    '306771893': {
-      name: '«CHIRCHIQ MED STAR DIAGNOSTIKA MARKAZI» MCHJ',
-      region: 'Toshkent viloyati',
-      district: 'Chirchiq sh.',
-      address: 'Navoiy shoh ko\'chasi 7',
-      status: 'ACTIVE',
-    },
-  };
-
-  if (inn in mockDb) {
-    return { inn, found: true, ...mockDb[inn] };
-  }
-
-  return {
-    inn,
-    found: true,
-    name: `«TIBBIYOT DIAGNOSTIKA VA DAVOLASH #${inn.slice(-4)}» MCHJ`,
-    region: 'Toshkent shahri',
-    district: 'Yunusobod',
-    address: "Markaziy shoh ko'cha 1-uy",
-    status: 'ACTIVE',
-  };
-}
 
 export interface DomainStat {
   id: number;
@@ -329,20 +359,39 @@ export interface InitializeSessionInput {
 export function initializeSession(data: InitializeSessionInput) {
   const db = getDb();
 
-  const inn = (data.inn || '305123456').trim();
-  const orgName = (data.name || '').trim() || lookupInnData(inn).name;
-  const cadastre = data.cadastre_number || '';
-  const region = data.region || 'Toshkent shahri';
-  const district = data.district || 'Yunusobod';
-  const fio = data.submitter_fio || "Mas'ul Shaxs";
-  const phone = data.submitter_phone || '+998 71 200-00-00';
-  const level = data.level || 'VILOYAT';
+  const inn = (data.inn || '').trim();
+  const orgName = (data.name || '').trim();
+  const region = (data.region || '').trim();
+  const fio = (data.submitter_fio || '').trim();
+  const phone = (data.submitter_phone || '').trim();
+  const level = data.level || '';
+  if (!/^\d{9}$/.test(inn)) {
+    throw new InputError("INN 9 xonali raqam bo'lishi kerak");
+  }
+  if (!orgName || !region || !fio || !phone || !['RESPUBLIKA', 'VILOYAT', 'TUMAN'].includes(level)) {
+    throw new InputError("Tashkilot nomi, viloyat, daraja, mas'ul shaxs F.I.O va telefon raqami majburiy");
+  }
+
+  // Topshirilgan ariza bo'lsa — tashkilot ma'lumotlari ham, yangi sessiya ham yaratilmaydi
+  const submitted = getSubmittedSessionByInn(inn);
+  if (submitted) {
+    throw new AlreadySubmittedError(submitted.submitted_at);
+  }
+
+  const cadastre = (data.cadastre_number || '').trim();
+  const district = (data.district || '').trim();
   const profile = data.profile || 'ARALASH';
 
   const now = new Date();
   const day = String(now.getDate()).padStart(2, '0');
   const month = String(now.getMonth() + 1).padStart(2, '0');
-  const sessionId = `${inn}-${day}${month}`;
+  // Tashkilotning mavjud qoralamasi bo'lsa — o'sha davom ettiriladi (kuniga yangi sessiya ochilmaydi)
+  const existingDraft = db.prepare(`
+    SELECT s.id FROM audit_sessions s JOIN organizations o ON o.id = s.org_id
+    WHERE o.inn = ? AND s.status = 'DRAFT'
+    ORDER BY s.updated_at DESC LIMIT 1
+  `).get(inn) as { id: string } | undefined;
+  const sessionId = existingDraft?.id ?? `${inn}-${day}${month}`;
   const nowStr = now.toISOString().replace('T', ' ').slice(0, 19);
 
   // 1. Upsert Organization
@@ -562,6 +611,32 @@ export function getChecklist(sessionId: string) {
 export function saveAnswer(sessionId: string, criterionId: number, answerValue: string, note: string = '') {
   const db = getDb();
 
+  // Bo'limlar ketma-ketligi: oldingi bo'lim to'liq bo'lmasa keyingisiga javob berib bo'lmaydi;
+  // yakuniy bo'limga o'tilgach, oldingi bo'limlar yopiladi.
+  const session = db.prepare('SELECT final_stage_at, status FROM audit_sessions WHERE id = ?').get(sessionId) as
+    { final_stage_at: string | null; status: string } | undefined;
+  if (session?.status === 'SUBMITTED') {
+    throw new FlowError("Ariza topshirilgan — javoblarni o'zgartirib bo'lmaydi");
+  }
+  const crit = db.prepare(`
+    SELECT st.domain_id AS domain_id FROM criteria c JOIN standards st ON st.id = c.standard_id WHERE c.id = ?
+  `).get(criterionId) as { domain_id: number } | undefined;
+  if (!session || !crit) {
+    throw new FlowError('Sessiya yoki mezon topilmadi');
+  }
+  const progress = getDomainProgress(sessionId);
+  const lastDomainId = progress[progress.length - 1].domain_id;
+  if (session.final_stage_at && crit.domain_id !== lastDomainId) {
+    throw new FlowError(`Yakuniy ${lastDomainId}-bo'limga o'tilgan, oldingi bo'limlarni o'zgartirib bo'lmaydi`);
+  }
+  if (!session.final_stage_at && crit.domain_id === lastDomainId) {
+    throw new FlowError(`${lastDomainId}-bo'limga o'tish hali tasdiqlanmagan`);
+  }
+  const incomplete = progress.find((p) => p.domain_id < crit.domain_id && p.answered < p.total);
+  if (incomplete) {
+    throw new FlowError(`Avval ${incomplete.domain_id}-bo'limni to'liq to'ldiring`);
+  }
+
   let weight: number | null = 0.0;
   if (answerValue === 'YES') weight = 1.0;
   else if (answerValue === 'PARTIAL') weight = 0.5;
@@ -588,16 +663,62 @@ export function saveAnswer(sessionId: string, criterionId: number, answerValue: 
   };
 }
 
+// Yakuniy (oxirgi) bo'limga o'tish: oldingi barcha bo'limlar to'liq bo'lishi shart, qaytib bo'lmaydi
+export function enterFinalStage(sessionId: string) {
+  const db = getDb();
+  const session = db.prepare('SELECT final_stage_at, status FROM audit_sessions WHERE id = ?').get(sessionId) as
+    { final_stage_at: string | null; status: string } | undefined;
+  if (!session) {
+    throw new FlowError('Sessiya topilmadi');
+  }
+  if (session.status === 'SUBMITTED') {
+    throw new FlowError('Ariza allaqachon topshirilgan');
+  }
+  if (!session.final_stage_at) {
+    const progress = getDomainProgress(sessionId);
+    const incomplete = progress.slice(0, -1).find((p) => p.answered < p.total);
+    if (incomplete) {
+      throw new FlowError(`Avval ${incomplete.domain_id}-bo'limni to'liq to'ldiring`);
+    }
+    db.prepare("UPDATE audit_sessions SET final_stage_at = datetime('now') WHERE id = ?").run(sessionId);
+  }
+  return { status: 'FINAL_STAGE' };
+}
+
 export function submitSession(sessionId: string) {
   const db = getDb();
-  const updatedScore = calculateSessionScore(sessionId);
 
-  db.prepare(`
-    UPDATE audit_sessions 
-    SET status = 'SUBMITTED', submitted_at = datetime('now')
-    WHERE id = ?
-  `).run(sessionId);
+  // Tekshiruv va topshirish bitta IMMEDIATE tranzaksiyada: yozish qulfi tekshiruvdan oldin olinadi,
+  // shuning uchun parallel so'rovlar bir INN'dan ikkinchi topshirishni o'tkazib yubora olmaydi.
+  const submit = db.transaction(() => {
+    const session = db.prepare(`
+      SELECT s.final_stage_at, s.status, s.submitted_at, o.inn FROM audit_sessions s
+      JOIN organizations o ON o.id = s.org_id WHERE s.id = ?
+    `).get(sessionId) as { final_stage_at: string | null; status: string; submitted_at: string | null; inn: string } | undefined;
+    if (!session) {
+      throw new FlowError('Sessiya topilmadi');
+    }
+    if (session.status === 'SUBMITTED') {
+      throw new AlreadySubmittedError(session.submitted_at);
+    }
+    const other = getSubmittedSessionByInn(session.inn);
+    if (other) {
+      throw new AlreadySubmittedError(other.submitted_at);
+    }
+    const incomplete = getDomainProgress(sessionId).find((p) => p.answered < p.total);
+    if (!session.final_stage_at || incomplete) {
+      throw new FlowError("Arizani topshirish uchun barcha bo'limlarni to'liq to'ldiring");
+    }
+    const updatedScore = calculateSessionScore(sessionId);
+    db.prepare(`
+      UPDATE audit_sessions
+      SET status = 'SUBMITTED', submitted_at = datetime('now')
+      WHERE id = ?
+    `).run(sessionId);
+    return updatedScore;
+  });
 
+  const updatedScore = submit.immediate();
   return {
     status: 'SUBMITTED',
     message: 'Akkreditatsiya arizasi muvaffaqiyatli qabul qilindi!',
@@ -785,7 +906,9 @@ export function getBackofficeClinics(params: ClinicFilterParams) {
       totalCriteria: r.total_applicable,
       score: r.total_score,
       status: r.readiness_category === 'READY' ? 'ready' : (r.readiness_category === 'PARTIALLY_READY' ? 'partial' : 'risk'),
-      date: r.submitted_at || '2026-10-06',
+      // Faqat haqiqatda topshirilgan sessiyalar uchun sana; qoralamada null
+      date: r.status === 'SUBMITTED' ? r.submitted_at || null : null,
+      submitted: r.status === 'SUBMITTED',
     });
   }
 

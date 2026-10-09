@@ -28,7 +28,7 @@ curl -fsSL "https://github.com/WiseLibs/better-sqlite3/releases/download/v$BS_VE
 cp "$WORK/build/Release/better_sqlite3.node" "$B/node_modules/better-sqlite3/build/Release/"
 
 # 3. Startup fayl va minimal package.json (Plesk'da "NPM install" bosilmasin)
-printf "// Plesk Node.js (Passenger) startup file — Next.js standalone serverini ishga tushiradi.\nrequire('./server.js');\n" > "$B/app.js"
+cp deploy/app.js "$B/app.js"  # backoffice.env ni yuklaydi (serverda alohida turadi)
 echo '{ "name": "clamo-accreditation-system", "version": "1.0.0", "private": true }' > "$B/package.json"
 
 # 4. Yuklash va qayta ishga tushirish

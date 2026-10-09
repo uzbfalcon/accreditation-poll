@@ -11,7 +11,7 @@ export interface InnScraperResult {
   district: string;
   address: string;
   status: string;
-  source: 'orginfo.uz' | 'ihamkor.uz' | 'cache' | 'mock' | 'generated';
+  source: 'orginfo.uz' | 'ihamkor.uz' | 'cache' | 'mock';
 }
 
 // In-memory cache to guarantee sub-millisecond responses on repeated queries
@@ -231,18 +231,16 @@ export async function lookupInnOnline(inn: string): Promise<InnScraperResult> {
       return res;
     }
 
-    // 4. Fallback: Algorithmic clean generation for valid 9-digit INN
-    const generated: InnScraperResult = {
+    // 4. Topilmadi — nom to'qib chiqarilmaydi; foydalanuvchi ma'lumotlarni qo'lda kiritadi
+    return {
       inn: cleanInn,
-      found: true,
-      name: `«TIBBIYOT DIAGNOSTIKA VA DAVOLASH #${cleanInn.slice(-4)}» MCHJ`,
-      region: 'Toshkent shahri',
-      district: 'Yunusobod',
-      address: "Markaziy shoh ko'cha 1-uy",
-      status: 'ACTIVE',
-      source: 'generated',
+      found: false,
+      name: '',
+      region: '',
+      district: '',
+      address: '',
+      status: '',
+      source: 'mock',
     };
-    innCache.set(cleanInn, generated);
-    return generated;
   }
 }
