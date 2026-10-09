@@ -572,7 +572,7 @@ export default function ChecklistPortalPage() {
                 alt="CLAMO"
                 className="h-10 sm:h-11 w-auto object-contain"
               />
-              <span className="bg-teal-50 text-teal-700 text-[10px] font-bold px-2 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
+              <span className="bg-teal-50 text-teal-700 text-2xs font-bold px-2 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
                 Akkreditatsiya Tasdiqnomasi
               </span>
             </Link>
@@ -597,7 +597,7 @@ export default function ChecklistPortalPage() {
             <span>Akkreditatsiya arizasi muvaffaqiyatli qabul qilindi</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 text-center tracking-tight mb-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 text-center tracking-tight mb-2">
             Akkreditatsiya So&apos;rovnomasi Qabul Qilindi
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 text-center max-w-lg mb-8 no-print">
@@ -616,7 +616,7 @@ export default function ChecklistPortalPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo.svg" alt="CLAMO" className="h-10 w-auto object-contain" />
                   <div>
-                    <h2 className="text-base font-black text-slate-900 tracking-tight">
+                    <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
                       CLAMO TIBBIYOT AKKREDITATSIYASI
                     </h2>
                     <p className="text-xs text-slate-500">
@@ -626,7 +626,7 @@ export default function ChecklistPortalPage() {
                 </div>
 
                 <div className="text-left sm:text-right">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  <span className="text-2xs font-bold uppercase tracking-wider text-slate-400 block">
                     Ariza Maqomi
                   </span>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold mt-1">
@@ -643,7 +643,7 @@ export default function ChecklistPortalPage() {
                     <Hash className="w-3.5 h-3.5 text-teal-600" />
                     <span>Akkreditatsiya arizasi №</span>
                   </div>
-                  <div className="font-mono font-black text-lg text-teal-900 tracking-tight">
+                  <div className="font-mono font-extrabold text-lg text-teal-900 tracking-tight">
                     {submissionSuccess.sessionId}
                   </div>
                 </div>
@@ -680,7 +680,7 @@ export default function ChecklistPortalPage() {
                 </h3>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
                   <div className="shrink-0">
-                    <div className={`text-4xl font-black font-mono tracking-tight ${scoreColorClass(submissionSuccess.scorePercent)}`}>
+                    <div className={`text-4xl font-extrabold font-mono tracking-tight ${scoreColorClass(submissionSuccess.scorePercent)}`}>
                       {submissionSuccess.scorePercent}%
                     </div>
                     <div className="mt-2">
@@ -706,19 +706,19 @@ export default function ChecklistPortalPage() {
                         style={{ width: `${Math.min(100, submissionSuccess.scorePercent)}%` }}
                       ></div>
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                    <p className="text-caption text-slate-500 leading-relaxed">
                       Bajarilgan mezon: Gold — 1,3 ball, oddiy — 1 ball; «Qisman» — 0,5 ball; «Tadbiq etilmaydi» mezonlar
                       hisobga olinmaydi. Toifalar 16-son qaror (37-band) bo&apos;yicha: oliy — 95%, birinchi — 85%, ikkinchi — 75%.
                     </p>
                     {submissionSuccess.hasCriticalViolations && (
-                      <p className="text-[11px] font-semibold text-rose-700 flex items-start gap-1.5">
+                      <p className="text-caption font-semibold text-rose-700 flex items-start gap-1.5">
                         <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-px" />
                         Kritik xavfsizlik talablaridan biri bajarilmagan — ekspert baholashida alohida e&apos;tibor qaratiladi.
                       </p>
                     )}
                   </div>
                 </div>
-                <p className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-400">
+                <p className="mt-4 pt-3 border-t border-slate-100 text-caption text-slate-400">
                   Natija o&apos;z-o&apos;zini baholash asosida hisoblangan dastlabki ko&apos;rsatkich. Rasmiy akkreditatsiya toifasini
                   akkreditatsiyalovchi organ belgilaydi.
                 </p>
@@ -807,11 +807,11 @@ export default function ChecklistPortalPage() {
               />
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="bg-teal-50 text-teal-700 text-[10px] font-bold px-2 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
+                  <span className="bg-teal-50 text-teal-700 text-2xs font-bold px-2 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
                     Klinika Portali
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 hidden sm:block">
+                <p className="text-caption text-slate-500 hidden sm:block">
                   75 ta standart va 275 ta mezon asosidagi milliy audit chek-listi
                 </p>
               </div>
@@ -848,7 +848,7 @@ export default function ChecklistPortalPage() {
               {/* STEP 1: INN & ORG NAME */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Tashkilot INN&apos;i *
                   </label>
                   <div className="relative">
@@ -865,26 +865,26 @@ export default function ChecklistPortalPage() {
                       required
                     />
                     {isSearchingInn ? (
-                      <span className="absolute right-2 top-2 text-[10px] bg-cyan-50 text-cyan-800 font-bold px-2 py-1 rounded border border-cyan-200 flex items-center gap-1.5 shadow-2xs">
+                      <span className="absolute right-2 top-2 text-2xs bg-cyan-50 text-cyan-800 font-bold px-2 py-1 rounded border border-cyan-200 flex items-center gap-1.5 shadow-2xs">
                         <span className="w-2.5 h-2.5 border-2 border-cyan-600 border-t-transparent rounded-full animate-spin"></span>
                         Qidirilmoqda...
                       </span>
                     ) : innFound ? (
-                      <span className="absolute right-2 top-2 text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-1 rounded border border-emerald-200 flex items-center gap-1 shadow-2xs">
+                      <span className="absolute right-2 top-2 text-2xs bg-emerald-50 text-emerald-800 font-bold px-2 py-1 rounded border border-emerald-200 flex items-center gap-1 shadow-2xs">
                         <Check className="w-3 h-3 text-emerald-600" />
                         Topildi
                       </span>
                     ) : inn.length === 9 ? (
-                      <span className="absolute right-2 top-2 text-[10px] bg-amber-50 text-amber-800 font-bold px-2 py-1 rounded border border-amber-200 flex items-center gap-1 shadow-2xs">
+                      <span className="absolute right-2 top-2 text-2xs bg-amber-50 text-amber-800 font-bold px-2 py-1 rounded border border-amber-200 flex items-center gap-1 shadow-2xs">
                         Topilmadi
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1">9 xonali yuridik shaxs INN kodi</p>
+                  <p className="text-caption text-slate-500 mt-1">9 xonali yuridik shaxs INN kodi</p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Tashkilot nomi *
                   </label>
                   <input
@@ -905,7 +905,7 @@ export default function ChecklistPortalPage() {
               {/* STEP 2: HUDUD, TUMAN, KADASTR, DARAJA — hudud va tumanlar lib/regions.ts ro'yxatidan */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label htmlFor="region" className="block text-xs font-bold text-slate-800 mb-1">
+                  <label htmlFor="region" className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Viloyat / Hudud *
                   </label>
                   <div className="relative">
@@ -935,7 +935,7 @@ export default function ChecklistPortalPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="district" className="block text-xs font-bold text-slate-800 mb-1">
+                  <label htmlFor="district" className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Tuman / Shahar *
                   </label>
                   <div className="relative">
@@ -963,7 +963,7 @@ export default function ChecklistPortalPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="cadastre" className="block text-xs font-bold text-slate-800 mb-1">
+                  <label htmlFor="cadastre" className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Kadastr raqami *
                   </label>
                   <input
@@ -978,7 +978,7 @@ export default function ChecklistPortalPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="level" className="block text-xs font-bold text-slate-800 mb-1">
+                  <label htmlFor="level" className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Muassasa darajasi *
                   </label>
                   <div className="relative">
@@ -1005,7 +1005,7 @@ export default function ChecklistPortalPage() {
 
               {/* STEP 2b: QUVVATI */}
               <div>
-                <span className="block text-xs font-bold text-slate-800 mb-1">Quvvati *</span>
+                <span className="block text-xs font-semibold text-slate-700 mb-1.5">Quvvati *</span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
                     { id: 'bed-capacity', label: "O'rinlar soni", value: bedCapacity, set: setBedCapacity, placeholder: 'Masalan: 120' },
@@ -1013,7 +1013,7 @@ export default function ChecklistPortalPage() {
                     { id: 'departments', label: "Bo'linmalar soni", value: departmentsCount, set: setDepartmentsCount, placeholder: 'Masalan: 12' },
                   ].map((f) => (
                     <div key={f.id}>
-                      <label htmlFor={f.id} className="block text-[11px] font-medium text-slate-600 mb-1">
+                      <label htmlFor={f.id} className="block text-caption font-medium text-slate-600 mb-1">
                         {f.label}
                       </label>
                       <input
@@ -1036,7 +1036,7 @@ export default function ChecklistPortalPage() {
               {/* STEP 3: FIO & TELEFON */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                     F.I.O (to&apos;ldiruvchi mas&apos;ul shaxs) *
                   </label>
                   <input
@@ -1050,7 +1050,7 @@ export default function ChecklistPortalPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Telefon raqam (tashkilotniki) *
                   </label>
                   <input
@@ -1130,7 +1130,7 @@ export default function ChecklistPortalPage() {
                       </a>{' '}
                       shartlariga roziman *
                     </span>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-caption text-slate-500">
                       Ommaviy oferta shartlari bilan tanishdim, shaxsga doir ma&apos;lumotlarimga ishlov berishga rozilik beraman
                       va kiritilgan ma&apos;lumotlarning to&apos;g&apos;riligini tasdiqlayman
                     </p>
@@ -1175,7 +1175,7 @@ export default function ChecklistPortalPage() {
             <span className="text-xs font-bold text-slate-800 truncate min-w-0 max-w-xl" title={orgName}>
               {orgName}
             </span>
-            <span className="text-[10px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 shrink-0 hidden sm:inline">
+            <span className="text-2xs font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 shrink-0 hidden sm:inline">
               № {activeSessionId}
             </span>
           </div>
@@ -1183,7 +1183,7 @@ export default function ChecklistPortalPage() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3 shrink-0 ml-4">
-          <span className="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
+          <span className="text-caption text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="hidden lg:inline">Avtomatik saqlanmoqda</span>
           </span>
@@ -1216,7 +1216,7 @@ export default function ChecklistPortalPage() {
         <aside className="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-2xs">
           {/* Checklist Completion Progress (No Score / Readiness shown to clinic) */}
           <div className="p-3.5 border-b border-slate-200">
-            <div className="flex items-center justify-between text-[11px] font-bold text-slate-700">
+            <div className="flex items-center justify-between text-caption font-bold text-slate-700">
               <span>To&apos;ldirilgan mezonlar</span>
               <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
                 {checklistProgress.answered} / {checklistProgress.total}
@@ -1228,7 +1228,7 @@ export default function ChecklistPortalPage() {
                 style={{ width: `${checklistProgress.pct}%` }}
               ></div>
             </div>
-            <div className="mt-1.5 text-[10px] text-slate-500 font-medium">
+            <div className="mt-1.5 text-2xs text-slate-500 font-medium">
               {checklistProgress.pct}% savolga javob berildi
             </div>
           </div>
@@ -1238,7 +1238,7 @@ export default function ChecklistPortalPage() {
               <Layers className="w-3.5 h-3.5 text-teal-600" />
               <span>Asosiy bo&apos;limlar</span>
             </span>
-            <span className="text-[10px] text-slate-500 font-mono font-medium">
+            <span className="text-2xs text-slate-500 font-mono font-medium">
               {domains.length} ta bo&apos;lim
             </span>
           </div>
@@ -1263,17 +1263,17 @@ export default function ChecklistPortalPage() {
                   aria-disabled={!isUnlocked}
                   className={`sidebar-nav-item p-3.5 flex items-center justify-between gap-2 ${
                     isActive && isUnlocked ? 'active-nav-item shadow-2xs' : ''
-                  } ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                  } ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="text-xs line-clamp-2 leading-snug font-medium">
+                    <span className={`text-sm line-clamp-2 leading-snug ${isActive && isUnlocked ? 'font-bold' : 'font-semibold'}`}>
                       {d.name}
                     </span>
-                    <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 font-normal">
+                    <div className="flex items-center gap-2 mt-1 text-caption text-slate-500 font-medium">
                       <span>{d.standards.length} ta standart</span>
-                      {isFinished && <span className="text-[10px] text-emerald-700 font-semibold">• yakunlangan</span>}
+                      {isFinished && <span className="text-emerald-700 font-semibold">• yakunlangan</span>}
                       {dStats && (
-                        <span className="font-mono text-[10px] text-slate-400">
+                        <span className="font-mono text-slate-500">
                           • {dStats.answeredCount}/{dStats.totalCriteria}
                         </span>
                       )}
@@ -1281,7 +1281,7 @@ export default function ChecklistPortalPage() {
                   </div>
 
                   <span
-                    className={`sidebar-badge w-6 h-6 rounded-full text-xs flex items-center justify-center shrink-0 transition-all ${
+                    className={`sidebar-badge w-7 h-7 rounded-full text-xs flex items-center justify-center shrink-0 transition-all ${
                       isActive && isUnlocked
                         ? 'bg-teal-600 text-white font-bold shadow-xs scale-105'
                         : isCompleted
@@ -1338,8 +1338,8 @@ export default function ChecklistPortalPage() {
                         <span
                           className={`font-bold transition-all duration-200 shrink-0 ${
                             isStuck
-                              ? 'px-2 py-0.5 rounded text-[11px] bg-teal-700 text-white'
-                              : 'px-2 py-0.5 rounded text-[11px] bg-teal-700 text-white shadow-2xs'
+                              ? 'px-2 py-0.5 rounded text-caption bg-teal-700 text-white'
+                              : 'px-2 py-0.5 rounded text-caption bg-teal-700 text-white shadow-2xs'
                           }`}
                         >
                           {domain.id}-BO&apos;LIM
@@ -1351,7 +1351,7 @@ export default function ChecklistPortalPage() {
                         >
                           {domain.name}
                           {isCompleted && isStuck && (
-                            <span className="text-[11px] font-normal text-emerald-700 ml-1.5">
+                            <span className="text-caption font-normal text-emerald-700 ml-1.5">
                               (Tugadi)
                             </span>
                           )}
@@ -1446,11 +1446,11 @@ export default function ChecklistPortalPage() {
                           <span className="font-extrabold text-teal-800 bg-teal-50/80 px-2 py-0.5 rounded border border-teal-200/70">
                             Standart {st.id}
                           </span>
-                          <span className="text-[11px] text-slate-500 italic">
+                          <span className="text-caption text-slate-500 italic">
                             {st.applicability}
                           </span>
                         </div>
-                        <h3 className="text-sm font-bold text-slate-900 mt-1.5 leading-snug">
+                        <h3 className="text-[15px] font-semibold text-slate-900 mt-2 leading-snug">
                           {st.title}
                         </h3>
                       </div>
@@ -1461,17 +1461,17 @@ export default function ChecklistPortalPage() {
                           <div
                             key={c.id}
                             id={`criterion-${c.id}`}
-                            className={`p-3.5 bg-slate-50/90 rounded-xl border text-xs space-y-2.5 transition-all hover:bg-slate-50 ${
+                            className={`p-4 bg-slate-50/90 rounded-xl border text-sm space-y-3 transition-all hover:bg-slate-50 ${
                               highlightUnanswered && domain.id === currentSection && (!c.answer || c.answer === 'UNANSWERED')
                                 ? 'border-amber-400 ring-2 ring-amber-300/60'
                                 : 'border-slate-200'
                             }`}
                           >
                             <div className="flex items-start justify-between gap-2">
-                              <span className="text-slate-800 leading-relaxed font-normal">
-                                <strong className="text-slate-900 font-bold">#{c.number}.</strong> {c.description}
+                              <span className="text-slate-800 leading-relaxed">
+                                <strong className="text-slate-900 font-semibold">#{c.number}.</strong> {c.description}
                                 {c.is_critical && (
-                                  <span className="ml-1.5 inline-flex items-center gap-1 text-[10px] text-rose-700 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-300 uppercase tracking-wider">
+                                  <span className="ml-1.5 inline-flex items-center gap-1 text-2xs text-rose-700 font-extrabold bg-rose-50 px-2 py-0.5 rounded border border-rose-300 uppercase tracking-wider">
                                     <AlertTriangle className="w-3 h-3 text-rose-600" />
                                     <span>Kritik xavfsizlik talabi</span>
                                   </span>
@@ -1492,7 +1492,7 @@ export default function ChecklistPortalPage() {
                                     disabled={!editable}
                                     aria-pressed={isSelected}
                                     title={value === 'NA' ? 'Tadbiq etilmaydi' : undefined}
-                                    className={`py-2 px-3 rounded-lg border font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
+                                    className={`py-2 px-3 rounded-lg border font-semibold text-xs transition-all flex items-center justify-center gap-1.5 ${
                                       isSelected ? selected : editable ? idle : 'bg-white text-slate-400 border-slate-200'
                                     } ${editable ? 'cursor-pointer' : 'cursor-not-allowed'} ${!editable && !isSelected ? 'opacity-60' : ''}`}
                                   >

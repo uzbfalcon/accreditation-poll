@@ -48,7 +48,7 @@ function LoginForm() {
       )}
 
       <div>
-        <label htmlFor="username" className="block text-xs font-bold text-slate-800 mb-1">
+        <label htmlFor="username" className="block text-xs font-semibold text-slate-700 mb-1.5">
           Login
         </label>
         <div className="relative">
@@ -67,7 +67,7 @@ function LoginForm() {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-xs font-bold text-slate-800 mb-1">
+        <label htmlFor="password" className="block text-xs font-semibold text-slate-700 mb-1.5">
           Parol
         </label>
         <div className="relative">
@@ -105,7 +105,7 @@ export default function BackofficeLoginPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.svg" alt="CLAMO" className="h-9 w-auto object-contain" />
           </Link>
-          <span className="mt-3 text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-purple-50 text-purple-800 border-purple-200">
+          <span className="mt-3 text-2xs font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-purple-50 text-purple-800 border-purple-200">
             Backoffice Monitoring
           </span>
         </div>

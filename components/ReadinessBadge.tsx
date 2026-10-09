@@ -11,7 +11,7 @@ const STYLES: Record<string, { className: string; Icon: typeof Award }> = {
 
 export default function ReadinessBadge({ category, size = 'sm' }: { category: string; size?: 'sm' | 'md' }) {
   const { className, Icon } = STYLES[category] ?? STYLES.NOT_READY;
-  const sizing = size === 'md' ? 'px-3 py-1 text-xs gap-1.5' : 'px-2 py-0.5 text-[11px] gap-1';
+  const sizing = size === 'md' ? 'px-3 py-1 text-xs gap-1.5' : 'px-2 py-0.5 text-caption gap-1';
   return (
     <span className={`inline-flex items-center whitespace-nowrap border font-semibold rounded-full ${sizing} ${className}`}>
       <Icon className={size === 'md' ? 'w-3.5 h-3.5' : 'w-3 h-3'} />
