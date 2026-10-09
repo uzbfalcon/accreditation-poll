@@ -23,9 +23,9 @@ export default function Navbar() {
           {/* Real CLAMO Logo */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src="/logo.svg"
             alt="CLAMO"
-            className="h-8 sm:h-9 w-auto object-contain group-hover:scale-[1.02] transition-transform"
+            className="h-10 sm:h-11 w-auto object-contain group-hover:scale-[1.02] transition-transform"
           />
           <div>
             <div className="flex items-center gap-2">

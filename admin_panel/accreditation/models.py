@@ -69,11 +69,11 @@ class OrganizationServices(models.Model):
     org = models.OneToOneField(
         Organization, on_delete=models.CASCADE, primary_key=True, db_column='org_id', related_name='services'
     )
-    has_emergency_blue_code = models.BooleanField("Shoshilinch yordam / «Ko'k kod»", default=True)
+    has_emergency_blue_code = models.BooleanField('Shoshilinch yordam', default=True)
     has_surgery = models.BooleanField('Jarrohlik', default=True)
     has_anesthesia = models.BooleanField('Anesteziya / sedatsiya', default=True)
     has_laboratory = models.BooleanField('Laboratoriya', default=True)
-    has_radiology_ultrasound = models.BooleanField('Nur diagnostikasi / UTT', default=True)
+    has_radiology_ultrasound = models.BooleanField('Funksional diagnostika', default=True)
     has_mri = models.BooleanField('MRT', default=False)
     has_endoscopy = models.BooleanField('Endoskopiya', default=True)
     has_sterilization_dept = models.BooleanField("Sterilizatsiya bo'linmasi", default=True)
@@ -149,6 +149,10 @@ class AuditSession(models.Model):
     submitted_at = models.CharField('Topshirilgan', max_length=32, blank=True, null=True)
     updated_at = models.CharField('Yangilangan', max_length=32, blank=True, null=True)
     final_stage_at = models.CharField("Yakuniy bo'limga o'tgan", max_length=32, blank=True, null=True)
+    current_section = models.IntegerField(
+        "Joriy bo'lim", default=1,
+        help_text="Klinika tahrirlay oladigan bo'lim. Undan oldingilari yakunlangan (faqat ko'rish), keyingilari yopiq.",
+    )
 
     class Meta:
         managed = False

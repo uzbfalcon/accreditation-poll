@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import { formatTashkentDateTime } from '@/lib/format';
 import ReadinessBadge, { scoreColorClass } from '@/components/ReadinessBadge';
 import { READINESS_CATEGORIES, categoryLabel, type ReadinessCategory } from '@/lib/readiness';
+import { REGIONS, districtsOf } from '@/lib/regions';
 import {
   Building2,
   TrendingUp,
@@ -34,7 +35,8 @@ interface RegionItem {
 interface DomainItem {
   id: number;
   name: string;
-  score: number;
+  score: number | null; // topshirilgan ariza bo'lmasa null
+  sessions: number;
   is_weakest: boolean;
 }
 
@@ -100,15 +102,6 @@ interface PassportData {
     }>;
   };
 }
-
-const DISTRICT_MAPPING: Record<string, string[]> = {
-  'Toshkent shahri': ['Barchasi', 'Yunusobod', 'Olmazor', 'Mirobod', 'Chilonzor', "Mirzo Ulug'bek", 'Shayxontohur', 'Yakkasaroy'],
-  'Toshkent viloyati': ['Barchasi', 'Chirchiq sh.', 'Angren sh.', 'Qibray', 'Zangiota', 'Olmaliq sh.'],
-  'Samarqand viloyati': ['Barchasi', 'Samarqand sh.', "Kattaqo'rg'on sh.", "Pastdarg'om", 'Urgut', 'Jomboy'],
-  "Farg'ona viloyati": ['Barchasi', "Farg'ona sh.", "Qo'qon sh.", "Marg'ilon sh.", 'Quva'],
-  'Andijon viloyati': ['Barchasi', 'Andijon sh.', 'Asaka', 'Shahrixon', "Xo'jaobod"],
-  'Buxoro viloyati': ['Barchasi', 'Buxoro sh.', "G'ijduvon", 'Kogon sh.'],
-};
 
 // Uzun tashkilot nomi «...» bilan qisqaradi; hover/focus'da to'liq nom va INN box ichida chiqadi.
 // Tooltip position: fixed — jadval konteynerining overflow'i uni kesmaydi; pastda joy bo'lmasa yuqorida ochiladi.
@@ -268,10 +261,7 @@ export default function BackofficeDashboardPage() {
     window.print();
   };
 
-  const availableDistricts =
-    selectedRegion !== 'all' && DISTRICT_MAPPING[selectedRegion]
-      ? DISTRICT_MAPPING[selectedRegion]
-      : [];
+  const availableDistricts = selectedRegion !== 'all' ? districtsOf(selectedRegion) : [];
 
   return (
     <div className="min-h-full flex flex-col bg-slate-50">
@@ -303,7 +293,7 @@ export default function BackofficeDashboardPage() {
               <span className="text-3xl font-extrabold text-blue-600 font-mono tracking-tight">
                 {summary ? `${summary.avg_score}%` : '...%'}
               </span>
-              <span className="text-xs text-slate-400">O&apos;tish: 75.0%</span>
+              <span className="text-xs text-slate-400">O&apos;tish: {summary ? summary.passing_threshold : 75}%</span>
             </div>
             <p className="mt-2 text-xs text-slate-500">275 ta mezon bo&apos;yicha tayyorgarlik</p>
           </div>
@@ -355,7 +345,7 @@ export default function BackofficeDashboardPage() {
               <select
                 value={regionSort}
                 onChange={(e) => setRegionSort(e.target.value)}
-                className="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 font-medium"
+                className="select-chevron text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
               >
                 <option value="score_desc">Ball yuqoridan pastga</option>
                 <option value="count_desc">Klinikalar soni bo&apos;yicha</option>
@@ -364,6 +354,11 @@ export default function BackofficeDashboardPage() {
             </div>
 
             <div className="space-y-3.5 flex-1 overflow-y-auto max-h-[350px] pr-2">
+              {regions.length === 0 && (
+                <p className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-100 text-xs text-slate-500">
+                  Hali topshirilgan ariza yo&apos;q — viloyatlar kesimi birinchi ariza topshirilgach paydo bo&apos;ladi.
+                </p>
+              )}
               {regions.map((reg) => {
                 const barColor =
                   reg.avgScore >= 85 ? 'bg-emerald-500' : reg.avgScore >= 75 ? 'bg-teal-500' : 'bg-rose-500';
@@ -396,11 +391,17 @@ export default function BackofficeDashboardPage() {
               <p className="text-xs text-slate-500">275 ta mezonning sohalar kesimidagi bajarilishi</p>
             </div>
 
+            {domains.length > 0 && domains.every((d) => d.score === null) && (
+              <p className="mb-3 px-3 py-2 rounded-lg bg-slate-50 border border-slate-100 text-xs text-slate-500">
+                Hali topshirilgan ariza yo&apos;q — natijalar birinchi ariza topshirilgach hisoblanadi.
+              </p>
+            )}
+
             <div className="space-y-3">
               {domains.map((d) => {
                 const barColor = d.is_weakest
                   ? 'bg-rose-500'
-                  : d.score >= 75
+                  : d.score !== null && d.score >= 75
                   ? 'bg-emerald-500'
                   : 'bg-teal-500';
                 return (
@@ -410,22 +411,22 @@ export default function BackofficeDashboardPage() {
                       d.is_weakest ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'
                     } rounded-xl text-xs`}
                   >
-                    <div className="flex justify-between font-semibold text-slate-800 mb-1">
+                    <div className="flex justify-between gap-2 font-semibold text-slate-800 mb-1">
                       <span className="truncate">
                         {d.id}. {d.name} {d.is_weakest ? '⚠️' : ''}
                       </span>
                       <span
-                        className={`font-mono ${
-                          d.is_weakest ? 'text-rose-600 font-bold' : ''
+                        className={`font-mono shrink-0 ${
+                          d.score === null ? 'text-slate-400 font-normal' : d.is_weakest ? 'text-rose-600 font-bold' : ''
                         }`}
                       >
-                        {d.score}%
+                        {d.score === null ? '—' : `${d.score}%`}
                       </span>
                     </div>
                     <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                       <div
                         className={`${barColor} h-full rounded-full`}
-                        style={{ width: `${d.score}%` }}
+                        style={{ width: `${d.score ?? 0}%` }}
                       ></div>
                     </div>
                   </div>
@@ -455,15 +456,14 @@ export default function BackofficeDashboardPage() {
               <select
                 value={selectedRegion}
                 onChange={(e) => handleRegionChange(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium"
+                className="select-chevron w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
               >
                 <option value="all">Barcha viloyatlar</option>
-                <option value="Toshkent shahri">Toshkent shahri</option>
-                <option value="Toshkent viloyati">Toshkent viloyati</option>
-                <option value="Samarqand viloyati">Samarqand viloyati</option>
-                <option value="Farg'ona viloyati">Farg&apos;ona viloyati</option>
-                <option value="Andijon viloyati">Andijon viloyati</option>
-                <option value="Buxoro viloyati">Buxoro viloyati</option>
+                {REGIONS.map((r) => (
+                  <option key={r.code} value={r.name}>
+                    {r.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -472,17 +472,14 @@ export default function BackofficeDashboardPage() {
               <select
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium"
+                className="select-chevron w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
               >
                 <option value="all">Barcha tumanlar</option>
-                {availableDistricts.map(
-                  (d) =>
-                    d !== 'Barchasi' && (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    )
-                )}
+                {availableDistricts.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -491,7 +488,7 @@ export default function BackofficeDashboardPage() {
               <select
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium"
+                className="select-chevron w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
               >
                 <option value="all">Barchasi</option>
                 <option value="RESPUBLIKA">Respublika</option>
@@ -505,7 +502,7 @@ export default function BackofficeDashboardPage() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium"
+                className="select-chevron w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
               >
                 <option value="all">Barchasi</option>
                 {READINESS_CATEGORIES.map((c) => (

@@ -3,11 +3,14 @@ Sessiya balini javoblardan qayta hisoblash — lib/db.ts (calculateSessionScore)
 Admin javobni o'zgartirganda Natija darhol yangilanishi uchun ishlatiladi; Next.js ham keyingi o'qishda
 xuddi shu hisobni o'zi bajaradi, shuning uchun manba (single source of truth) — javoblar.
 
-Ball: Gold mezon — 1.3, oddiy — 1; Bor — to'liq, Qisman — yarmi, Yo'q/javobsiz — 0;
-«Tadbiq etilmaydi» maksimal balldan chiqariladi. Foiz = olingan ball / maksimal ball.
-Toifa (16-son qaror, 37-band): ≥95 oliy, ≥85 birinchi, ≥75 ikkinchi, aks holda — tayyor emas;
-kritik stop-faktor buzilgan bo'lsa — tayyor emas.
+Metodika (standartlar 07.08.2025, 1-jadval): Bor — koeffitsient (Gold 1,3 / oddiy 1,0), Qisman — 0,5 (ikkalasida),
+Yo'q/javobsiz — 0; «Tadbiq etilmaydi» maksimal balldan chiqariladi (Reglament, 28-band).
+Foiz = olingan ball / maksimal ball × 100, bir xonagacha kesiladi; toifa yaxlitlanmagan foiz bo'yicha
+(16-son qaror, 37-band): ≥95 oliy, ≥85 birinchi, ≥75 ikkinchi, aks holda — tayyor emas.
+Kritik stop-faktorlar toifaga ta'sir qilmaydi — faqat belgi sifatida saqlanadi.
 """
+
+import math
 
 from django.db import connections
 
@@ -16,7 +19,7 @@ CRITICAL_STOP_FACTORS = {(16, 2), (38, 1), (55, 4), (58, 1)}
 
 GOLD_WEIGHT = 1.3
 REGULAR_WEIGHT = 1.0
-ANSWER_SHARE = {'YES': 1.0, 'PARTIAL': 0.5, 'NO': 0.0}
+PARTIAL_POINTS = 0.5
 
 # Bazadagi score_weight ustuni (javob ulushi) — Next.js saveAnswer bilan bir xil
 ANSWER_WEIGHTS = {'YES': 1.0, 'PARTIAL': 0.5, 'NO': 0.0, 'NA': None}
@@ -24,18 +27,24 @@ ANSWER_WEIGHTS = {'YES': 1.0, 'PARTIAL': 0.5, 'NO': 0.0, 'NA': None}
 CATEGORY_THRESHOLDS = [('HIGHEST', 95), ('FIRST', 85), ('SECOND', 75)]
 
 
-def categorize(percent, has_critical_violation):
-    if has_critical_violation:
-        return 'NOT_READY'
+def points_for(answer, weight):
+    if answer == 'YES':
+        return weight
+    if answer == 'PARTIAL':
+        return PARTIAL_POINTS
+    return 0.0
+
+
+def categorize(raw_percent):
     for code, min_percent in CATEGORY_THRESHOLDS:
-        if percent >= min_percent:
+        if raw_percent >= min_percent:
             return code
     return 'NOT_READY'
 
 
-def js_round1(value):
-    # JS: Math.round(x * 10) / 10 — yarmini yuqoriga yaxlitlash (Python round() bankir usulida)
-    return int(value * 10 + 0.5) / 10
+def truncate_percent(raw_percent):
+    # lib/readiness.ts → truncatePercent: bir xonagacha kesish (85,389 → 85,3)
+    return math.floor(raw_percent * 10 + 1e-9) / 10
 
 
 def recalculate_session(session_id):
@@ -59,7 +68,7 @@ def recalculate_session(session_id):
                 continue
             weight = GOLD_WEIGHT if is_gold else REGULAR_WEIGHT
             maximum += weight
-            earned += weight * ANSWER_SHARE.get(answer or 'NO', 0.0)
+            earned += points_for(answer, weight)
             if answer == 'YES':
                 yes += 1
             elif answer == 'PARTIAL':
@@ -70,8 +79,9 @@ def recalculate_session(session_id):
                     critical_violation = True
 
         applicable = len(rows) - na
-        score = js_round1(earned / maximum * 100) if maximum > 0 else 0.0
-        category = categorize(score, critical_violation)
+        raw_percent = earned / maximum * 100 if maximum > 0 else 0.0
+        score = truncate_percent(raw_percent)
+        category = categorize(raw_percent)
 
         cursor.execute(
             '''

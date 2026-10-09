@@ -23,7 +23,7 @@ export default function OfertaPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="CLAMO" className="h-7 w-auto object-contain" />
+            <img src="/logo.svg" alt="CLAMO" className="h-8 sm:h-9 w-auto object-contain" />
           </Link>
           <PrintButton />
         </div>

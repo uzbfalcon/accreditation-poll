@@ -103,7 +103,7 @@ export default function BackofficeLoginPage() {
         <div className="flex flex-col items-center mb-6">
           <Link href="/">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="CLAMO" className="h-9 w-auto object-contain" />
+            <img src="/logo.svg" alt="CLAMO" className="h-9 w-auto object-contain" />
           </Link>
           <span className="mt-3 text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-purple-50 text-purple-800 border-purple-200">
             Backoffice Monitoring

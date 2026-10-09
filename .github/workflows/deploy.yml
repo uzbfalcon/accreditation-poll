@@ -71,6 +71,12 @@ jobs:
                   rm -rf ~/release_new && mkdir ~/release_new
                   tar xzf - -C ~/release_new
                   cd ~/httpdocs
+                  # Yangi kod bazaga migratsiya qollashi mumkin - har deploydan oldin nusxa (WAL fayli bilan birga)
+                  mkdir -p ~/backups
+                  ts=$(date +%Y%m%d_%H%M%S 2>/dev/null || echo latest)
+                  for ext in db db-wal; do
+                    if [ -f clamo_accreditation.$ext ]; then cp -p clamo_accreditation.$ext ~/backups/clamo_predeploy_$ts.$ext; fi
+                  done
                   rm -rf .next.old node_modules.old
                   [ -d .next ] && mv .next .next.old
                   [ -d node_modules ] && mv node_modules node_modules.old

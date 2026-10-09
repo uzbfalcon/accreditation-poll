@@ -149,8 +149,8 @@ def main(xlsx_path, docx_path):
         s['applicability'] = applicability[s['id']]
 
     OUT_PATH.parent.mkdir(exist_ok=True)
-    # version bazadagi PRAGMA user_version'dan katta bo'lishi kerak (lib/db.ts: 4 — ballarni qayta hisoblash);
-    # keyingi yangilanishda 5 qiling
+    # version bazadagi PRAGMA user_version'dan katta bo'lishi kerak (lib/db.ts: 6 — hudud nomlarini moslash);
+    # keyingi yangilanishda 7 qiling
     OUT_PATH.write_text(json.dumps(
         {'version': 3, 'domains': domains, 'standards': standards, 'criteria': criteria},
         ensure_ascii=False, indent=1,

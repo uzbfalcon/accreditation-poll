@@ -1,3 +1,5 @@
+import json
+
 from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
@@ -66,8 +68,34 @@ class AuditSessionInline(admin.TabularInline):
         return False
 
 
+# Hudud va tumanlar — Next.js bilan bir xil ro'yxat (data/uz_regions.json, manba: clamo-backend SOATO)
+REGIONS = json.loads((settings.BASE_DIR.parent / 'data' / 'uz_regions.json').read_text(encoding='utf-8'))
+DISTRICTS_BY_REGION = {r['name']: r['districts'] for r in REGIONS}
+
+
+class OrganizationForm(forms.ModelForm):
+    region = forms.ChoiceField(label='Viloyat', choices=[(r['name'], r['name']) for r in REGIONS])
+    district = forms.ChoiceField(
+        label='Tuman',
+        choices=[(r['name'], [(d, d) for d in r['districts']]) for r in REGIONS],
+        help_text="Tanlangan viloyatga tegishli tuman yoki shahar.",
+    )
+
+    class Meta:
+        model = Organization
+        fields = '__all__'
+
+    def clean(self):
+        cleaned = super().clean()
+        region, district = cleaned.get('region'), cleaned.get('district')
+        if region and district and district not in DISTRICTS_BY_REGION.get(region, []):
+            self.add_error('district', f"«{district}» {region} tarkibida emas")
+        return cleaned
+
+
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
+    form = OrganizationForm
     formfield_overrides = SINGLE_LINE_TEXT
     list_display = ('name', 'inn', 'region', 'district', 'level', 'profile', 'sessions_count', 'created_at')
     list_filter = ('region', 'level', 'profile')
@@ -104,6 +132,13 @@ class AuditSessionForm(forms.ModelForm):
         model = AuditSession
         fields = '__all__'
 
+    def clean_current_section(self):
+        value = self.cleaned_data['current_section']
+        sections = list(Standard.objects.values_list('domain_id', flat=True).distinct().order_by('domain_id'))
+        if value not in sections:
+            raise ValidationError(f"Bo'lim raqami {sections[0]}–{sections[-1]} oralig'ida bo'lishi kerak")
+        return value
+
     def clean_status(self):
         status = self.cleaned_data['status']
         if status == 'SUBMITTED' and self.instance.pk:
@@ -127,24 +162,24 @@ class AuditSessionAdmin(admin.ModelAdmin):
     formfield_overrides = SINGLE_LINE_TEXT
     list_display = (
         'id', 'org_name', 'org_region', 'submitter_fio', 'status_badge', 'score_display',
-        'readiness_badge', 'has_critical_stop_factors', 'final_stage_at', 'submitted_at', 'updated_at',
+        'readiness_badge', 'has_critical_stop_factors', 'current_section', 'submitted_at', 'updated_at',
     )
     list_display_links = ('id', 'org_name')
     list_filter = ('status', 'readiness_category', 'has_critical_stop_factors', 'org__region', 'org__level')
     search_fields = ('id', 'org__inn', 'org__name', 'submitter_fio', 'submitter_phone')
     list_select_related = ('org',)
     list_per_page = 50
-    actions = ('unlock_final_stage', 'reopen_as_draft')
+    actions = ('reopen_sections', 'reopen_as_draft')
 
     # Natija javoblardan hisoblanadi (Next.js har o'qishda qayta hisoblaydi) — to'g'ridan-to'g'ri tahrirlanmaydi;
     # o'zgartirish uchun «Javoblar» tabidagi javoblar tahrirlanadi va saqlashda Natija qayta hisoblanadi.
     readonly_fields = (
         'id', 'org', 'total_score', 'readiness_category', 'has_critical_stop_factors',
         'total_applicable', 'criteria_yes', 'criteria_partial', 'criteria_no', 'criteria_na',
-        'final_stage_at', 'submitted_at', 'updated_at', 'answers_table',
+        'submitted_at', 'updated_at', 'answers_table',
     )
     fieldsets = (
-        (None, {'fields': ('id', 'org', 'status', 'submitter_fio', 'submitter_phone')}),
+        (None, {'fields': ('id', 'org', 'status', 'current_section', 'submitter_fio', 'submitter_phone')}),
         ('Natija', {
             'description': "Javoblardan avtomatik hisoblanadi. O'zgartirish uchun «Javoblar» tabida javoblarni "
                            "tahrirlab saqlang — ball, tayyorgarlik va stop-faktor darhol qayta hisoblanadi.",
@@ -153,7 +188,7 @@ class AuditSessionAdmin(admin.ModelAdmin):
                 ('criteria_yes', 'criteria_partial', 'criteria_no', 'criteria_na'),
             ),
         }),
-        ('Vaqtlar', {'fields': ('final_stage_at', 'submitted_at', 'updated_at')}),
+        ('Vaqtlar', {'fields': ('submitted_at', 'updated_at')}),
         ("Javoblar (bo'limlar bo'yicha)", {'fields': ('answers_table',)}),
     )
 
@@ -228,6 +263,7 @@ class AuditSessionAdmin(admin.ModelAdmin):
             elif obj.status == 'DRAFT':
                 obj.submitted_at = None
                 obj.final_stage_at = None
+                obj.current_section = 1  # qayta ochilgan ariza 1-bo'limdan davom etadi
         super().save_model(request, obj, form, change)
 
         if change:
@@ -289,12 +325,12 @@ class AuditSessionAdmin(admin.ModelAdmin):
             message.append({'changed': {'fields': [f'javob {c}' for c in shown]}})
         return message
 
-    @admin.action(description="Yakuniy bo'lim qulfini ochish (klinika 1–6-bo'limlarga qayta oladi)")
-    def unlock_final_stage(self, request, queryset):
+    @admin.action(description="Bo'limlarni qayta ochish (klinika 1-bo'limdan qayta tahrirlay oladi)")
+    def reopen_sections(self, request, queryset):
         drafts = queryset.filter(status='DRAFT')
-        updated = drafts.update(final_stage_at=None)
+        updated = drafts.update(current_section=1, final_stage_at=None)
         skipped = queryset.count() - drafts.count()
-        self.message_user(request, f'{updated} ta sessiya qulfi ochildi.', messages.SUCCESS)
+        self.message_user(request, f"{updated} ta sessiyada bo'limlar qayta ochildi.", messages.SUCCESS)
         if skipped:
             self.message_user(
                 request, f"{skipped} ta topshirilgan sessiya o'tkazib yuborildi — avval qoralamaga qaytaring.",
@@ -303,15 +339,41 @@ class AuditSessionAdmin(admin.ModelAdmin):
 
     @admin.action(description='Qoralamaga qaytarish (topshirilgan arizani qayta ochish)')
     def reopen_as_draft(self, request, queryset):
-        updated = queryset.update(status='DRAFT', submitted_at=None, final_stage_at=None)
+        updated = queryset.update(status='DRAFT', submitted_at=None, final_stage_at=None, current_section=1)
         self.message_user(request, f'{updated} ta sessiya qoralamaga qaytarildi.', messages.SUCCESS)
 
-    # Sessiyalar klinika portalida yaratiladi; o'chirish javoblarni yetim qoldiradi
+    # Sessiyalar klinika portalida yaratiladi
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # O'chirish: sessiya javoblari bilan birga bitta tranzaksiyada o'chiriladi (SQLite'da FK cascade yo'q).
+    # Topshirilgan sessiya o'chirilsa, shu INN qaytadan ariza topshira oladi; tashkilot yozuvi saqlanib qoladi.
+    def get_deleted_objects(self, objs, request):
+        # Standart yig'uvchi har bir sessiyaning 275 ta javobini sahifada ro'yxat qiladi — o'rniga qisqa xulosa
+        sessions = list(objs)
+        answers = SessionAnswer.objects.using('clamo').filter(session__in=sessions).count()
+        deleted = [
+            format_html('{}: {} — {} ({})', AuditSession._meta.verbose_name.capitalize(), s.pk, s.org.name,
+                        s.get_status_display())
+            for s in sessions
+        ]
+        counts = {AuditSession._meta.verbose_name_plural: len(sessions), SessionAnswer._meta.verbose_name_plural: answers}
+        return deleted, counts, set(), []
+
+    def delete_model(self, request, obj):
+        self._delete_sessions([obj.pk])
+
+    def delete_queryset(self, request, queryset):
+        self._delete_sessions(list(queryset.values_list('pk', flat=True)))
+
+    @staticmethod
+    def _delete_sessions(session_ids):
+        if not session_ids:
+            return
+        placeholders = ', '.join(['%s'] * len(session_ids))
+        with transaction.atomic(using='clamo'), connections['clamo'].cursor() as cursor:
+            cursor.execute(f'DELETE FROM session_answers WHERE session_id IN ({placeholders})', session_ids)
+            cursor.execute(f'DELETE FROM audit_sessions WHERE id IN ({placeholders})', session_ids)
 
 
 # ---------------------------------------------------------------------------

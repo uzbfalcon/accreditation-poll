@@ -111,7 +111,8 @@ async function fetchFromOrgInfo(inn: string, signal: AbortSignal): Promise<InnSc
     .trim();
 
   const locMatch = html.match(/alt="location">([\s\S]*?)<\/p>/);
-  let region = 'Toshkent shahri';
+  // Joylashuv topilmasa bo'sh qoladi — hudud to'qib chiqarilmaydi, foydalanuvchi o'zi tanlaydi
+  let region = '';
   let district = '';
   let address = '';
 
@@ -123,7 +124,7 @@ async function fetchFromOrgInfo(inn: string, signal: AbortSignal): Promise<InnSc
 
     if (locLines.length > 0) {
       const parts = locLines[0].split(',').map((p) => p.trim());
-      region = parts[0] || 'Toshkent shahri';
+      region = parts[0] || '';
       district = parts[1] || '';
       address = locLines.slice(1).join(', ') || locLines[0] || '';
     }
@@ -177,7 +178,7 @@ async function fetchFromIHamkor(inn: string, signal: AbortSignal): Promise<InnSc
     inn,
     found: true,
     name: nameMatch[1].trim(),
-    region: 'Toshkent shahri',
+    region: '',
     district: '',
     address: '',
     status: 'ACTIVE',
