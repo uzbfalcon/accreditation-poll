@@ -21,7 +21,7 @@ export default function OfertaPage() {
     <div className="min-h-full bg-slate-50 print:bg-white">
       <header className="bg-white border-b border-slate-200 print:hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center">
+          <Link href="/pasport" className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.svg" alt="CLAMO" className="h-8 sm:h-9 w-auto object-contain" />
           </Link>

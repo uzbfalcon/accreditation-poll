@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { denySessionAccess } from '@/lib/session-access';
 import { saveAnswer, FlowError } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -8,6 +9,9 @@ export async function PATCH(
   { params }: { params: { sessionId: string } }
 ) {
   try {
+    const denied = denySessionAccess(request, params.sessionId);
+    if (denied) return denied;
+
     const body = await request.json();
     const { criterion_id, answer_value, note } = body;
 

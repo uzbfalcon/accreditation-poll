@@ -101,7 +101,7 @@ export default function BackofficeLoginPage() {
     <div className="min-h-full flex flex-col items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-6">
-          <Link href="/">
+          <Link href="/pasport">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.svg" alt="CLAMO" className="h-9 w-auto object-contain" />
           </Link>
@@ -120,7 +120,7 @@ export default function BackofficeLoginPage() {
         </div>
 
         <p className="text-center text-xs text-slate-500 mt-6">
-          <Link href="/" className="hover:text-teal-700">
+          <Link href="/pasport" className="hover:text-teal-700">
             &larr; Klinika portaliga qaytish
           </Link>
         </p>

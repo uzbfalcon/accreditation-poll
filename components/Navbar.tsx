@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3.5 group">
+        <Link href="/pasport" className="flex items-center gap-3.5 group">
           {/* Real CLAMO Logo */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -47,7 +47,7 @@ export default function Navbar() {
           {isBackoffice ? (
             <>
               <Link
-                href="/"
+                href="/pasport"
                 className="text-xs font-bold text-slate-700 hover:text-teal-700 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition"
               >
                 <Building2 className="w-3.5 h-3.5 text-slate-500" />

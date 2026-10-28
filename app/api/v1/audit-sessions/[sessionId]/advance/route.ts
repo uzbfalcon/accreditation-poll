@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { denySessionAccess } from '@/lib/session-access';
 import { advanceSection, FlowError } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -9,6 +10,9 @@ export async function POST(
   { params }: { params: { sessionId: string } }
 ) {
   try {
+    const denied = denySessionAccess(request, params.sessionId);
+    if (denied) return denied;
+
     const body = await request.json().catch(() => ({}));
     const fromSection = Number(body.from_section);
     if (!Number.isInteger(fromSection) || fromSection < 1) {

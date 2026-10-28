@@ -7,6 +7,7 @@ from django.db.backends.signals import connection_created
 CLAMO_EXTRA_COLUMNS = [
     ('audit_sessions', 'final_stage_at', 'TEXT'),
     ('audit_sessions', 'current_section', 'INTEGER DEFAULT 1'),
+    ('audit_sessions', 'access_token', 'TEXT'),
     ('standards', 'is_gold', 'INTEGER DEFAULT 0'),
     ('criteria', 'is_gold', 'INTEGER DEFAULT 0'),
     ('criteria', 'sop_required', 'INTEGER DEFAULT 0'),

@@ -1,4 +1,5 @@
 import Database from 'better-sqlite3';
+import { randomBytes } from 'crypto';
 import path from 'path';
 // Standart va mezonlarning o'zbekcha matnlari (scripts/import_standards_xlsx.py yaratadi)
 import standardsContent from '@/data/standards_uz.json';
@@ -23,6 +24,10 @@ export function getDb(): Database.Database {
     // Joriy (tahrirlanadigan) bo'lim: undan oldingilari faqat ko'rish uchun, keyingilari yopiq
     if (!sessionCols.some((c) => c.name === 'current_section')) {
       dbInstance.exec('ALTER TABLE audit_sessions ADD COLUMN current_section INTEGER DEFAULT 1');
+    }
+    // Arizaga kirish kaliti: pasport to'ldirilganda brauzer cookie'siga yoziladi (lib/session-access.ts)
+    if (!sessionCols.some((c) => c.name === 'access_token')) {
+      dbInstance.exec('ALTER TABLE audit_sessions ADD COLUMN access_token TEXT');
     }
 
     // Ma'lumotlar migratsiyalari PRAGMA user_version bo'yicha ketma-ket: 1–3 — standartlar matni (data/standards_uz.json
@@ -515,13 +520,30 @@ export function initializeSession(data: InitializeSessionInput) {
 
   const scoreData = calculateSessionScore(sessionId);
 
+  // Kirish kaliti: mavjud bo'lsa o'sha (klinikaning boshqa qurilmasi ham ishlayveradi), bo'lmasa yangisi
+  let accessToken = (db.prepare('SELECT access_token FROM audit_sessions WHERE id = ?').get(sessionId) as
+    | { access_token: string | null }
+    | undefined)?.access_token;
+  if (!accessToken) {
+    accessToken = randomBytes(24).toString('base64url');
+    db.prepare('UPDATE audit_sessions SET access_token = ? WHERE id = ?').run(accessToken, sessionId);
+  }
+
   return {
     status: 'INITIALIZED',
     session_id: sessionId,
     org_id: orgId,
     org_name: orgName,
     score: scoreData,
+    access_token: accessToken,
   };
+}
+
+export function getSessionAccessToken(sessionId: string): string | null {
+  const row = getDb().prepare('SELECT access_token FROM audit_sessions WHERE id = ?').get(sessionId) as
+    | { access_token: string | null }
+    | undefined;
+  return row?.access_token ?? null;
 }
 
 export interface CriterionItem {
@@ -550,7 +572,7 @@ export function getChecklist(sessionId: string) {
   const db = getDb();
 
   const sessionRow = db.prepare(`
-    SELECT s.*, o.name as org_name, o.inn as org_inn, o.region, o.district
+    SELECT s.*, o.name as org_name, o.inn as org_inn, o.region, o.district, o.cadastre_number
     FROM audit_sessions s
     JOIN organizations o ON s.org_id = o.id
     WHERE s.id = ?
@@ -642,9 +664,11 @@ export function getChecklist(sessionId: string) {
   }
 
   const scoreData = calculateSessionScore(sessionId);
+  // Kirish kaliti javobga qo'shilmaydi (faqat HttpOnly cookie'da yuradi)
+  const { access_token: _accessToken, ...session } = sessionRow as Record<string, unknown>;
 
   return {
-    session: sessionRow,
+    session,
     score: scoreData,
     domains: resultDomains,
   };
@@ -1031,9 +1055,10 @@ export function getClinicPassport(sessionId: string) {
   }
 
   const scoreData = calculateSessionScore(sessionId);
+  const { access_token: _accessToken, ...clinic } = row as Record<string, unknown>;
 
   return {
-    clinic: row,
+    clinic,
     score: scoreData,
   };
 }

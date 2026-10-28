@@ -94,7 +94,7 @@ jobs:
       - name: Health check
         run: |
           for i in $(seq 1 12); do
-            code=$(curl -s -o /dev/null -w '%{http_code}' https://lochinbek-ai.uz/ || true)
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://lochinbek-ai.uz/pasport || true)
             [ "$code" = 200 ] && echo "OK ($code)" && exit 0
             echo "Kutilmoqda ($code)..."; sleep 10
           done

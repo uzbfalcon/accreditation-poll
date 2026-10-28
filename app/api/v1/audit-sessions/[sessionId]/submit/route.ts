@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { denySessionAccess } from '@/lib/session-access';
 import { submitSession, FlowError, AlreadySubmittedError } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -8,6 +9,9 @@ export async function POST(
   { params }: { params: { sessionId: string } }
 ) {
   try {
+    const denied = denySessionAccess(request, params.sessionId);
+    if (denied) return denied;
+
     const result = submitSession(params.sessionId);
     return NextResponse.json(result);
   } catch (error: any) {

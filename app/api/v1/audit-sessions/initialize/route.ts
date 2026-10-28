@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { initializeSession, FlowError, AlreadySubmittedError, InputError } from '@/lib/db';
+import { setSessionAccessCookie } from '@/lib/session-access';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const result = initializeSession(body);
-    return NextResponse.json(result);
+    const { access_token: accessToken, ...result } = initializeSession(body);
+    const response = NextResponse.json(result);
+    setSessionAccessCookie(response, request, result.session_id, accessToken);
+    return response;
   } catch (error: any) {
     if (error instanceof AlreadySubmittedError) {
       return NextResponse.json(
